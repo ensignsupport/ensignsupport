@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+.env*.local
+.DS_Store
+*.log
+
+# Archives. A 237MB zip in a commit is what blocked the first push.
+*.zip
