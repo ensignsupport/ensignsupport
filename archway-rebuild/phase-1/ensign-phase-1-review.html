@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ensign Phase 1 Review</title>
+<style>
+:root{--bg:#f7f7fb;--card:#fff;--ink:#1b1b3a;--muted:#5b5b7a;--line:#e3e3ef;--accent:#2b2fa8;--ok:#1f7a4d;--warn:#a15c00;--bad:#b3261e;--info:#2b2fa8}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101024;--card:#18183a;--ink:#ececff;--muted:#a9a9cc;--line:#2c2c55;--accent:#8e92ff;--ok:#5fd39a;--warn:#f0b35a;--bad:#ff8a80;--info:#8e92ff}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+main{max-width:1000px;margin:0 auto;padding:32px 16px 80px}
+h1{font-size:28px;margin:0 0 4px}h2{font-size:20px;margin:40px 0 8px}h3{font-size:16px;margin:0 0 6px}
+.sub{color:var(--muted);margin:0 0 24px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0}
+ul{margin:6px 0;padding-left:20px}li{margin:3px 0}
+.tag{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;border:1px solid currentColor;white-space:nowrap}
+.ok{color:var(--ok)}.warn{color:var(--warn)}.bad{color:var(--bad)}.info{color:var(--info)}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{border-collapse:collapse;width:100%;min-width:680px;font-size:14px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+tr:last-child td{border-bottom:0}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 18px;margin:10px 0}
+.q .n{color:var(--accent);font-weight:700;margin-right:6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.opt{border:1px solid var(--line);border-radius:8px;padding:5px 10px;font-size:14px}
+.opt::before{content:"\25A2  ";color:var(--muted)}
+.why{color:var(--muted);font-size:14px;margin-top:6px}
+.legend span{margin-right:10px}
+</style>
+</head>
+<body><main>
+<h1>Ensign: Phase 1 review</h1>
+<p class="sub">Information validation, correction and collection. 16 Sep 2026. Nothing here is locked. Say "lock" or give changes.</p>
+
+<div class="card">
+<h3>What Phase 1 did</h3>
+<ul>
+<li>Listed every fact from the questionnaire and from Anand's site copy (<code>lib/content.js</code>).</li>
+<li>Tagged each one: confirmed by client, added by the build, conflict, or missing.</li>
+<li>Checked the regulated facts against official sources.</li>
+<li>Turned every gap into a short follow-up question for the client. Tick-box wherever possible.</li>
+<li>Design choices are NOT asked here. They come at the end of Phase 2.</li>
+</ul>
+</div>
+
+<h2>1. Decisions for Allen first</h2>
+<div class="q"><span class="n">A1</span><b>Referral form scope.</b> The client wants date of birth, plan dates and uploads of NDIS plans and health reports. Our rules say no participant data beyond a contact form.
+<div class="opts"><span class="opt">Simple referral form: referrer details, participant first name, service, plan type, message. Documents shared after the first call</span><span class="opt">Full form as client asked, built outside Archway by a secure specialist tool</span></div>
+<div class="why">Recommended: simple form. Also recommend "working towards NDIS registration" for C2, because "coming soon" reads as a date. Anand's build already carries a "pending legal review" privacy notice, which shows the risk.</div></div>
+<div class="q"><span class="n">A2</span><b>Professional indemnity.</b> Anand's build shows a public row "Professional indemnity insurance: Not held". Client only said don't show it as a badge.
+<div class="opts"><span class="opt">Don't mention it at all</span><span class="opt">Show it as "not held"</span></div>
+<div class="why">Recommended: don't mention it. Not a legal requirement to publish. Ask the client either way (question C6).</div></div>
+
+<h2>2. Fact register</h2>
+<p class="legend"><span class="tag ok">Confirmed</span> <span class="tag bad">Added by build</span> <span class="tag warn">Conflict</span> <span class="tag info">Missing</span></p>
+<div class="tablewrap"><table>
+<thead><tr><th>Fact</th><th>Source</th><th>Status</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>Name: Ensign Support Coordination. Sole trader, ABN held</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Business name not found on ABN Lookup today. Ask for the ABN (C1)</td></tr>
+<tr><td>Services: Support Coordination, Psychosocial Recovery Coaching</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Ask what each looks like day to day (C8)</td></tr>
+<tr><td>Unregistered, working towards registration</td><td>Questionnaire, NDIS Commission</td><td><span class="tag ok">Confirmed</span></td><td>Legal for self and plan managed. Mandatory registration for support coordination is paused</td></tr>
+<tr><td>"Registration coming soon" (client wording)</td><td>Questionnaire vs build</td><td><span class="tag warn">Conflict</span></td><td>Build changed it to "working towards registration". Client picks (C2)</td></tr>
+<tr><td>Specialist Support Coordination</td><td>Not mentioned</td><td><span class="tag info">Missing</span></td><td>Needs registration. Confirm they don't offer it (C9)</td></tr>
+<tr><td>All ages, all disability types</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>None</td></tr>
+<tr><td>Plan types: self managed and plan managed, not NDIA managed</td><td>Questionnaire (registration and referral answers)</td><td><span class="tag ok">Confirmed</span></td><td>None</td></tr>
+<tr><td>Area: South East Queensland in person, Australia wide remote later</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Ask which regions exactly (C11)</td></tr>
+<tr><td>Hours 7am to 7pm</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Days not stated (C4)</td></tr>
+<tr><td>"Seven days"</td><td>Build</td><td><span class="tag bad">Added by build</span></td><td>Remove unless confirmed (C4)</td></tr>
+<tr><td>Response time "within one business day"</td><td>Build</td><td><span class="tag bad">Added by build</span></td><td>Anand flagged it himself. Ask (C5)</td></tr>
+<tr><td>Screening: Worker Screening, Blue Card, Police Check, Mental Health First Aid, First Aid and CPR. Public liability held</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Show once, after the services</td></tr>
+<tr><td>Professional indemnity not held</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Don't show as a badge. Display decision A2 and C6</td></tr>
+<tr><td>Experience and qualifications of the coordinator</td><td>Not answered</td><td><span class="tag info">Missing</span></td><td>NDIA recommends Cert IV and/or 2 years' mental health work for recovery coaches. Referrers look for this (C7)</td></tr>
+<tr><td>Values: Compassion, Integrity, Advocacy</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Three values is a triad. Handle in Phase 3 copy</td></tr>
+<tr><td>CALD trained, interpreters arranged</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Ask about own languages (C14)</td></tr>
+<tr><td>Written progress summary before each plan review</td><td>Build</td><td><span class="tag bad">Added by build</span></td><td>Confirm or remove (C3)</td></tr>
+<tr><td>Same day reference number and named person</td><td>Build</td><td><span class="tag bad">Added by build</span></td><td>Confirm or remove (C3)</td></tr>
+<tr><td>First meeting within the first week</td><td>Build</td><td><span class="tag bad">Added by build</span></td><td>Confirm or remove (C3)</td></tr>
+<tr><td>Recovery coaching by phone</td><td>Build</td><td><span class="tag bad">Added by build</span></td><td>Questionnaire says in person for launch. Confirm (C3)</td></tr>
+<tr><td>Bills actual time, not rounded blocks. Itemised invoices every time</td><td>Build</td><td><span class="tag bad">Added by build</span></td><td>Confirm or remove (C3). Also a money claim, check against rules</td></tr>
+<tr><td>"Someone comes to you" for every referral</td><td>Build</td><td><span class="tag bad">Added by build</span></td><td>Confirm or remove (C3)</td></tr>
+<tr><td>Phone, email, photos, socials, coordinator's own name</td><td>Not answered</td><td><span class="tag info">Missing</span></td><td>C0, C12, C13, C16</td></tr>
+<tr><td>No domain yet, wants something close to ensign.com.au. No logo, wants a simple one designed</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Confirm domain preference (C15). Logo in Phase 3</td></tr>
+<tr><td>Taking participants from September 2026</td><td>Questionnaire</td><td><span class="tag ok">Confirmed</span></td><td>Confirm start date (C19)</td></tr>
+<tr><td>Indigo palette, light to dark, light and dark mode</td><td>Client request via Allen, 16 Sep</td><td><span class="tag ok">Confirmed</span></td><td>Check it still reads "mild, warm, welcoming" in Phase 2</td></tr>
+<tr><td>Privacy policy and complaints process</td><td>Not answered</td><td><span class="tag info">Missing</span></td><td>C20</td></tr>
+<tr><td>Testimonials, numbers, years operating</td><td>Pre-launch</td><td><span class="tag ok">Confirmed none</span></td><td>No proof section. No numbers anywhere</td></tr>
+</tbody></table></div>
+
+<h2>3. Follow-up questions for the client</h2>
+<p class="sub">Target: under 15 minutes. Tick one unless it says tick all.</p>
+
+<div class="q"><span class="n">C0</span>Your name as it should appear on the site. <div class="opts"><span class="opt">Name: ________</span></div></div>
+
+<div class="q"><span class="n">C1</span>Your ABN, so we can show it in the footer. <div class="opts"><span class="opt">ABN: ________</span></div></div>
+
+<div class="q"><span class="n">C2</span>How should the site describe your registration?
+<div class="opts"><span class="opt">"Registration coming soon"</span><span class="opt">"Working towards NDIS registration"</span></div>
+<div class="why">First option is your original wording. Second is what the draft site used.</div></div>
+
+<div class="q"><span class="n">C3</span>Are these true for how you'll work? Tick true or remove for each.
+<ul>
+<li>A written progress summary before each plan review</li>
+<li>Same day reply to a referral</li>
+<li>Your reply gives a reference number</li>
+<li>First meeting within the first week</li>
+<li>Recovery coaching sessions can be by phone</li>
+<li>You bill the actual time worked, not rounded blocks</li>
+<li>Itemised invoices to plan managers every time</li>
+<li>You visit in person for every participant you take on</li>
+</ul>
+<div class="opts"><span class="opt">True</span><span class="opt">Remove</span></div></div>
+
+<div class="q"><span class="n">C4</span>Which days are you available 7am to 7pm?
+<div class="opts"><span class="opt">Monday to Friday</span><span class="opt">Monday to Saturday</span><span class="opt">Seven days</span><span class="opt">Other: ____</span></div></div>
+
+<div class="q"><span class="n">C5</span>How fast will you reply to a new enquiry?
+<div class="opts"><span class="opt">Same business day</span><span class="opt">Within 1 business day</span><span class="opt">Within 2 business days</span><span class="opt">Don't show a time</span></div></div>
+
+<div class="q"><span class="n">C6</span>Professional indemnity insurance on the site?
+<div class="opts"><span class="opt">Don't mention it</span><span class="opt">Say it's not held</span></div></div>
+
+<div class="q"><span class="n">C7</span>Your background. Write exactly, no rounding up.
+<div class="opts"><span class="opt">Years working in disability or mental health: ____</span><span class="opt">Past roles: ____</span></div>
+<div class="opts"><span class="opt">Cert IV Mental Health</span><span class="opt">Cert IV Mental Health Peer Work</span><span class="opt">Other qualification: ____</span><span class="opt">None</span></div></div>
+
+<div class="q"><span class="n">C8</span>In 2 short lines each: what does a normal week of your work look like for a participant?
+<div class="opts"><span class="opt">Support Coordination: ____</span><span class="opt">Recovery Coaching: ____</span></div></div>
+
+<div class="q"><span class="n">C9</span>Do you offer Specialist Support Coordination?
+<div class="opts"><span class="opt">No</span><span class="opt">Yes</span><span class="opt">Not sure</span></div>
+<div class="why">It needs NDIS registration, so the site can't offer it yet.</div></div>
+
+<div class="q"><span class="n">C11</span>Where will you travel to in person? Tick all.
+<div class="opts"><span class="opt">Brisbane</span><span class="opt">Ipswich</span><span class="opt">Logan</span><span class="opt">Moreton Bay</span><span class="opt">Redlands</span><span class="opt">Gold Coast</span><span class="opt">Sunshine Coast</span><span class="opt">Scenic Rim</span><span class="opt">Lockyer Valley</span><span class="opt">Toowoomba (outside SEQ)</span><span class="opt">Other: ____</span></div></div>
+
+<div class="q"><span class="n">C12</span>Phone and email to publish.
+<div class="opts"><span class="opt">Phone: ____</span><span class="opt">Email: ____</span></div></div>
+
+<div class="q"><span class="n">C13</span>Photos of you.
+<div class="opts"><span class="opt">I have good photos</span><span class="opt">I'll get photos taken</span><span class="opt">No photos of me. Use neutral images only</span></div>
+<div class="why">Stock photos will never be shown as you or your participants.</div></div>
+
+<div class="q"><span class="n">C14</span>Do you speak a language other than English?
+<div class="opts"><span class="opt">No</span><span class="opt">Yes: ____</span></div></div>
+
+<div class="q"><span class="n">C15</span>Domain name.
+<div class="opts"><span class="opt">ensign.com.au or close to it is fine. Archway to suggest</span><span class="opt">I have another name in mind: ____</span></div></div>
+
+<div class="q"><span class="n">C16</span>Social media to link.
+<div class="opts"><span class="opt">None yet</span><span class="opt">Facebook: ____</span><span class="opt">Instagram: ____</span><span class="opt">LinkedIn: ____</span></div></div>
+
+<div class="q"><span class="n">C17</span>Things you do NOT do, so nobody is misled. Tick all.
+<div class="opts"><span class="opt">Crisis or emergency support</span><span class="opt">After hours support</span><span class="opt">Plan management</span><span class="opt">Support work or personal care</span><span class="opt">Other: ____</span></div></div>
+
+<div class="q"><span class="n">C18</span>Any words or images you definitely don't want on the site?
+<div class="opts"><span class="opt">____</span></div></div>
+
+<div class="q"><span class="n">C19</span>When can you take your first participant?
+<div class="opts"><span class="opt">Now</span><span class="opt">From date: ____</span></div></div>
+
+<div class="q"><span class="n">C20</span>Do you have a privacy policy and a complaints process?
+<div class="opts"><span class="opt">Yes, will send them</span><span class="opt">No, need help</span></div></div>
+
+<h2>4. Already fixed, not asked</h2>
+<div class="card"><ul>
+<li>Colour: indigo, light to dark shades, light and dark mode (client request via Allen).</li>
+<li>Logo: client wants a simple one designed. Happens in Phase 3.</li>
+<li>Pages: Home, About, Services, Referral, Contact.</li>
+<li>Style choice: picked from researched options at the end of Phase 2.</li>
+</ul></div>
+
+<h2>Sources checked</h2>
+<div class="card"><ul>
+<li><a href="https://www.ndiscommission.gov.au/about-us/ndis-commission-reform-hub/mandatory-registration">NDIS Commission: mandatory registration</a>. Support coordination registration "paused".</li>
+<li><a href="https://www.cliniccomply.com.au/blog/ndis-support-coordination-compliance-2026-registration-pause">ClinicComply, 17 May 2026</a>. Specialist Support Coordination still needs registration.</li>
+<li><a href="https://centreofhope.com.au/recovery-coach-ndis-2026/">Centre of Hope</a>. NDIA recommended experience for recovery coaches. Secondary source, confirm on ndis.gov.au in Phase 2.</li>
+<li><a href="https://abr.business.gov.au/Search/ResultsActive?SearchText=Ensign%20Support%20Coordination">ABN Lookup</a>. No exact match on 16 Sep 2026.</li>
+</ul></div>
+</main></body></html>

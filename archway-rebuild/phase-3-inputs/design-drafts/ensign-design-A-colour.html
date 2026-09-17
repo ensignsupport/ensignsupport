@@ -1,0 +1,140 @@
+<!doctype html><html lang="en-AU"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Ensign Design A Colour</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;600&family=Atkinson+Hyperlegible+Next:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://api.fontshare.com/v2/css?f[]=chillax@400,500&f[]=switzer@400,500,600&display=swap" rel="stylesheet">
+<style>
+:root{--page:#e9e6df;--ink0:#1d1d1b;--m0:#6b6a66;--line0:#d6d2c8}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]){--page:#141413;--ink0:#efeee9;--m0:#a9a79f;--line0:#2d2c29}}
+*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink0);font:16px/1.5 system-ui,sans-serif}
+.wrap{max-width:1320px;margin:0 auto;padding:32px 16px 80px}.wrap>h1{font-size:28px;margin:0}.m{color:var(--m0);font-size:14px}
+.box{border:1px solid var(--line0);border-radius:12px;padding:14px 18px;margin:14px 0;background:color-mix(in srgb,var(--page) 85%,#fff 15%)}.box li{margin:5px 0}
+.tw{overflow-x:auto;border:1px solid var(--line0);border-radius:12px}table{border-collapse:collapse;width:100%;min-width:760px;font-size:14px}th,td{padding:8px 10px;border-bottom:1px solid var(--line0);text-align:left}.n{text-align:center}
+.design{margin:44px 0}.dh{display:flex;justify-content:space-between;gap:12px;align-items:flex-end;flex-wrap:wrap}.dh h2{margin:0;font-size:22px}
+.rec{font-size:12px;background:#2850d3;color:#fff;padding:3px 10px;border-radius:99px;vertical-align:middle;margin-left:6px}
+.score{text-align:right}.score b{font-size:26px;display:block}.score span{font-size:12px;color:var(--m0)}
+.info p{margin:6px 0;max-width:80ch}
+.views{display:grid;grid-template-columns:1fr 390px;gap:18px;margin-top:14px;align-items:start}
+@media (max-width:1000px){.views{grid-template-columns:1fr}.frame.phone{max-width:390px}}
+.frame{border:1px solid var(--line0);border-radius:14px;overflow:hidden;background:#fff}.lbl{font:600 12px system-ui;color:#6b6a66;background:#f3f1ec;padding:6px 12px;border-bottom:1px solid #e2dfd7}
+.frame.desk .cq{height:760px;overflow:auto}.frame.phone .cq{height:760px;overflow:auto}
+.cq{container-type:inline-size}
+/* shared design system (light only in mockup) */
+.d{--bg:#eeebe4;--ink:#2a2a2a;--mut:#5f5c56;--ac:#2850d3;--acsoft:#e5edff;--mk:#5b7fe8;background:var(--bg);color:var(--ink);font-family:var(--body);min-height:100%}
+.d a{cursor:default}
+.nav{display:flex;align-items:center;gap:20px;padding:22px 5cqw}.logo{font-family:var(--head);font-size:22px;letter-spacing:-.02em;margin-right:auto}.nav nav{display:flex;gap:22px;font-size:15px}
+.pill{display:inline-block;border:1.5px solid var(--ac);color:var(--ac);border-radius:30px;padding:11px 20px;font-size:15px;font-weight:600;white-space:nowrap}.pill.solid{background:var(--ac);color:#fff}
+.hero{padding:6cqw 5cqw 5cqw 12cqw}
+.big{font-family:var(--head);font-weight:400;font-size:clamp(40px,7.4cqw,112px);line-height:.98;letter-spacing:-.045em;margin:0 0 3cqw}
+.lede{font-size:clamp(18px,2.1cqw,26px);line-height:1.4;max-width:30ch;margin:0 0 3cqw;color:var(--ink)}
+.u{position:relative;white-space:nowrap}.mark{position:absolute;color:var(--mk);pointer-events:none}.mark.under{left:-2%;bottom:-.18em;width:104%;height:.3em}
+.c{position:relative;white-space:nowrap}.mark.circ{left:-12%;top:-18%;width:124%;height:136%}
+.task{max-width:760px}.q{font-size:15px;color:var(--mut);margin:18px 0 8px}.chips{display:flex;flex-wrap:wrap;gap:8px}.chips button{font:inherit;font-size:16px;background:transparent;border:1.5px solid #cfcac0;color:var(--ink);border-radius:30px;padding:9px 16px}
+.chips button:first-child{border-color:var(--ink);background:var(--ink);color:var(--bg)}.task .pill{margin-top:22px}
+.band{padding:3cqw 5cqw 3cqw 12cqw;border-top:1px solid #d9d5cc;border-bottom:1px solid #d9d5cc}.band.soft{background:var(--acsoft);border:0}
+.facts{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:20px}.facts b{display:block;font-family:var(--head);font-weight:400;font-size:clamp(20px,2.4cqw,30px);letter-spacing:-.02em;line-height:1.1}.facts span{color:var(--mut);font-size:15px}
+.two{padding:6cqw 5cqw 7cqw 12cqw}.mid{font-family:var(--head);font-weight:400;font-size:clamp(30px,4.2cqw,56px);letter-spacing:-.035em;margin:0 0 3cqw;line-height:1}
+.steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:24px;counter-reset:s}.steps li{counter-increment:s;border-top:1.5px solid var(--ink);padding-top:12px}.steps li::before{content:counter(s);display:block;font-family:var(--head);font-size:15px;color:var(--mut);margin-bottom:6px}
+.steps b{display:block;font-size:19px;font-weight:600;margin-bottom:4px}.steps span{color:var(--mut);font-size:16px;line-height:1.45}
+/* A */
+.A{--head:'Figtree',sans-serif;--body:'Figtree',sans-serif}
+/* B */
+.B{--head:'Chillax',sans-serif;--body:'Atkinson Hyperlegible Next',sans-serif;--bg:#f3efe8;--mk:#2850d3}
+.B .big{font-weight:500;letter-spacing:-.03em}.B .pill,.B .chips button{border-radius:40px}
+.B .hero{display:grid;grid-template-columns:1.3fr .8fr;gap:5cqw;align-items:center;padding-left:8cqw}
+.B .ph{margin:0;border-radius:36px;overflow:hidden;background:var(--acsoft)}.B .ph img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover}.B .ph figcaption{padding:12px 16px;font-size:15px}
+.B .btns{display:flex;gap:10px;flex-wrap:wrap}.B .band,.B .two{padding-left:8cqw}.B .steps li{border-top:0;background:#fffdf9;border-radius:22px;padding:18px}
+/* C */
+.C{--head:'Switzer',sans-serif;--body:'Switzer',sans-serif;--bg:#f1efea}
+.C .hero{display:grid;grid-template-columns:.8fr 1.2fr;gap:6cqw;align-items:end;padding-left:5cqw}
+.C .ph{margin:0}.C .ph img{display:block;width:100%;aspect-ratio:4/5;object-fit:cover;border-radius:4px}
+.C .hi{font-size:clamp(18px,2cqw,24px);color:var(--mut);margin:0 0 1cqw}.C .big{font-size:clamp(34px,5cqw,76px);letter-spacing:-.035em;line-height:1.02}
+.C .sign{display:flex;align-items:center;gap:12px;margin:0 0 3cqw;color:var(--ink)}.C .sig{width:170px;height:52px;color:var(--ink)}.C .sign span{font-size:14px;color:var(--mut)}
+.C .btns{display:flex;gap:10px;flex-wrap:wrap}.C .band,.C .two{padding-left:5cqw}.C .pill{border-radius:6px}
+/* phone layout via container */
+@container (max-width:600px){
+ .nav nav{display:none}.nav{padding:16px 20px}.hero,.band,.two,.B .hero,.B .band,.B .two,.C .band,.C .two{padding-left:20px;padding-right:20px}
+ .hero{padding-top:28px;padding-bottom:28px}.big{font-size:44px}.C .big{font-size:34px}.lede{font-size:18px}
+ .facts,.steps{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr}
+ .B .hero,.C .hero{grid-template-columns:1fr;padding-left:20px}.B .ph{max-width:260px}.C .ph{max-width:240px}
+ .mid{font-size:32px}.two{padding-top:30px}
+}
+
+/* indigo variants for A */
+.A.v1{--mk:#2850d3}
+.A.v1 .big,.A.v1 .mid{color:#0f225e}
+.A.v1 .chips button:first-child{background:#2850d3;border-color:#2850d3;color:#fff}
+.A.v1 .band{background:#e5edff;border:0}
+.A.v1 .facts b{color:#0f225e}
+
+.A.v2{--mk:#2850d3}
+.A.v2 .big{color:#0f225e}
+.A.v2 .chips button:first-child{background:#0f225e;border-color:#0f225e;color:#fff}
+.A.v2 .band{background:#0f225e;border:0;color:#f3f7ff}.A.v2 .band .facts span{color:#cadbff}
+.A.v2 .two{background:#173182;color:#f3f7ff}.A.v2 .two .mid{color:#f3f7ff}.A.v2 .steps li{border-top-color:#a0bdfe}.A.v2 .steps span,.A.v2 .steps li::before{color:#cadbff}
+
+.A.v3{--bg:#0f225e;--ink:#f3f7ff;--mut:#cadbff;--ac:#a0bdfe;--mk:#6993fa}
+.A.v3 .pill.solid{background:#f3f7ff;color:#0f225e;border-color:#f3f7ff}
+.A.v3 .pill{border-color:#a0bdfe;color:#f3f7ff}
+.A.v3 .chips button{border-color:#3d5aa8;color:#f3f7ff}.A.v3 .chips button:first-child{background:#f3f7ff;color:#0f225e;border-color:#f3f7ff}
+.A.v3 .band{background:#e5edff;color:#0f225e;border:0}.A.v3 .band .facts span{color:#2041a8}
+.A.v3 .two{background:#eeebe4;color:#2a2a2a}.A.v3 .two .mid{color:#0f225e}.A.v3 .steps li{border-top-color:#0f225e}.A.v3 .steps span,.A.v3 .steps li::before{color:#5f5c56}
+.swatches{display:flex;gap:6px;margin:8px 0}.swatches i{width:28px;height:28px;border-radius:6px;border:1px solid #0002;display:inline-block}
+</style></head><body><div class="wrap">
+<h1>Ensign: Design A, more indigo</h1>
+<p class="m">Phase 2, Step 6. 16 Sep 2026. Same layout as Design A, three strengths of Andrew's indigo. Not locked. Scroll inside each frame.</p>
+<div class="box"><b>What changed</b><ul>
+<li>Only colour. Layout, fonts, facts and copy are the same as Design A.</li>
+<li>Every colour comes from the indigo scale built from Andrew's pigment photo, and every text pairing used here passed the readability check on the colour sheet.</li>
+<li>Recommended: <b>A2</b>. It makes the site clearly indigo while keeping the first screen light, calm and easy to read, which matters for tired or low vision eyes.</li>
+</ul></div><section class="design"><div class="dh"><div><h2>A1. Indigo accents</h2><p class="m">Warm stone page. Headlines, the selected option and the scribble go indigo. The facts strip sits on a soft indigo tint.</p></div></div>
+<div class="swatches"><i style="background:#eeebe4" title="#eeebe4"></i><i style="background:#e5edff" title="#e5edff"></i><i style="background:#2850d3" title="#2850d3"></i><i style="background:#0f225e" title="#0f225e"></i></div>
+<p class="m"><b>Trade-off:</b> Closest to Therapy in London. Colour is noticeable but still quiet.</p>
+<div class="views"><div class="frame desk"><div class="lbl">Desktop</div><div class="cq"><div class="d A v1"><header class="nav"><span class="logo">Ensign</span><nav><a>Services</a><a>About Andrew</a><a>Contact</a></nav><a class="pill">Refer someone</a></header>
+<section class="hero"><h2 class="big">Support coordination<br>with one person<br><span class="u">you know by name<svg class="mark under" viewBox="0 0 300 30" aria-hidden="true" preserveAspectRatio="none"><path d="M4 20 C 30 8, 48 26, 72 14 S 118 6, 140 18 S 190 26, 214 12 S 262 8, 296 16" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></h2>
+<p class="lede">Andrew reads your NDIS plan with you and finds providers who have room.</p>
+<div class="task"><p class="q">Who is this for?</p><div class="chips"><button>Me</button><button>Someone I support</button><button>I'm referring a participant</button></div>
+<p class="q">Where are you?</p><div class="chips"><button>Brisbane</button><button>Ipswich</button><button>Logan</button><button>Gold Coast</button><button>Other SEQ</button></div>
+<a class="pill solid">See if Andrew can help</a></div></section>
+<section class="band"><ul class="facts"><li><b>1 business day</b><span>to reply</span></li><li><b>7am to 7pm</b><span>seven days</span></li><li><b>Self and plan managed</b><span>participants</span></li><li><b>English and Tamil</b><span>spoken</span></li></ul></section>
+<section class="two"><h3 class="mid">How it starts</h3><ol class="steps"><li><b>You get a reply</b><span>Within 1 business day, with a reference number.</span></li><li><b>We meet</b><span>In your first week, in person.</span></li><li><b>Supports get set up</b><span>Providers found, agreements signed.</span></li><li><b>You get a written summary</b><span>Before each plan review.</span></li></ol></section></div></div></div><div class="frame phone"><div class="lbl">Phone</div><div class="cq"><div class="d A v1"><header class="nav"><span class="logo">Ensign</span><nav><a>Services</a><a>About Andrew</a><a>Contact</a></nav><a class="pill">Refer someone</a></header>
+<section class="hero"><h2 class="big">Support coordination<br>with one person<br><span class="u">you know by name<svg class="mark under" viewBox="0 0 300 30" aria-hidden="true" preserveAspectRatio="none"><path d="M4 20 C 30 8, 48 26, 72 14 S 118 6, 140 18 S 190 26, 214 12 S 262 8, 296 16" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></h2>
+<p class="lede">Andrew reads your NDIS plan with you and finds providers who have room.</p>
+<div class="task"><p class="q">Who is this for?</p><div class="chips"><button>Me</button><button>Someone I support</button><button>I'm referring a participant</button></div>
+<p class="q">Where are you?</p><div class="chips"><button>Brisbane</button><button>Ipswich</button><button>Logan</button><button>Gold Coast</button><button>Other SEQ</button></div>
+<a class="pill solid">See if Andrew can help</a></div></section>
+<section class="band"><ul class="facts"><li><b>1 business day</b><span>to reply</span></li><li><b>7am to 7pm</b><span>seven days</span></li><li><b>Self and plan managed</b><span>participants</span></li><li><b>English and Tamil</b><span>spoken</span></li></ul></section>
+<section class="two"><h3 class="mid">How it starts</h3><ol class="steps"><li><b>You get a reply</b><span>Within 1 business day, with a reference number.</span></li><li><b>We meet</b><span>In your first week, in person.</span></li><li><b>Supports get set up</b><span>Providers found, agreements signed.</span></li><li><b>You get a written summary</b><span>Before each plan review.</span></li></ol></section></div></div></div></div></section><section class="design"><div class="dh"><div><h2>A2. Indigo bands <span class="rec">Recommended</span></h2><p class="m">Stone first screen with deep indigo headline, then the facts and steps sections switch to deep indigo bands with light text.</p></div></div>
+<div class="swatches"><i style="background:#eeebe4" title="#eeebe4"></i><i style="background:#0f225e" title="#0f225e"></i><i style="background:#173182" title="#173182"></i><i style="background:#a0bdfe" title="#a0bdfe"></i></div>
+<p class="m"><b>Trade-off:</b> Balanced. The site clearly feels indigo as you scroll, the first screen stays calm and readable.</p>
+<div class="views"><div class="frame desk"><div class="lbl">Desktop</div><div class="cq"><div class="d A v2"><header class="nav"><span class="logo">Ensign</span><nav><a>Services</a><a>About Andrew</a><a>Contact</a></nav><a class="pill">Refer someone</a></header>
+<section class="hero"><h2 class="big">Support coordination<br>with one person<br><span class="u">you know by name<svg class="mark under" viewBox="0 0 300 30" aria-hidden="true" preserveAspectRatio="none"><path d="M4 20 C 30 8, 48 26, 72 14 S 118 6, 140 18 S 190 26, 214 12 S 262 8, 296 16" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></h2>
+<p class="lede">Andrew reads your NDIS plan with you and finds providers who have room.</p>
+<div class="task"><p class="q">Who is this for?</p><div class="chips"><button>Me</button><button>Someone I support</button><button>I'm referring a participant</button></div>
+<p class="q">Where are you?</p><div class="chips"><button>Brisbane</button><button>Ipswich</button><button>Logan</button><button>Gold Coast</button><button>Other SEQ</button></div>
+<a class="pill solid">See if Andrew can help</a></div></section>
+<section class="band"><ul class="facts"><li><b>1 business day</b><span>to reply</span></li><li><b>7am to 7pm</b><span>seven days</span></li><li><b>Self and plan managed</b><span>participants</span></li><li><b>English and Tamil</b><span>spoken</span></li></ul></section>
+<section class="two"><h3 class="mid">How it starts</h3><ol class="steps"><li><b>You get a reply</b><span>Within 1 business day, with a reference number.</span></li><li><b>We meet</b><span>In your first week, in person.</span></li><li><b>Supports get set up</b><span>Providers found, agreements signed.</span></li><li><b>You get a written summary</b><span>Before each plan review.</span></li></ol></section></div></div></div><div class="frame phone"><div class="lbl">Phone</div><div class="cq"><div class="d A v2"><header class="nav"><span class="logo">Ensign</span><nav><a>Services</a><a>About Andrew</a><a>Contact</a></nav><a class="pill">Refer someone</a></header>
+<section class="hero"><h2 class="big">Support coordination<br>with one person<br><span class="u">you know by name<svg class="mark under" viewBox="0 0 300 30" aria-hidden="true" preserveAspectRatio="none"><path d="M4 20 C 30 8, 48 26, 72 14 S 118 6, 140 18 S 190 26, 214 12 S 262 8, 296 16" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></h2>
+<p class="lede">Andrew reads your NDIS plan with you and finds providers who have room.</p>
+<div class="task"><p class="q">Who is this for?</p><div class="chips"><button>Me</button><button>Someone I support</button><button>I'm referring a participant</button></div>
+<p class="q">Where are you?</p><div class="chips"><button>Brisbane</button><button>Ipswich</button><button>Logan</button><button>Gold Coast</button><button>Other SEQ</button></div>
+<a class="pill solid">See if Andrew can help</a></div></section>
+<section class="band"><ul class="facts"><li><b>1 business day</b><span>to reply</span></li><li><b>7am to 7pm</b><span>seven days</span></li><li><b>Self and plan managed</b><span>participants</span></li><li><b>English and Tamil</b><span>spoken</span></li></ul></section>
+<section class="two"><h3 class="mid">How it starts</h3><ol class="steps"><li><b>You get a reply</b><span>Within 1 business day, with a reference number.</span></li><li><b>We meet</b><span>In your first week, in person.</span></li><li><b>Supports get set up</b><span>Providers found, agreements signed.</span></li><li><b>You get a written summary</b><span>Before each plan review.</span></li></ol></section></div></div></div></div></section><section class="design"><div class="dh"><div><h2>A3. Indigo-led</h2><p class="m">The first screen is deep indigo with light text and a bright indigo scribble, then light sections follow.</p></div></div>
+<div class="swatches"><i style="background:#0f225e" title="#0f225e"></i><i style="background:#6993fa" title="#6993fa"></i><i style="background:#e5edff" title="#e5edff"></i><i style="background:#eeebe4" title="#eeebe4"></i></div>
+<p class="m"><b>Trade-off:</b> Boldest and most memorable. Risk: large dark areas can feel heavy for some visitors, so it relies on the lighter sections below.</p>
+<div class="views"><div class="frame desk"><div class="lbl">Desktop</div><div class="cq"><div class="d A v3"><header class="nav"><span class="logo">Ensign</span><nav><a>Services</a><a>About Andrew</a><a>Contact</a></nav><a class="pill">Refer someone</a></header>
+<section class="hero"><h2 class="big">Support coordination<br>with one person<br><span class="u">you know by name<svg class="mark under" viewBox="0 0 300 30" aria-hidden="true" preserveAspectRatio="none"><path d="M4 20 C 30 8, 48 26, 72 14 S 118 6, 140 18 S 190 26, 214 12 S 262 8, 296 16" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></h2>
+<p class="lede">Andrew reads your NDIS plan with you and finds providers who have room.</p>
+<div class="task"><p class="q">Who is this for?</p><div class="chips"><button>Me</button><button>Someone I support</button><button>I'm referring a participant</button></div>
+<p class="q">Where are you?</p><div class="chips"><button>Brisbane</button><button>Ipswich</button><button>Logan</button><button>Gold Coast</button><button>Other SEQ</button></div>
+<a class="pill solid">See if Andrew can help</a></div></section>
+<section class="band"><ul class="facts"><li><b>1 business day</b><span>to reply</span></li><li><b>7am to 7pm</b><span>seven days</span></li><li><b>Self and plan managed</b><span>participants</span></li><li><b>English and Tamil</b><span>spoken</span></li></ul></section>
+<section class="two"><h3 class="mid">How it starts</h3><ol class="steps"><li><b>You get a reply</b><span>Within 1 business day, with a reference number.</span></li><li><b>We meet</b><span>In your first week, in person.</span></li><li><b>Supports get set up</b><span>Providers found, agreements signed.</span></li><li><b>You get a written summary</b><span>Before each plan review.</span></li></ol></section></div></div></div><div class="frame phone"><div class="lbl">Phone</div><div class="cq"><div class="d A v3"><header class="nav"><span class="logo">Ensign</span><nav><a>Services</a><a>About Andrew</a><a>Contact</a></nav><a class="pill">Refer someone</a></header>
+<section class="hero"><h2 class="big">Support coordination<br>with one person<br><span class="u">you know by name<svg class="mark under" viewBox="0 0 300 30" aria-hidden="true" preserveAspectRatio="none"><path d="M4 20 C 30 8, 48 26, 72 14 S 118 6, 140 18 S 190 26, 214 12 S 262 8, 296 16" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></span></h2>
+<p class="lede">Andrew reads your NDIS plan with you and finds providers who have room.</p>
+<div class="task"><p class="q">Who is this for?</p><div class="chips"><button>Me</button><button>Someone I support</button><button>I'm referring a participant</button></div>
+<p class="q">Where are you?</p><div class="chips"><button>Brisbane</button><button>Ipswich</button><button>Logan</button><button>Gold Coast</button><button>Other SEQ</button></div>
+<a class="pill solid">See if Andrew can help</a></div></section>
+<section class="band"><ul class="facts"><li><b>1 business day</b><span>to reply</span></li><li><b>7am to 7pm</b><span>seven days</span></li><li><b>Self and plan managed</b><span>participants</span></li><li><b>English and Tamil</b><span>spoken</span></li></ul></section>
+<section class="two"><h3 class="mid">How it starts</h3><ol class="steps"><li><b>You get a reply</b><span>Within 1 business day, with a reference number.</span></li><li><b>We meet</b><span>In your first week, in person.</span></li><li><b>Supports get set up</b><span>Providers found, agreements signed.</span></li><li><b>You get a written summary</b><span>Before each plan review.</span></li></ol></section></div></div></div></div></section></div></body></html>

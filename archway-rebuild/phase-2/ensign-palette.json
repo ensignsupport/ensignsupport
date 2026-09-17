@@ -1,0 +1,215 @@
+{
+ "core": "#193abd",
+ "indigo": {
+  "50": "#f3f7ff",
+  "100": "#e5edff",
+  "200": "#cadbff",
+  "300": "#a0bdfe",
+  "400": "#6993fa",
+  "500": "#416ce5",
+  "600": "#2850d3",
+  "700": "#2041a8",
+  "800": "#173182",
+  "900": "#0f225e",
+  "950": "#061237"
+ },
+ "neutral": {
+  "0": "#fffdfa",
+  "50": "#faf6f1",
+  "100": "#f2eee7",
+  "200": "#e2ddd7",
+  "400": "#a29e98",
+  "600": "#6d6861",
+  "800": "#39352f",
+  "900": "#231f19"
+ },
+ "pairs": [
+  {
+   "mode": "Light",
+   "use": "Body text on page",
+   "fg": "neutral-900",
+   "bg": "neutral-50",
+   "fgh": "#231f19",
+   "bgh": "#faf6f1",
+   "ratio": 15.23,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Light",
+   "use": "Headings on page",
+   "fg": "indigo-900",
+   "bg": "neutral-50",
+   "fgh": "#0f225e",
+   "bgh": "#faf6f1",
+   "ratio": 13.83,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Light",
+   "use": "Muted text on page",
+   "fg": "neutral-600",
+   "bg": "neutral-50",
+   "fgh": "#6d6861",
+   "bgh": "#faf6f1",
+   "ratio": 5.13,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Light",
+   "use": "Link on page",
+   "fg": "indigo-600",
+   "bg": "neutral-50",
+   "fgh": "#2850d3",
+   "bgh": "#faf6f1",
+   "ratio": 6.14,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Light",
+   "use": "White text on primary button",
+   "fg": "neutral-0",
+   "bg": "indigo-600",
+   "fgh": "#fffdfa",
+   "bgh": "#2850d3",
+   "ratio": 6.51,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Light",
+   "use": "Text on soft indigo panel",
+   "fg": "indigo-900",
+   "bg": "indigo-100",
+   "fgh": "#0f225e",
+   "bgh": "#e5edff",
+   "ratio": 12.68,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Light",
+   "use": "Link on soft indigo panel",
+   "fg": "indigo-700",
+   "bg": "indigo-100",
+   "fgh": "#2041a8",
+   "bgh": "#e5edff",
+   "ratio": 7.51,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Light",
+   "use": "Button edge against page (UI)",
+   "fg": "indigo-600",
+   "bg": "neutral-50",
+   "fgh": "#2850d3",
+   "bgh": "#faf6f1",
+   "ratio": 6.14,
+   "need": 3.0,
+   "ok": true
+  },
+  {
+   "mode": "Light",
+   "use": "Text on dark indigo band",
+   "fg": "indigo-50",
+   "bg": "indigo-900",
+   "fgh": "#f3f7ff",
+   "bgh": "#0f225e",
+   "ratio": 13.86,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Dark",
+   "use": "Body text on page",
+   "fg": "indigo-50",
+   "bg": "indigo-950",
+   "fgh": "#f3f7ff",
+   "bgh": "#061237",
+   "ratio": 17.02,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Dark",
+   "use": "Muted text on page",
+   "fg": "indigo-200",
+   "bg": "indigo-950",
+   "fgh": "#cadbff",
+   "bgh": "#061237",
+   "ratio": 13.13,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Dark",
+   "use": "Link on page",
+   "fg": "indigo-300",
+   "bg": "indigo-950",
+   "fgh": "#a0bdfe",
+   "bgh": "#061237",
+   "ratio": 9.75,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Dark",
+   "use": "Dark text on primary button",
+   "fg": "indigo-950",
+   "bg": "indigo-300",
+   "fgh": "#061237",
+   "bgh": "#a0bdfe",
+   "ratio": 9.75,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Dark",
+   "use": "Text on raised card",
+   "fg": "indigo-50",
+   "bg": "indigo-900",
+   "fgh": "#f3f7ff",
+   "bgh": "#0f225e",
+   "ratio": 13.86,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Dark",
+   "use": "Link on raised card",
+   "fg": "indigo-300",
+   "bg": "indigo-900",
+   "fgh": "#a0bdfe",
+   "bgh": "#0f225e",
+   "ratio": 7.94,
+   "need": 4.5,
+   "ok": true
+  },
+  {
+   "mode": "Dark",
+   "use": "Button against page (UI)",
+   "fg": "indigo-300",
+   "bg": "indigo-950",
+   "fgh": "#a0bdfe",
+   "bgh": "#061237",
+   "ratio": 9.75,
+   "need": 3.0,
+   "ok": true
+  },
+  {
+   "mode": "Dark",
+   "use": "Pigment core as text on page",
+   "fg": "indigo-600",
+   "bg": "indigo-950",
+   "fgh": "#2850d3",
+   "bgh": "#061237",
+   "ratio": 2.77,
+   "need": 4.5,
+   "ok": false
+  }
+ ]
+}
