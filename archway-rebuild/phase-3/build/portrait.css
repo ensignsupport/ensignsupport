@@ -1,0 +1,61 @@
+/* ===== Component 2: portrait with brush-stroke frame (C24) ===== */
+.pt{margin:0;position:relative;width:100%;max-width:440px;aspect-ratio:3/4;--tilt:-2deg}
+.pt .brush-bg{position:absolute;inset:-3% -4% -3% -3%;width:107%;height:106%;fill:var(--indigo-200);transform:rotate(3deg);transition:transform 420ms var(--ease-out)}
+.pt .photo{position:absolute;inset:0;transform:rotate(var(--tilt));transition:transform 420ms var(--ease-out)}
+.pt img{width:100%;height:100%;object-fit:cover;display:block;-webkit-mask:var(--mask) center/100% 100% no-repeat;mask:var(--mask) center/100% 100% no-repeat}
+.pt .card{position:absolute;left:-6%;bottom:9%;background:var(--surface);border-radius:var(--r-md);padding:var(--s3) var(--s5) var(--s4);box-shadow:0 14px 32px -16px rgba(35,31,25,.4);transform:rotate(2deg);transition:transform 420ms var(--ease-out)}
+.pt .card strong{display:block;font-weight:600;font-size:19px;line-height:1.25}
+.pt .card span{display:block;font-size:15px;color:var(--muted)}
+.pt .card .sig{display:block;width:92px;height:22px;margin-top:6px;color:var(--accent)}
+@media (hover:hover) and (pointer:fine){
+  .pt:hover .photo{transform:rotate(0deg)}
+  .pt:hover .brush-bg{transform:rotate(1deg) scale(1.01)}
+  .pt:hover .card{transform:rotate(0deg) translateY(-3px)}
+}
+@media (prefers-reduced-motion:reduce){.pt .photo,.pt .brush-bg,.pt .card{transition:none}}
+
+/* hero placement */
+.hero2{padding:var(--s8) 0 var(--section)}
+.hero2 .grid{display:grid;grid-template-columns:7fr 5fr;gap:var(--s8);align-items:center}
+.hero2 h1{font-size:clamp(44px,4.6vw + 18px,80px);letter-spacing:var(--track-display);line-height:var(--lh-head)}
+.hero2 .lead{margin-top:var(--s5)}
+.hero2 .pt{margin-left:auto}
+
+/* meet Andrew placement */
+.meet{background:var(--n-100)}
+.meet .grid{display:grid;grid-template-columns:5fr 7fr;gap:var(--s9);align-items:center}
+.meet .pt{max-width:400px;aspect-ratio:4/5;--tilt:1.5deg}
+.meet .pt .brush-bg{transform:rotate(-3deg)}
+.meet .pt .card{left:auto;right:-8%;bottom:12%;transform:rotate(-2deg)}
+.meet h2{max-width:16ch}
+.meet p{margin-top:var(--s5)}
+.creds{list-style:none;padding:0;margin:var(--s6) 0 0;display:grid;grid-template-columns:1fr 1fr;gap:var(--s4) var(--s6);max-width:560px}
+.creds li{display:grid;grid-template-columns:28px 1fr;gap:var(--s3);align-items:start;font-size:16px;line-height:1.4}
+.creds svg{width:24px;height:24px;color:var(--accent);margin-top:1px}
+.creds b{display:block;font-weight:600}
+.creds span{color:var(--muted)}
+.meet .more{display:inline-flex;align-items:center;gap:var(--s2);margin-top:var(--s6);font-weight:600;color:var(--text);text-decoration:none;min-height:48px;border-bottom:1.5px solid var(--text)}
+.meet .more svg{width:18px;height:18px;transition:transform 200ms var(--ease-out)}
+@media (hover:hover) and (pointer:fine){.meet .more:hover svg{transform:translateX(4px)}}
+.ph{display:inline-block;font-size:13px;font-weight:600;letter-spacing:.04em;color:#8a5a00;background:#fff3d6;border-radius:6px;padding:2px 8px;margin-top:var(--s3)}
+
+@media (max-width:820px){
+  .nav a:not(.btn),.nav a.btn{display:none}.menu-btn{display:inline-flex}.site-head .wrap{min-height:72px}.site-head .logo img{height:40px}
+  .hero2 .grid,.meet .grid{grid-template-columns:1fr;gap:var(--s7)}
+  .hero2 .pt{max-width:260px;margin:0 auto}
+  .meet .pt{max-width:280px;margin:0 auto}
+  .pt .card{left:-4%;padding:var(--s2) var(--s4) var(--s3)}
+  .pt .card strong{font-size:16px}
+  .pt .card span{font-size:13px}
+  .meet .pt .card{right:-4%}
+  .creds{grid-template-columns:1fr}
+  .sheet-bar{position:static}
+}
+.sheet-bar{background:var(--indigo-900);color:var(--n-0);font:500 14px/1.3 "Figtree",sans-serif}
+.sheet-bar .wrap{padding-top:var(--s3);padding-bottom:var(--s3)}
+.site-head .logo img{height:52px;width:auto}
+
+.ph-photo .ph-box{position:absolute;inset:0;border-radius:40% 46% 42% 48% / 44% 40% 48% 42%;background:repeating-linear-gradient(135deg,var(--indigo-50) 0 14px,var(--n-0) 14px 28px);box-shadow:inset 0 0 0 2px var(--indigo-200);display:grid;place-items:center;padding:var(--s7);text-align:center;transform:rotate(1.5deg)}
+.ph-photo .ph-box p{font-size:15px;color:var(--muted);max-width:28ch}
+.hero2 .grid{align-items:center}
+@media (max-width:820px){.hero2 .pt{max-width:220px}}

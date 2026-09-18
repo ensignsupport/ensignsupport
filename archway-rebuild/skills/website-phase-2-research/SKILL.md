@@ -1,13 +1,15 @@
 ---
 name: website-phase-2-research
-description: Archway website factory, Phase 2 of 7. Turns locked Phase 1 facts into a research and findings pack (audience, market benchmark, parameters, human-made inspiration picked by the operator, colour and type rules, page question maps) for Phase 3 to write and design from. Use on "phase 2", "website research", "benchmark", "design inspiration", "findings pack".
+description: "Archway website factory, Phase 2 of 7. Turns locked Phase 1 facts into a research and findings pack for Phase 3, including the customer avatar, the mood set the operator supplies, and the one big idea. Use on 'phase 2', 'website research', 'benchmark', 'mood set', 'design direction', 'findings pack'."
 ---
 
 # Website Phase 2: Market, customer and design research
 
 Phase 2 of the Archway website factory. One job: gather everything Phase 3 needs to write the content and design the website, and hand it over as one locked findings pack.
 
-**Phase 2 in one line:** Phase 1 facts plus research, then parameters, then inspiration inside those parameters picked by the operator, then a findings pack for Phase 3.
+**Phase 2 in one line:** Phase 1 facts plus research, then parameters, then the mood set the operator supplies, then a findings pack for Phase 3.
+
+**What only Phase 2 can decide:** who the customer is, what state they are in when they arrive, and the one big idea the whole site will serve. Phase 3 can only be as customer obsessed as this pack lets it be. If the avatar is thin, Phase 3 designs on taste and every Archway site converges.
 
 ## The factory (for context)
 
@@ -37,7 +39,7 @@ Phase 2 of the Archway website factory. One job: gather everything Phase 3 needs
 3. **Local and sector first.** Prefer sources from the client's country (default Australia) and sector, from the last three years.
 4. **Sit in the customer's seat.** Every page must be readable without feeling tired, answering one customer question per section, in the order the customer asks.
 5. **Best in the market is the bar.** The site must beat the best site for this type of business. Phase 2 sets that bar with evidence.
-6. **Never self-assess.** Scores shown to the operator come from a blind reviewer only (see Step 8). Your own estimates are never shown.
+6. **Never self-assess.** Scores shown to the operator come from a blind reviewer only (see Step 9). Your own estimates are never shown.
 7. **No em dashes, anywhere.** Australian English.
 8. **Show work as files.** Each step produces a file the operator can open.
 
@@ -45,10 +47,10 @@ Phase 2 of the Archway website factory. One job: gather everything Phase 3 needs
 
 - Browser access for live sites (Claude in Chrome or the built-in browser). Cloud fetch tools are often blocked by site firewalls.
 - Taste Skill (`design-taste-frontend`): its list of AI design tells and its "trust-first" and audience presets, used in Step 4.
-- Impeccable (`npx impeccable install`): its `critique` checks, used for the blind review in Step 8. Test that its checker runs in your environment first.
+- Impeccable (`npx impeccable install`): its `critique` checks, used for the blind review in Step 9. Test that its checker runs in your environment first.
 - Web search for audience and sector research.
 
-## Step 1. Audience research
+## Step 1. Audience research and the avatar
 
 Name each visitor group (for example participants, families, professional referrers; or homeowners, landlords, property managers). For each group, research and write:
 
@@ -59,7 +61,19 @@ Name each visitor group (for example participants, families, professional referr
 - **Thin evidence areas**, stated honestly.
 - **One assumption the evidence challenges.**
 
-Output: `research-audiences.md`.
+### Then write the avatar
+
+These fields are what the mood set and Phase 3 actually run on. This was the gap on Ensign: the pack had questions, trust builders and accessibility needs, and nothing about how the customer feels, so Phase 3 could not write emotional copy honestly (C63). Every line is sourced or tagged `(inference)`.
+
+- **Who lands here**, and why they are looking right now
+- **What state they are in when they arrive.** Anxious, rushed, sceptical, excited, exhausted. What happened just before they opened the site
+- **How they use it.** Phone or desktop, where, what time of day, tech confidence, plain English needed or happy with detail
+- **What makes them close the tab.** Three things
+- **What makes them feel safe enough to act.** Three things
+- **The one thing we want them to do**
+- **The words they actually use** for their own problem, quoted from reviews, forums or the client's own inbox. Never paraphrased into industry language, because Phase 3 writes with these words
+
+Output: `research-audiences.md` and `avatar.md`.
 
 ## Step 2. Market benchmark
 
@@ -88,13 +102,13 @@ Record for every site: what works, what fails, fonts measured. Then write three 
 
 State the limits honestly (for example tools blocked, a page that no longer exists).
 
-Output: `benchmark.html` (scorecard, site cards with "open site" links, patterns, limits). The scores are sent to the blind reviewer in Step 8 before they are final.
+Output: `benchmark.html` (scorecard, site cards with "open site" links, patterns, limits). The scores are sent to the blind reviewer in Step 9 before they are final.
 
 ## Step 3. Set the parameters
 
 Before looking for inspiration, write the boundaries that any design must fit. Pull each one from Phase 1 or the research above, and cite where it came from:
 
-- **Audience needs** (from Step 1): for example calm, low reading load, practical questions answered first, trust through a named person.
+- **Audience needs** (from Step 1 and `avatar.md`): for example calm, low reading load, practical questions answered first, trust through a named person.
 - **Client's fixed choices** (from `facts.md`): colours, names, logo status, words or images to avoid, pages and forms wanted.
 - **Hard rules:** accessibility (WCAG 2.2 AA), facts only from `facts.md`, copy and claims rules, legal items (for example a privacy policy when health information is collected).
 - **The bar to beat** (from Step 2): the top benchmark score and why.
@@ -113,21 +127,104 @@ Output: `parameters.md`. Show it to the operator and get a yes before Step 4.
 
 Output: `reference-board.html`.
 
-## Step 5. The operator picks and explains
+## Step 5. The mood set
 
-- The operator (Allen, or the client with Allen) picks **3 to 5 sites** and writes, **in their own words**, what they like about each: fonts, layout, colour, photos, feeling, how information is laid out.
-- If the operator picks fewer than 3, ask once for more. If they stay with fewer, record it.
-- For each picked site, measure what makes it work: fonts and weights, heading sizes and letter spacing, colours (hex), corner radius, word count, first-screen structure, how people are shown, any hand-made or human touches.
-- Turn the operator's words plus the measurements into **direction principles** (for example "precise, restrained layout plus one hand-made human mark per screen").
+This is the step that stops every Archway site looking the same. The operator supplies material no research can produce, and it is chosen **for the customer, not for taste**. One reference from the operator settles more than three rounds of guessing.
 
-Output: `reference-analysis.md` (one section per picked site, operator's words quoted exactly, measurements, principles).
+### 5a. Send the operator the mood set brief
 
-## Step 6. Colour and type findings
+Fill this from `avatar.md` and Step 2, then send it. It is short on purpose so it gets answered.
+
+```
+*MOOD SET: [client name]*
+
+Need your mood input before design starts.
+Here is who we are designing for.
+
+*Who lands on this site*
+- [who they are, one line]
+- [why they are looking right now]
+
+*What state they are in when they arrive*
+- [anxious, rushed, sceptical, excited, exhausted]
+- [what happened just before they opened the site]
+
+*How they use it*
+- Mostly [phone or desktop], [where and when]
+- Tech confidence: [low, medium, high]
+- Reading: [plain English needed, or happy with detail]
+
+*What makes them close the tab*
+- [three things]
+
+*What makes them feel safe enough to act*
+- [three things]
+
+*The one thing we want them to do*
+- [single action]
+
+*What everyone else in this industry looks like*
+- [the visual cliche we must not match]
+
+*Hard constraints*
+- [accessibility level, language, cultural marks, existing brand colours]
+
+*What I need back from you*
+1. 3 to 5 reference screenshots. One line each on what to TAKE.
+   The spacing, the photo treatment, how the form feels.
+   Not "I like this"
+2. 1 or 2 anti-references. Sites that are wrong for this client, and why
+3. Three words it should feel like TO THE CUSTOMER, not to the client
+4. Anything the client owns that nobody else has. Objects, handwriting,
+   their language, real photos, the words their customers actually use
+
+*The test for every reference*
+- Would this client's customer find this easy?
+- Beautiful but fails that test = out
+```
+
+If the operator is unavailable, whoever runs the phase answers it from `avatar.md` and marks the answers `(operator not consulted)` so the operator can overrule at the Phase 3 lock.
+
+### 5b. Test what comes back
+
+- **The customer test.** For each reference, would this client's customer find it easy? A beautiful site that fails is out, however much the operator likes it. Say so plainly once, then record the operator's decision.
+- **The mass check.** Note what the client's real content weighs against the element being admired. A small teaser card in a reference is not the same object as a five step form. Flag any reference whose signature move depends on content lighter than the client's, so Phase 3 does not build it and then discover it fails.
+- **The lookalike check.** If a reference would be copied closely enough to be recognised, that is the clone problem wearing someone else's clothes. Take proportion, rhythm and density. Never the composition.
+- **The anti-references earn their place.** Knowing what is wrong for this client narrows the search faster than another good example.
+- If the operator picks fewer than 3 references, ask once for more. If they stay with fewer, record it.
+
+### 5c. Measure, never eyeball
+
+For each picked reference, measure in pixels: panel width against viewport width, panel aspect ratio, padding, text column width as a share of the panel, type sizes, corner radius, colours (hex), word count, first-screen structure, how people are shown, any hand-made or human touches. Phase 3 builds to those numbers, not to an impression of them.
+
+### 5d. Write the direction
+
+Output: `design-direction.md`. One page, locked with the pack:
+
+- The three words, in the customer's terms
+- Each reference: link, screenshot, what to take, what **not** to take, the measurements
+- The anti-references and why
+- The client-owned material list: objects, handwriting, language, real photos, customer words
+- The direction principles, written as instructions a builder can follow (for example "precise, restrained layout plus one hand-made human mark per screen")
+
+## Step 6. The one big idea
+
+One structural idea this site gets and no other Archway site gets. In Phase 3 every section either serves it or is cut.
+
+- It comes from the client-owned material, not from a layout
+- It must be sayable in one sentence and visible on the first screen
+- Ensign's was "one coordinator you know by name" made literal: his face, his handwriting, his brush stroke, his Tamil. That is Ensign's answer, not a template to reuse
+- Write the idea plus three ways it will show up in the design
+
+Output: section in `research-findings.md`.
+
+## Step 7. Colour and type findings
 
 **Colour**
 - Start from the client's fixed colour choice and any reference photo they supplied.
 - Build a scale (for example 50 to 950) and a set of neutrals that match the feeling the client asked for.
 - Test every text and background pair that could ship in light and dark mode against WCAG 2.2 AA (4.5:1 text, 3:1 large text and UI). Record passes, fails and the rules they create.
+- Include a **muted text token that passes AA on its own**. Phase 3 is forbidden from making muted text with opacity, so the token has to exist here.
 - Output: `colour-sheet.html` plus the palette as JSON.
 
 **Type**
@@ -137,7 +234,7 @@ Output: `reference-analysis.md` (one section per picked site, operator's words q
 - Test fonts only inside a real reference layout or a neutral specimen, never inside a designed page.
 - Output: `type-findings.md` with a shortlist of 2 to 4 pairings, reasons, licence notes, and what was ruled out and why. **Final font choice happens in Phase 3.**
 
-## Step 7. Page question maps
+## Step 8. Page question maps
 
 For each page the client wants (from `facts.md`), write:
 - Who arrives on this page and from where
@@ -148,7 +245,7 @@ For each page the client wants (from `facts.md`), write:
 
 Output: section in `research-findings.md`.
 
-## Step 8. Blind review
+## Step 9. Blind review
 
 Spawn a reviewer agent that has not seen this conversation, the parameters or the operator's picks. Give it only the benchmark site list with links and the scorecard. Ask it to score the sites itself and to check the audience findings for unsupported claims.
 
@@ -156,7 +253,7 @@ Spawn a reviewer agent that has not seen this conversation, the parameters or th
 - Treat any single score as roughly plus or minus 5. Only claim a site is "the best" if two independent rounds agree.
 - Only blind scores go into the final pack.
 
-## Step 9. Write the findings pack
+## Step 10. Write the findings pack
 
 One file, `research-findings.md`, plus an HTML copy for easy reading. Use this structure:
 
@@ -165,30 +262,35 @@ One file, `research-findings.md`, plus an HTML copy for easy reading. Use this s
 Phase 2 output. Status: DRAFT or LOCKED (date)
 
 ## 1. Summary for Phase 3 (10 dot points max)
-## 2. Audience findings (per group: questions in order, trust, accessibility)
-## 3. Market findings (blind scores, bar to beat, patterns, the client's opening)
-## 4. Parameters (with sources)
-## 5. Inspiration (picked references, operator's words, measurements, direction principles)
-## 6. Colour findings (palette, contrast rules)
-## 7. Type findings (shortlist, ruled out, licences)
-## 8. Page question maps (one per page)
-## 9. Open decisions and assets needed (owner for each)
-## 10. Sources
+## 2. The customer avatar
+## 3. Audience findings (per group: questions in order, trust, accessibility)
+## 4. Market findings (blind scores, bar to beat, patterns, the client's opening)
+## 5. Parameters (with sources)
+## 6. Design direction (three words, references, anti-references,
+##    client-owned material, measurements, direction principles)
+## 7. The one big idea, and three ways it shows up
+## 8. Colour findings (palette, contrast rules, the muted token)
+## 9. Type findings (shortlist, ruled out, licences)
+## 10. Page question maps (one per page)
+## 11. Open decisions and assets needed (owner for each)
+## 12. Sources
 ```
 
-Link to the supporting files from Steps 1 to 6.
+Link to the supporting files from Steps 1 to 7.
 
-## Step 10. Lock gate
+## Step 11. Lock gate
 
-Send the operator the HTML findings pack and a 3 to 5 line summary: the bar to beat, the client's opening, the direction principles, and the one decision needed. Then STOP. Wait for "lock". Changes loop back to the relevant step. When locked, set the status line to `LOCKED (date)`. Phase 3 may start.
+Send the operator the HTML findings pack and a 3 to 5 line summary: the bar to beat, the client's opening, the one big idea, the direction principles, and the one decision needed. Then STOP. Wait for "lock". Changes loop back to the relevant step. When locked, set the status line to `LOCKED (date)`. Phase 3 may start.
+
+**Phase 3 cannot start without `avatar.md`, `design-direction.md` and the one big idea.** If they are missing, Phase 3 is designing on taste and will rebuild the last client.
 
 ## Output files
 
-- `research-audiences.md`
+- `research-audiences.md` and `avatar.md`
 - `benchmark.html`
 - `parameters.md`
 - `reference-board.html`
-- `reference-analysis.md`
+- `design-direction.md`
 - `colour-sheet.html` and palette JSON
 - `type-findings.md`
 - `research-findings.md` (locked) and its HTML copy

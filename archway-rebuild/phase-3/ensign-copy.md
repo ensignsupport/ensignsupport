@@ -78,14 +78,35 @@ Rules: Archway copy and claims rules. Australian English. No em dashes. Two or f
   - Done (phone): **Your details are saved. Now press send in your messages app.** · Button: Messages didn't open? Try again · Link: Or call Andrew
   - Save error: That didn't go through. Please try again, or call Andrew on [PLACEHOLDER: phone].
 - Under the flow: Replies within 1 business day. Available 7am to 7pm, seven days.
-- Andrew beside the headline: photo in brush stroke frame `[Mark: brush stroke]`, name card: **Andrew Manoba** · Support coordinator
+- Andrew beside the headline: photo in a circle with a thin indigo ring `[Visual: circle portrait]`, a slowly turning dashed ring behind it, and soft indigo bubbles drifting in the background.
+- Four chips drift slowly around the circle `[Visual: floating chips]`. Wording taken from the approved "What Andrew does" list, nothing new:
+  - Reads your plan
+  - Finds who has room
+  - Sets up bookings
+  - Comes to you
+- Screen readers get one sentence instead of the four chips: "What Andrew does: reads your plan, finds who has room, sets up bookings, and comes to you."
+- All movement is slow and small, and stops under reduced motion.
+- Headline breaks as two lines: "One coordinator" / "you know by name."
+- Subheading breaks as: "Andrew reads your NDIS plan with you" / "and comes to you in person."
+- The enquiry flow sits under the subheading. Questions 1 and 2 are plain buttons on the page with no card and no progress bar. The card, the progress bar and the form styling appear only on question 3, where name and contact details are asked for.
 
 ### 2. The scene
 *Job: show the problem as something that happens, not a feeling.*
 
-- Heading: **Four providers on the list. Nobody calling back.**
-- Text: A new NDIS plan often arrives with a budget and a list of names. Then comes the ringing around, and a week of waiting to hear who actually has a place.
-- Text: Andrew does that ringing. He checks who has room, and checks with you before anything is booked.
+- Heading: **Four providers on the list. Nobody calling back.** (breaks after the full stop on a computer)
+- Two panels side by side with a hand-drawn arrow between them `[Visual: arrow]`. Same facts as the old paragraph, shown instead of written out.
+- Panel 1 label: **On your own** (muted, outlined)
+  - A budget and a list of names
+  - Ringing around, leaving messages
+  - A week of waiting
+- Panel 2 label: **With Andrew** (white card, lifted, blue ticks)
+  - Andrew does the ringing
+  - He checks who has room
+  - He checks with you before anything is booked
+- Panel 1 closing line: **It is a lot to carry on your own.** `[NEW 18 Sep 2026: Allen approved, Andrew to confirm]`
+- Panel 2 closing line: **One person who does it with you.** `[NEW 18 Sep 2026: Allen approved, Andrew to confirm]`
+- Line under both panels: **You do not have to chase any of it.** `[NEW 18 Sep 2026: Allen approved, Andrew to confirm]`
+- The old intro paragraph was removed on 17 Sep 2026. It repeated panel 1 word for word.
 
 ### 3. What Andrew does
 *Job: name both services in plain words and send people to the right one.*

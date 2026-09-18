@@ -1,6 +1,6 @@
 ---
 name: website-phase-1-information
-description: Archway website factory, Phase 1 of 7. Validates, corrects and collects every fact a client website needs and produces a locked facts.md. Use when starting any new or rebuilt client website, or when the operator says "phase 1", "new website client", "client questionnaire", "fact register" or "facts.md".
+description: "Archway website factory, Phase 1 of 7. Scrapes, validates, corrects and collects every fact a client website needs and produces a locked facts.md. Use when starting any new or rebuilt client website, or on 'phase 1', 'new website client', 'client questionnaire', 'fact register'."
 ---
 
 # Website Phase 1: Information validation, correction and collection

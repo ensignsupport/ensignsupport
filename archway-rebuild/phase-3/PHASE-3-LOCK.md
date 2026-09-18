@@ -1,6 +1,10 @@
-# Ensign Phase 3: Content and design. LOCKED 18 Sep 2026
+# Ensign Phase 3: Content and design. LOCKED 18 Sep 2026. Revision 2, 17 Sep 2026
 
 Every piece below was locked by Allen one at a time on 17 Sep 2026, then checked by a two-round whole-site blind review (see site-review-log.md).
+
+**Revision 3** (17 Sep 2026): Home hero rebuilt as the circle portrait with Andrew's work floating around it, after six layouts were built and compared (site-review-log.md round 4). Enquiry flow simplified so questions 1 and 2 are plain buttons and the card only appears at the details step. Scroll reveal made fail safe. Corrections C47 to C50.
+
+**Revision 2** (17 Sep 2026, after Allen viewed the whole site): Home hero rebuilt so both columns start and finish level, and the "Four providers on the list" band rebuilt as two panels with an arrow. Curly apostrophes site wide. See site-review-log.md round 3 and corrections C41 to C46.
 
 | Part | Files |
 |---|---|

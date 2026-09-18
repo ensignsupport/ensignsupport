@@ -15,7 +15,7 @@
   --lh-body:1.6;--lh-head:1.05;--track-display:-0.04em;--track-h2:-0.025em;
 
   /* Layout */
-  --page-max:1240px;--measure:60ch;--gutter:clamp(16px,4vw,48px);--section:clamp(64px,8vw,128px);
+  --page-max:1340px;--measure:60ch;--gutter:clamp(16px,4vw,48px);--section:clamp(64px,8vw,128px);
 
   /* Shape and motion */
   --r-sm:12px;--r-md:20px;--r-lg:32px;--r-pill:999px;--tap:48px;
@@ -178,6 +178,41 @@ a{color:var(--accent)}
 .row input:checked+label .ink path{stroke-dashoffset:0;opacity:1}
 .enq .meta{margin-top:var(--s5)}
 @media (max-width:820px){ .enq{padding:var(--s5)} .row label{padding:0 var(--s5)} }
+
+/* ---- shorter flow: 'Somewhere else' opens a field in place --------------- */
+.enq .where-pick{display:grid;gap:10px}
+.enq .other-btn:not([hidden]){display:flex}
+.enq .other-btn{width:100%;align-items:center;justify-content:space-between;gap:var(--s3);
+  font:inherit;font-size:17px;font-weight:600;color:var(--text);text-align:left;cursor:pointer;
+  background:var(--n-0);border:0;border-radius:14px;min-height:58px;padding:0 var(--s4) 0 var(--s5);
+  box-shadow:0 1px 2px rgba(35,31,25,.07),0 14px 28px -20px rgba(35,31,25,.55);
+  transition:transform 200ms var(--ease-out),box-shadow 200ms ease}
+.enq .other-btn .arrow{display:grid;place-items:center;width:26px;height:26px;color:var(--muted);flex:none}
+.enq .other-btn .arrow svg{width:17px;height:17px}
+@media (hover:hover) and (pointer:fine){
+  .enq .other-btn:hover{transform:translateY(-2px);
+    box-shadow:0 0 0 2px var(--accent),0 18px 34px -20px rgba(35,31,25,.55)}
+  .enq .other-btn:hover .arrow{color:var(--accent);transform:translateX(3px)}
+}
+.enq .other-btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.enq .other-slot{position:relative}
+.enq .other-field:not([hidden]){display:block}
+.enq .other-field input{width:100%}
+.enq .other-field .err{position:absolute;left:0;top:100%;margin:2px 0 0}
+.enq .fields.two{grid-template-columns:1fr 1fr}
+.enq .ph{font-size:13px;font-weight:600;color:#8a5a00;background:#fff3d6;border-radius:6px;
+  padding:2px 8px;justify-self:start;margin:0}
+.enq .next{margin-right:var(--s3)}
+@media (prefers-reduced-motion:reduce){ .enq .other-btn{transition:none} }
+@media (max-width:820px){ .enq .fields.two{grid-template-columns:1fr} }
+/* a reserved, empty actions row keeps step 1 the same height as step 0 */
+.enq .actions.spacer{min-height:44px;pointer-events:none}
+/* the confirmation screens stay inside the same box */
+.enq .done{text-align:left}
+.enq .done .tick{width:44px;height:44px}
+.enq .done h2{font-size:20px;line-height:1.3;margin:var(--s3) 0 var(--s2)}
+.enq .done p{margin:0;font-size:15px}
+.enq .done .again{margin-top:var(--s3)}
 /* ===== Component 2: portrait with brush-stroke frame (C24) ===== */
 .pt{margin:0;position:relative;width:100%;max-width:440px;aspect-ratio:3/4;--tilt:-2deg}
 .pt .brush-bg{position:absolute;inset:-3% -4% -3% -3%;width:107%;height:106%;fill:var(--indigo-200);transform:rotate(3deg);transition:transform 420ms var(--ease-out)}
@@ -224,7 +259,9 @@ a{color:var(--accent)}
   .hero2 .grid,.meet .grid{grid-template-columns:1fr;gap:var(--s7)}
   .hero2 .pt{max-width:260px;margin:0 auto}
   .meet .pt{max-width:280px;margin:0 auto}
-  .pt .card{left:-4%}
+  .pt .card{left:-4%;padding:var(--s2) var(--s4) var(--s3)}
+  .pt .card strong{font-size:16px}
+  .pt .card span{font-size:13px}
   .meet .pt .card{right:-4%}
   .creds{grid-template-columns:1fr}
   .x-sheet{position:static}
@@ -333,14 +370,18 @@ a{color:var(--accent)}
   .fx .v{font-size:18px}
 }
 
-.home-hero{padding:var(--s7) 0 var(--section)}
-.home-hero .grid{display:grid;grid-template-columns:7fr 5fr;gap:var(--s8);align-items:start}
-.home-hero h1{font-size:clamp(44px,4.6vw + 18px,84px);letter-spacing:var(--track-display);line-height:var(--lh-head)}
+.home-hero{padding:var(--s7) 0 var(--s8)}
+.home-hero .grid{display:grid;grid-template-columns:7fr 5.6fr;gap:var(--s8);align-items:center}
+.home-hero h1{font-size:clamp(40px,4.1vw + 17px,76px);letter-spacing:var(--track-display);line-height:var(--lh-head)}
 .home-hero .mark-wrap{position:relative;white-space:nowrap}
-.home-hero .mark{position:absolute;left:-2%;bottom:-0.14em;width:104%;height:0.3em;overflow:visible;color:var(--indigo-400,#6993fa)}
+.home-hero .mark{position:absolute;left:-2%;bottom:-0.22em;width:104%;height:0.3em;overflow:visible;color:var(--indigo-400,#6993fa)}
 .home-hero .lead{margin-top:var(--s5)}
-.home-hero .enq{margin-top:var(--s6)}
-.home-hero .pt{margin:var(--s4) 0 0 auto}
+.home-hero .enq{margin-top:var(--s6);max-width:none}
+.home-hero .pt{margin:0;width:100%;max-width:500px}
+@media (min-width:821px){.home-hero .pt .card{left:-3%}}
+.home-hero h1 .l1{display:block}
+.dbr{display:none}
+@media (min-width:821px){.dbr{display:inline}}
 .status{display:inline-flex;align-items:center;gap:var(--s2);font-size:var(--t-small);font-weight:600;color:var(--accent-strong);background:var(--indigo-100);padding:var(--s2) var(--s4);border-radius:var(--r-pill);margin-bottom:var(--s5)}
 .status i{width:8px;height:8px;border-radius:50%;background:#1f8a4c}
 .services .head{margin-bottom:var(--s7)}
@@ -403,7 +444,9 @@ p,li,dd{text-wrap:pretty}
   .home-hero .pt{max-width:230px;margin:0 auto;order:-1}
   .home-hero .grid>div:first-child{display:contents}
   .home-hero .status{order:1;justify-self:start}.home-hero h1{order:2}.home-hero .lead{order:3}.home-hero .grid>.pt{order:4}.home-hero .enq{order:5}
-  .home-hero .grid{row-gap:var(--s4)}
+  .home-hero .grid{row-gap:var(--s5)}
+  .home-hero .lead{margin-top:0}
+  .home-hero .enq{margin-top:var(--s3)}
   .scene-grid{grid-template-columns:1fr!important;gap:var(--s5)!important}.scene h2{max-width:none}
   .svc-grid{grid-template-columns:1fr}
   .svc{padding:var(--s6) var(--s5)}
@@ -415,6 +458,32 @@ p,li,dd{text-wrap:pretty}
   .foot .grid{grid-template-columns:1fr;gap:var(--s6)}
 }
 .pt-phone{display:none}
+
+.scene .scene-grid{display:block}
+.scene h2{max-width:36ch;margin:0;text-wrap:initial}
+.scene .scene-grid p{margin:0}
+.swap{display:grid;grid-template-columns:1fr auto 1fr;gap:var(--s4);align-items:stretch;margin-top:var(--s8)}
+.swap .panel{border-radius:var(--r-lg);padding:var(--s6) var(--s6) var(--s7);display:flex;flex-direction:column;gap:var(--s5)}
+.swap .ptag{margin:0;font-size:var(--t-small);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.swap ul{list-style:none;margin:0;padding:0;display:grid;gap:var(--s4);font-size:18px;line-height:1.45}
+.swap li{display:grid;grid-template-columns:24px 1fr;gap:var(--s3);align-items:start}
+.swap .before{background:transparent;box-shadow:inset 0 0 0 2px var(--n-200)}
+.swap .before .ptag{color:var(--muted)}
+.swap .before li{color:var(--muted)}
+.swap .before .dot{width:11px;height:11px;border-radius:50%;background:transparent;box-shadow:inset 0 0 0 2px var(--n-600);opacity:.45;margin:8px 0 0 6px}
+.swap .after{background:var(--surface);box-shadow:0 18px 40px -26px rgba(35,31,25,.45)}
+.swap .after .ptag{color:var(--accent-strong)}
+.swap .after li{font-weight:600}
+.swap .after svg{width:24px;height:24px;color:var(--accent);margin-top:1px}
+.swap-arrow{display:grid;place-items:center;color:var(--indigo-400,#6993fa);padding:0 var(--s2)}
+.swap-arrow svg{width:88px;height:38px;overflow:visible}
+@media (max-width:820px){
+  .swap{grid-template-columns:1fr;gap:var(--s4);margin-top:var(--s6)}
+  .swap .panel{padding:var(--s5)}
+  .swap-arrow{transform:rotate(90deg);justify-self:center}
+  .swap-arrow svg{width:44px}
+  .swap ul{font-size:17px}
+}
 
 .nav a[aria-current="page"]{font-weight:600;text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px;text-decoration-color:var(--accent)}
 .ct{padding:var(--s7) 0 var(--s8)}
@@ -508,25 +577,48 @@ p,li,dd{text-wrap:pretty}
     <p class="send-h">Send a message</p>
     
     <form id="enq" class="enq" action="/api/enquiries" method="post" novalidate aria-label="Start an enquiry">
-  <div class="enq-top"><div class="enq-progress" aria-hidden="true"><span></span><span></span><span></span></div><span class="enq-count" aria-hidden="true">Question 1 of 3</span></div>
+  <div class="enq-top"><div class="enq-progress" aria-hidden="true"><span class="bar"></span></div><span class="enq-count" aria-hidden="true">Question 1 of 5</span></div>
   <p id="enq-live" class="sr" aria-live="polite"></p>
-  <fieldset class="enq-step" data-step="0"><legend class="enq-q">Who is this for?</legend><ul class="rows"><li class="row"><input type="radio" id="who-0" name="who" value="Me" required><label for="who-0"><span class="txt">Me<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="who-1" name="who" value="Someone I support" required><label for="who-1"><span class="txt">Someone I support<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="who-2" name="who" value="I'm referring someone" required><label for="who-2"><span class="txt">I'm referring someone<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li></ul></fieldset>
-  <fieldset class="enq-step" data-step="1" hidden><legend class="enq-q">Where are they?</legend><ul class="rows two"><li class="row"><input type="radio" id="where-0" name="where" value="Brisbane" required><label for="where-0"><span class="txt">Brisbane<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-1" name="where" value="Ipswich" required><label for="where-1"><span class="txt">Ipswich<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-2" name="where" value="Logan" required><label for="where-2"><span class="txt">Logan<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-3" name="where" value="Moreton Bay" required><label for="where-3"><span class="txt">Moreton Bay<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-4" name="where" value="Redlands" required><label for="where-4"><span class="txt">Redlands<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-5" name="where" value="Gold Coast" required><label for="where-5"><span class="txt">Gold Coast<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-6" name="where" value="Sunshine Coast" required><label for="where-6"><span class="txt">Sunshine Coast<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-7" name="where" value="Scenic Rim" required><label for="where-7"><span class="txt">Scenic Rim<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-8" name="where" value="Lockyer Valley" required><label for="where-8"><span class="txt">Lockyer Valley<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-9" name="where" value="Somewhere else" required><label for="where-9"><span class="txt">Somewhere else<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li></ul><p class="hint">Outside these areas? Choose Somewhere else and Andrew will let you know if he can help.</p>
-    <div class="actions"><button type="button" class="back" data-to="0">Back</button></div></fieldset>
-  <fieldset class="enq-step" data-step="2" hidden><legend class="enq-q">How can Andrew reach you?</legend>
-    <div class="recap" aria-label="Your answers"></div>
-    <div class="fields">
-      <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name" required><p class="err" id="f-name-e" hidden></p></div>
-      <div class="field"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required><p class="err" id="f-phone-e" hidden></p></div>
-      <div class="field"><label for="f-note">Anything Andrew should know first? <span class="opt">(optional)</span></label><textarea id="f-note" name="note" rows="2" aria-describedby="f-note-h"></textarea><p class="help" id="f-note-h">Please don't include health details.</p></div>
+
+  <fieldset class="enq-step" data-step="0"><legend class="enq-q">Who is this for?</legend><ul class="rows"><li class="row"><input type="radio" id="who-0" name="who" value="Me" required><label for="who-0"><span class="txt">Me<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="who-1" name="who" value="Someone I support" required><label for="who-1"><span class="txt">Someone I support<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="who-2" name="who" value="I’m referring someone" required><label for="who-2"><span class="txt">I’m referring someone<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li></ul>
+    <div class="actions spacer" aria-hidden="true"></div></fieldset>
+
+  <fieldset class="enq-step" data-step="1" hidden><legend class="enq-q">Where are you?</legend>
+    <div class="where-pick">
+      <ul class="rows two"><li class="row"><input type="radio" id="where-0" name="where" value="Brisbane" required><label for="where-0"><span class="txt">Brisbane<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-1" name="where" value="Ipswich" required><label for="where-1"><span class="txt">Ipswich<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-2" name="where" value="Logan" required><label for="where-2"><span class="txt">Logan<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-3" name="where" value="Moreton Bay" required><label for="where-3"><span class="txt">Moreton Bay<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li></ul>
+      <div class="other-slot">
+        <button type="button" class="other-btn" aria-expanded="false"><span class="txt">Somewhere else</span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4l6 6-6 6"/></svg></span></button>
+        <div class="field other-field" hidden><label class="sr" for="f-area">Which area are you in?</label><input id="f-area" name="area" placeholder="Type your area" autocomplete="address-level2"><p class="err" id="f-area-e" hidden></p></div>
+      </div>
     </div>
-    <p class="hint">Andrew replies within 1 business day.</p>
+    <div class="actions"><button type="button" class="btn btn-primary next" data-to="2" hidden><span>Next</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="0">Back</button><p class="ph">PLACEHOLDER: Andrew to confirm these four areas</p></div>
+  </fieldset>
+
+  <fieldset class="enq-step" data-step="2" hidden><legend class="enq-q">What is your name?</legend>
+    <div class="fields"><div class="field"><label class="sr" for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name" required><p class="err" id="f-name-e" hidden></p></div></div>
+    <div class="actions"><button type="button" class="btn btn-primary next" data-to="3"><span>Next</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="1">Back</button></div>
+  </fieldset>
+
+  <fieldset class="enq-step" data-step="3" hidden><legend class="enq-q">How can Andrew reach you?</legend>
+    <div class="fields two">
+      <div class="field"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required><p class="err" id="f-phone-e" hidden></p></div>
+      <div class="field"><label for="f-email">Email <span class="opt">(optional)</span></label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email"><p class="err" id="f-email-e" hidden></p></div>
+    </div>
+    <div class="actions"><button type="button" class="btn btn-primary next" data-to="4"><span>Next</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="2">Back</button></div>
+  </fieldset>
+
+  <fieldset class="enq-step" data-step="4" hidden aria-labelledby="q4">
+    <div class="recap" aria-label="Your answers"></div>
+    <p class="enq-q" id="q4">Anything Andrew should know first?</p>
+    <div class="fields"><div class="field"><label class="sr" for="f-note">Anything Andrew should know first, optional</label><textarea id="f-note" name="note" rows="2" aria-describedby="f-note-h"></textarea><p class="help" id="f-note-h">Optional. Please don’t include health details.</p></div></div>
     <p class="hint ref-note" hidden>Sending a full referral with documents? <a href="ensign-refer.html">Use the referral form</a>.</p>
-    <p class="err save-err" role="alert" hidden>That didn't go through. Please try again, or call Andrew on [PLACEHOLDER: phone].</p>
-    <div class="actions"><button class="btn btn-primary btn-send" type="submit"><span>Send to Andrew</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="1">Back</button></div></fieldset>
-  <div class="enq-step done" data-step="3" hidden><div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h2>Sent. Andrew will reply within 1 business day.</h2><p>Available 7am to 7pm, seven days.</p><button type="button" class="back again">Start a new enquiry</button></div>
-  <div class="enq-step done" data-step="4" hidden><div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h2>Your details are saved. Now press send in your messages app.</h2><p>Andrew replies within 1 business day.</p><div class="actions"><button type="button" class="btn btn-ghost retry">Messages didn't open? Try again</button><a class="back" href="tel:[PLACEHOLDER]">Or call Andrew</a></div><button type="button" class="back again">Start a new enquiry</button></div>
-  <p class="notice-s">We use these details to reply to you. Please don't include health information here. <a href="ensign-refer.html">Use the referral form</a> instead. See our <a href="ensign-privacy.html">Privacy Policy</a>.</p><p class="meta">Replies within 1 business day. Available 7am to 7pm, seven days.</p>
+    <p class="err save-err" role="alert" hidden>That didn’t go through. Please try again, or call Andrew on [PLACEHOLDER: phone].</p>
+    <div class="actions"><button class="btn btn-primary btn-send" type="submit"><span>Send to Andrew</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="3">Back</button></div>
+  </fieldset>
+
+  <div class="enq-step done" data-step="5" hidden><div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h2>Sent. Andrew will reply within 1 business day.</h2><p>Available 7am to 7pm, seven days.</p><button type="button" class="back again">Start a new enquiry</button></div>
+  <div class="enq-step done" data-step="6" hidden><div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h2>Your details are saved. Now press send in your messages app.</h2><p>Andrew replies within 1 business day.</p><div class="actions"><button type="button" class="btn btn-ghost retry">Messages didn’t open? Try again</button><a class="back" href="tel:[PLACEHOLDER]">Or call Andrew</a></div><button type="button" class="back again">Start a new enquiry</button></div>
+  <p class="notice-s">We use these details to reply to you. Please don’t include health information here. <a href="ensign-refer.html">Use the referral form</a> instead. See our <a href="ensign-privacy.html">Privacy Policy</a>.</p><p class="meta">Replies within 1 business day. Available 7am to 7pm, seven days.</p>
 </form>
   </div>
   </div>
@@ -559,26 +651,36 @@ p,li,dd{text-wrap:pretty}
   <div class="base"><span>Ensign is an unregistered NDIS provider, working with self managed and plan managed participants. <span class="nowrap">ABN 19 518 036 825</span></span><span>Built by Archway Automation</span></div>
 </div></footer><script>(function(){
   var ANDREW_SMS='+61400000000'; // [PLACEHOLDER: Andrew's mobile]
+  var STEPS=5, DONE_WEB=5, DONE_SMS=6;
   var form=document.getElementById('enq'), steps=[].slice.call(form.querySelectorAll('.enq-step')),
-      bars=[].slice.call(form.querySelectorAll('.enq-progress span')), live=document.getElementById('enq-live'),
+      bar=form.querySelector('.enq-progress .bar'), live=document.getElementById('enq-live'),
       logEl=document.getElementById('log');
+  var other=form.querySelector('.other-field'),
+      otherBtn=form.querySelector('.other-btn'), nextOnWhere=form.querySelector('[data-step="1"] .next');
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var forced=null; // demo override: 'phone' | 'computer'
   function isPhone(){ if(forced) return forced==='phone'; return window.matchMedia('(pointer:coarse)').matches && window.matchMedia('(max-width: 820px)').matches; }
   function val(n){var c=form.querySelector('input[name="'+n+'"]:checked');return c?c.value:'';}
+  function areaVal(){ return form.elements.area ? form.elements.area.value.trim() : ''; }
+  function whereLabel(){ return val('where') || areaVal(); }
+
   function show(i,focus){
     steps.forEach(function(s,k){ s.hidden=k!==i; s.classList.remove('enter'); });
     var s=steps[i]; if(!reduce){ void s.offsetWidth; s.classList.add('enter'); }
-    bars.forEach(function(b,k){ b.classList.toggle('on',k<=Math.min(i,2)); });
-    if(i<3) live.textContent='Question '+(i+1)+' of 3';
-    form.querySelector('.enq-count').textContent = i<3 ? 'Question '+(i+1)+' of 3' : 'Done';
-    form.querySelector('.meta').hidden = i>=2;
-    if(i===2) paintRecap();
-    if(i===2) paintButton();
+    // starts near empty (nothing answered yet), then runs ahead of the real
+    // progress so every step after the first feels nearly done
+    var PCT=[8,45,66,82,93];
+    if(bar) bar.style.width=(i<STEPS?PCT[i]:100)+'%';
+    var label = i<STEPS ? 'Question '+(i+1)+' of '+STEPS : 'Done';
+    if(i<STEPS) live.textContent=label;
+    form.querySelector('.enq-count').textContent=label;
+    form.querySelector('.meta').hidden = i>=STEPS-1;
+    if(i===4){ paintRecap(); paintButton(); }
     if(focus){ var h=s.querySelector('.enq-q,h2'); if(h){h.setAttribute('tabindex','-1'); h.focus({preventScroll:true});} }
   }
   function log(t){ if(logEl) logEl.textContent=t; }
-  // step 1 and 2: choose, draw line, then move on
+
+  // ---- choice steps: pick an answer, the line draws, then move on ----------
   var arrowNav=false, timer=null;
   function advanceFrom(t){ var i=t.name==='who'?0:1; clearTimeout(timer); timer=setTimeout(function(){ show(i+1,true); }, reduce?0:480); }
   form.addEventListener('keydown',function(e){
@@ -590,53 +692,113 @@ p,li,dd{text-wrap:pretty}
   form.addEventListener('change',function(e){
     var t=e.target; if(t.type!=='radio') return;
     if(t.name==='who') wording();
+    if(t.name==='where') clearArea();
     if(arrowNav){ arrowNav=false; return; }
     advanceFrom(t);
   });
+
+  // ---- 'Somewhere else' opens a field in place, so the box never grows -----
+  function clearArea(){ if(form.elements.area) form.elements.area.value=''; }
+  // the button itself becomes the field, in the same row, so nothing moves
+  function openOther(){
+    var w=form.querySelector('input[name="where"]:checked'); if(w) w.checked=false;
+    otherBtn.hidden=true; other.hidden=false; nextOnWhere.hidden=false;
+    otherBtn.setAttribute('aria-expanded','true');
+    var inp=form.elements.area; if(inp) inp.focus({preventScroll:true});
+  }
+  function closeOther(){
+    otherBtn.hidden=false; other.hidden=true; nextOnWhere.hidden=true;
+    otherBtn.setAttribute('aria-expanded','false'); clearArea(); clearErr('area');
+  }
+  if(otherBtn) otherBtn.onclick=openOther;
+
   function wording(){
     var w=val('who');
     form.querySelector('[data-step="1"] .enq-q').textContent = w==='Me'?'Where are you?':(w==="I'm referring someone"?'Where is the participant?':'Where are they?');
-    form.querySelector('[data-step="2"] .enq-q').textContent = w==="I'm referring someone"?'Your details, so Andrew can reply':'How can Andrew reach you?';
     form.querySelector('.ref-note').hidden = w!=="I'm referring someone";
   }
+
   function paintRecap(){
     var r=form.querySelector('.recap'); r.innerHTML='';
-    [['who',0],['where',1]].forEach(function(p){
+    [[val('who'),0],[whereLabel(),1]].forEach(function(p){
+      if(!p[0]) return;
       var b=document.createElement('button'); b.type='button';
-      b.innerHTML=val(p[0])+' <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M11 2.5l2.5 2.5L6 12.5 3 13l.5-3z"/></svg>';
-      b.setAttribute('aria-label','Change: '+val(p[0])); b.onclick=function(){ show(p[1],true); }; r.appendChild(b);
+      b.innerHTML=p[0]+' <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M11 2.5l2.5 2.5L6 12.5 3 13l.5-3z"/></svg>';
+      b.setAttribute('aria-label','Change: '+p[0]); b.onclick=function(){ show(p[1],true); }; r.appendChild(b);
     });
   }
   function paintButton(){
     var phone=isPhone(), b=form.querySelector('.btn-send');
     b.querySelector('span').textContent=phone?'Open my messages':'Send to Andrew';
-    form.querySelector('[data-step="2"] .hint').textContent=phone?"Next, your messages app opens with this written for you. You just press send. Andrew gets your details either way.":'Andrew replies within 1 business day.';
   }
-  form.querySelectorAll('.back').forEach(function(b){ b.onclick=function(){ show(Number(b.dataset.to),true); }; });
-  function check(){
+
+  // ---- validation, one step at a time --------------------------------------
+  function setErr(name,msg){
+    var inp=form.elements[name]; if(!inp) return;
+    var wrap=inp.closest('.field'), err=wrap.querySelector('.err');
+    wrap.setAttribute('data-invalid',''); inp.setAttribute('aria-invalid','true');
+    err.textContent=msg; err.hidden=false; inp.setAttribute('aria-describedby',err.id);
+  }
+  function clearErr(name){
+    var inp=form.elements[name]; if(!inp) return;
+    var wrap=inp.closest('.field'), err=wrap.querySelector('.err');
+    wrap.removeAttribute('data-invalid'); inp.removeAttribute('aria-invalid');
+    inp.removeAttribute('aria-describedby'); err.hidden=true;
+  }
+  function okPhone(v){ var d=v.replace(/\D/g,''); return /^(0[2-478]\d{8}|61[2-478]\d{8})$/.test(d); }
+  function okEmail(v){ return /^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(v); }
+
+  function validate(step){
     var ok=true;
-    [['name',function(v){return v.trim().length>1;},'Please add your name.'],
-     ['phone',function(v){var d=v.replace(/\D/g,'');return /^(0[2-478]\d{8}|61[2-478]\d{8})$/.test(d);},'Please add an Australian phone number, like 0412 345 678.']
-    ].forEach(function(f){
-      var inp=form.elements[f[0]], wrap=inp.closest('.field'), err=wrap.querySelector('.err');
-      if(!f[1](inp.value)){ ok=false; wrap.setAttribute('data-invalid',''); inp.setAttribute('aria-invalid','true'); err.textContent=f[2]; err.hidden=false; inp.setAttribute('aria-describedby',err.id); }
-      else { wrap.removeAttribute('data-invalid'); inp.removeAttribute('aria-invalid'); inp.removeAttribute('aria-describedby'); err.hidden=true; }
-    });
-    if(!ok){ var first=form.querySelector('[aria-invalid="true"]'); first.focus(); }
+    if(step===1){
+      if(!val('where')){
+        if(!areaVal()){ setErr('area','Please tell Andrew which area you are in.'); ok=false; }
+        else clearErr('area');
+      }
+    }
+    if(step===2){
+      var n=form.elements.name.value;
+      if(n.trim().length>1){ clearErr('name'); } else { setErr('name','Please add your name.'); ok=false; }
+    }
+    if(step===3){
+      var p=form.elements.phone.value;
+      if(okPhone(p)){ clearErr('phone'); } else { setErr('phone','Please add an Australian phone number, like 0412 345 678.'); ok=false; }
+      var em=form.elements.email.value.trim();
+      if(!em || okEmail(em)){ clearErr('email'); } else { setErr('email','Please check this email address.'); ok=false; }
+    }
+    if(!ok){ var first=form.querySelector('[aria-invalid="true"]'); if(first) first.focus(); }
     return ok;
   }
+
+  form.querySelectorAll('.next').forEach(function(b){
+    b.onclick=function(){
+      var cur=Number(b.closest('.enq-step').dataset.step);
+      if(validate(cur)) show(Number(b.dataset.to),true);
+    };
+  });
+  form.querySelectorAll('.back').forEach(function(b){
+    if(b.classList.contains('again')||!b.dataset.to) return;
+    b.onclick=function(){
+      var cur=Number(b.closest('.enq-step').dataset.step);
+      if(cur===1 && !other.hidden){ closeOther(); return; }
+      show(Number(b.dataset.to),true);
+    };
+  });
+
   function saveLead(data){ // Phase 4: fetch('/api/enquiries',{method:'POST',body:JSON.stringify(data)})
     return new Promise(function(res){ setTimeout(res, 450); });
   }
   function smsText(d){
     var who = d.who==='Me' ? "I'd like to ask about support for myself" : (d.who==="I'm referring someone" ? "I'd like to refer a participant" : "I'm asking for someone I support");
-    return "Hi Andrew, I'm "+d.name+". "+who+" in "+(d.where==='Somewhere else'?'an area outside your list':d.where)+". My number is "+d.phone+"."+(d.note?' '+d.note:'');
+    return "Hi Andrew, I'm "+d.name+". "+who+" in "+d.where+". My number is "+d.phone+"."+(d.note?' '+d.note:'');
   }
   var lastHref='';
   form.addEventListener('submit',function(e){
-    e.preventDefault(); if(!check()) return;
+    e.preventDefault(); if(!validate(1)||!validate(2)||!validate(3)) return;
     var btn=form.querySelector('.btn-send'), label=btn.querySelector('span'), before=label.textContent;
-    var data={who:val('who'),where:val('where'),name:form.elements.name.value.trim(),phone:form.elements.phone.value.trim(),note:form.elements.note.value.trim(),channel:isPhone()?'sms':'web',at:new Date().toISOString()};
+    var data={who:val('who'),where:whereLabel(),name:form.elements.name.value.trim(),
+      phone:form.elements.phone.value.trim(),email:form.elements.email.value.trim(),
+      note:form.elements.note.value.trim(),channel:isPhone()?'sms':'web',at:new Date().toISOString()};
     btn.disabled=true; label.textContent= data.channel==='sms' ? 'Getting your message ready' : 'Sending';
     saveLead(data).then(function(){
       btn.disabled=false; label.textContent=before;
@@ -644,22 +806,26 @@ p,li,dd{text-wrap:pretty}
       if(data.channel==='sms'){
         lastHref='sms:'+ANDREW_SMS+'?&body='+encodeURIComponent(smsText(data));
         log(saved+'\n\nMessage text: '+smsText(data));
-        show(4,true);
+        show(DONE_SMS,true);
         if(!forced) window.location.href=lastHref;
       } else {
         log(saved+'\n\nServer then emails Andrew with Resend.');
-        show(3,true);
+        show(DONE_WEB,true);
       }
     }, function(){
       btn.disabled=false; label.textContent=before;
       form.querySelector('.save-err').hidden=false;
     });
   });
-  form.querySelector('.retry').onclick=function(){ if(lastHref && !forced) window.location.href=lastHref; };
-  form.querySelectorAll('.again').forEach(function(a){ a.onclick=function(){ form.reset(); wording(); show(0,true); log(''); }; });
+  var retry=form.querySelector('.retry'); if(retry) retry.onclick=function(){ if(lastHref && !forced) window.location.href=lastHref; };
+  form.querySelectorAll('.again').forEach(function(a){ a.onclick=function(){ form.reset(); closeOther(); wording(); show(0,true); log(''); }; });
   // demo switch
-  document.querySelectorAll('[data-dev]').forEach(function(b){ b.onclick=function(){ forced=b.dataset.dev; document.querySelectorAll('[data-dev]').forEach(function(x){x.setAttribute('aria-pressed',x===b);}); if(!steps[2].hidden) paintButton(); }; });
+  document.querySelectorAll('[data-dev]').forEach(function(b){ b.onclick=function(){ forced=b.dataset.dev; document.querySelectorAll('[data-dev]').forEach(function(x){x.setAttribute('aria-pressed',x===b);}); if(!steps[4].hidden) paintButton(); }; });
   form.classList.add('js'); show(0,false);
   window.__enq={show:show,setDev:function(d){forced=d;}};
 })();
+</script><script>/* dev only: auto reload while served from localhost. Stripped in Phase 4. */
+(function(){var h=location.hostname;if(h!=='localhost'&&h!=='127.0.0.1')return;var last=null;
+setInterval(function(){fetch('dev-version.txt?'+Date.now(),{cache:'no-store'}).then(function(r){return r.text()})
+.then(function(t){t=t.trim();if(last===null){last=t;return}if(t!==last){location.reload()}}).catch(function(){});},1500);})();
 </script></body></html>

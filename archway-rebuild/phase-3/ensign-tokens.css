@@ -1,4 +1,4 @@
-/* ===== Ensign design tokens v1. LOCKED 17 Sep 2026 (Phase 3 Step 3). Font: Figtree only (option A, SIL OFL) ===== */
+/* ===== Ensign design tokens v1 (Phase 3 Step 3) ===== */
 :root{
   /* Colour: warm page, indigo accents (A1) */
   --indigo-50:#f3f7ff;--indigo-100:#e5edff;--indigo-200:#cadbff;--indigo-300:#a0bdfe;
@@ -16,13 +16,15 @@
   --lh-body:1.6;--lh-head:1.05;--track-display:-0.04em;--track-h2:-0.025em;
 
   /* Layout */
-  --page-max:1240px;--measure:60ch;--gutter:clamp(16px,4vw,48px);--section:clamp(64px,8vw,128px);
+  --page-max:1340px;--measure:60ch;--gutter:clamp(16px,4vw,48px);--section:clamp(64px,8vw,128px);
 
   /* Shape and motion */
   --r-sm:12px;--r-md:20px;--r-lg:32px;--r-pill:999px;--tap:48px;
   --ease-out:cubic-bezier(0.23,1,0.32,1);--dur-press:160ms;--dur-ui:220ms;
 }
-body{--f-head:"Figtree";--f-body:"Figtree";--w-head:400}
+[data-font="A"]{--f-head:"Figtree";--f-body:"Figtree";--w-head:400}
+[data-font="B"]{--f-head:"Figtree";--f-body:"Atkinson Hyperlegible Next";--w-head:400}
+[data-font="C"]{--f-head:"Atkinson Hyperlegible Next";--f-body:"Atkinson Hyperlegible Next";--w-head:400}
 *{box-sizing:border-box;margin:0}
 html{background:var(--page)}
 body{background:var(--page);color:var(--text);font-family:var(--f-body),system-ui,sans-serif;font-size:var(--t-body);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
@@ -39,6 +41,13 @@ p{max-width:var(--measure)}
 a{color:var(--accent)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
 
+/* Sheet chrome (not part of the site) */
+.sheet-bar{position:sticky;top:0;z-index:10;background:var(--indigo-900);color:var(--n-0);font:500 14px/1.3 "Figtree",sans-serif}
+.sheet-bar .wrap{display:flex;gap:var(--s4);align-items:center;flex-wrap:wrap;padding-top:var(--s3);padding-bottom:var(--s3)}
+.sheet-bar button{font:inherit;min-height:40px;padding:0 var(--s4);border-radius:var(--r-pill);border:1px solid var(--indigo-300);background:transparent;color:inherit;cursor:pointer}
+.sheet-bar button[aria-pressed="true"]{background:var(--n-0);color:var(--indigo-900)}
+.sheet-label{font:600 13px/1 "Figtree",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:var(--s5)}
+.divider{border:0;border-top:1px dashed var(--line);margin:0}
 
 /* ===== Site: header ===== */
 .site-head .wrap{display:flex;align-items:center;justify-content:space-between;min-height:88px}

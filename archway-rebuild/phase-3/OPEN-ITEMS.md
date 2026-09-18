@@ -42,6 +42,13 @@ Nothing here blocks Phase 4 starting. Everything must be closed before go live (
 ## Referral form
 - Confirm "About 5 minutes" once the real form is built
 
+## New, from the hero rebuild (18 Sep 2026)
+- **Three new lines in the "Four providers" band** need Andrew's confirmation: "It is a lot to carry on your own.", "One person who does it with you.", "You do not have to chase any of it." They are in ensign-copy.md marked NEW. They make no new claim about the service, but they put words in a participant's mouth about how it feels, so Andrew should agree they sound like him.
+- **The four areas shown in question 2.** Brisbane, Ipswich, Logan and Moreton Bay are on screen with a visible yellow PLACEHOLDER tag. Andrew must confirm which four he actually sees most. The other six areas are still reachable through "Somewhere else" and still listed on Contact. The enquiry box gets about 34px shorter once the tag is removed.
+- **Copy change to fold into ensign-copy.md.** The flow is now five steps, so the counter reads "Question 1 of 5", not "of 3". The steps are who, where, name, phone and email, anything else.
+- **An optional email field was added** to the enquiry flow. Phone stays required so nobody without email is blocked. Confirm with Andrew that he wants email captured, and add it to the privacy policy's list of what is collected.
+- **Five steps instead of three** means more taps. Each screen is simpler, which suits low digital confidence, but more steps also means more places to drop out. Worth watching once there is real traffic.
+
 ## Phase 4 build decisions (Allen or Anand)
 - Lead storage provider and file storage for uploads (private, expiring links)
 - Resend setup and sending domain; ensignsupport.com.au domain
@@ -55,3 +62,12 @@ Nothing here blocks Phase 4 starting. Everything must be closed before go live (
 - Fewer repeats of "Replies within 1 business day"
 - Refer link visible in the phone header, and on the 404 page
 - One site wide wording of Andrew's checks and qualifications
+
+## More optional design decisions (round 3 blind reviews, 17 Sep 2026, not changed)
+- Give the enquiry card a visible edge. Two reviewers said it is near-white on cream so its boundary disappears. Not changed because Allen approved this card (C36).
+- Make the three option pills look more tappable (white fill, chevron). Not changed for the same reason.
+- Put a tappable phone number directly under the enquiry card. It is currently only in the header and footer.
+- Widen the gap between the enquiry card and the portrait. It is 64px against a 148px page margin. Widening it would push the headline to three lines.
+- The phone photo is centred inside an otherwise left-aligned stack. One reviewer wanted it full width, another wanted it much smaller.
+- Add a call to action at the end of the "Four providers on the list" band.
+- Raise the phone page gutter from 17px to 24px. This would touch every page.

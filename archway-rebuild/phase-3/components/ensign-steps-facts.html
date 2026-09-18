@@ -115,7 +115,10 @@ a{color:var(--accent)}
     <div class="fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0114 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><p class="k">Where</p><p class="v">In person across South East Queensland</p></div>
     <div class="fact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h10v8H8l-4 3z"/><path d="M14 9h6v8l-3-2h-6v-2"/></svg><p class="k">Languages</p><p class="v">English and Tamil, interpreters arranged</p></div>
   </div>
-  <p class="note">If your plan is NDIA managed, you'll need a registered NDIS provider.</p>
+  <p class="note">If your plan is NDIA managed, you’ll need a registered NDIS provider.</p>
 </div></div></section>
 </main><script>var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{rootMargin:'0px 0px -15% 0px'});
-document.querySelectorAll('.path,.fact-grid').forEach(function(el){io.observe(el)});</script></body></html>
+var reveal=document.querySelectorAll('.path,.fact-grid');
+reveal.forEach(function(el){io.observe(el)});
+/* safety net (C49): if the observer never fires, show everything anyway */
+setTimeout(function(){reveal.forEach(function(el){el.classList.add('in');io.unobserve(el)})},2200);</script></body></html>

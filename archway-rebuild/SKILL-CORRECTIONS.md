@@ -249,3 +249,171 @@ Status: all entries are PROPOSED until Step E (skill-creator pass). Nothing here
 - **Rule:** Any grid or flex row that holds rich text must wrap the text in one element. For long pages, screenshot and look at every section (or every row type with bold, links and placeholders), not just the top, before showing the operator.
 - **Where in skill:** Phase 3 page design check, Phase 5 visual testing.
 - **Date:** 17 Sep 2026
+
+## C41. Two columns centred but with edges that nearly line up
+- **Wrong:** The Home hero put the text column and the portrait side by side with the two columns centred on each other. Their centres matched to within 2px, but the tops missed by 44px and the bottoms by 47px. Allen: "this whole section is unevenly placed for a hero section... it feels uneven and messy". A blind reviewer put it the same way: a 200px offset reads as a decision, a 45px offset reads as a mistake.
+- **Rule:** In any two column block, edges either line up exactly or are offset far enough to read as deliberate (100px or more). Never leave a near miss. The cheapest fix is to let the taller element stretch to the row height (`align-items:stretch` plus `aspect-ratio:auto` on the image), so both columns share a top and a bottom. Measure the bounding boxes with the browser and print them; do not judge alignment by eye.
+- **Where in skill:** Phase 3 skill, page design step and the check step.
+- **Date:** 17 Sep 2026
+
+## C42. A hard line break swallowing the word space
+- **Wrong:** A `<br class="dbr">` was used to control where a subheading wrapped on a computer, written as `with you<br class="dbr">and comes`. The break is hidden on a phone with `display:none`, and because there was no space in the source the phone rendered "youand".
+- **Rule:** Every optional `<br>` used for line control must have a real space before it in the source. After adding one, render at phone width and read the sentence back. Never let markup supply a word space.
+- **Where in skill:** Phase 3 skill, copy and page design steps, and the phone check.
+- **Date:** 17 Sep 2026
+
+## C43. A block of text where a picture was needed
+- **Wrong:** The Home "Four providers on the list" band was a big heading beside two paragraphs. Allen: "This feels boring no one is going to read this text unless it feels visual, nice to read like the other components we have."
+- **Rule:** Any section whose job is to explain a problem gets turned into a shown comparison, not a written one. The house pattern is two panels side by side with a hand-drawn arrow between them: the current state muted and outlined, the better state a white lifted card with blue ticks, three short parallel lines each. On a phone they stack and the arrow rotates. Every line must already exist in the approved copy; nothing new is invented to fill a panel.
+- **Where in skill:** Phase 3 skill, page design step.
+- **Date:** 17 Sep 2026
+
+## C44. The same facts stated twice in one section
+- **Wrong:** After the two panels were added, the intro paragraph still said "a budget and a list of names... the ringing around... a week of waiting", which is exactly what the left panel listed. A blind reviewer flagged the repetition and that it leans on the pain longer than the point needs.
+- **Rule:** When copy is turned into a visual, delete the prose it replaced. Read the section aloud and check no fact appears twice. For a vulnerable audience, state the problem once and move to the answer.
+- **Where in skill:** Phase 3 skill, page design step.
+- **Date:** 17 Sep 2026
+
+## C45. Fixed size overlays on fluid images
+- **Wrong:** The name card over Andrew's portrait was the same 190x81px at every width. On a computer it covered 37% of the photo, on a phone 82%, with only a 3px inset left and a leftover strip of photo underneath.
+- **Rule:** Any label, badge or card sitting on top of a responsive image must scale with it. Set smaller padding and type at the phone breakpoint and check the inset as a percentage, not in pixels.
+- **Where in skill:** Phase 3 skill, component step, and Phase 5 visual testing.
+- **Date:** 17 Sep 2026
+
+## C46. Small craft defects that only a blind reviewer catches
+- **Wrong:** Straight apostrophes throughout the site, a hand-drawn underline running into the tail of a "y", three different blues doing one job (#2850d3, #6993fa, #506fd6), an arrow that looked off centre because its SVG viewBox had dead space on one side, and decorative markers at 1.17:1 that were invisible although they passed automated checks.
+- **Rule:** Before locking any page, run a blind reviewer whose only question is "what here is actually broken or wrong, as opposed to a matter of taste". Then check the list every time: curly apostrophes in text (never inside script or style blocks), no decoration touching a descender, one accent colour per motif, SVG viewBoxes trimmed to the drawing, and decorative elements checked by eye because automated contrast checks ignore them.
+- **Where in skill:** Phase 3 skill, check step.
+- **Date:** 17 Sep 2026
+
+## C47. Stretching a photo to force two columns to line up
+- **Wrong:** To fix the uneven hero (C41), the portrait was stretched to the full height of the text column by setting `align-items:stretch` and `aspect-ratio:auto`. The tops and bottoms then matched exactly, but `object-fit:cover` cropped the photo into a tall narrow frame. Allen: "This feels too messy now. the image looks too big and unnatural."
+- **Rule:** A photograph keeps its natural crop. Never stretch or re-crop a portrait to make a grid line up. Fix evenness with the things that have no natural shape: line breaks, column ratio, type size, the width of the card beside it. If two columns still cannot match, centre them so the leftover space is equal top and bottom, and stop there. Evenness never costs the photo.
+- **Where in skill:** Phase 3 skill, page design step (supersedes the stretch advice in C41).
+- **Date:** 17 Sep 2026
+
+## C48. A short question flow that looks like a form before it is one
+- **Wrong:** The enquiry flow sat inside a white card with a progress bar from the very first screen, so the first thing a visitor saw was a form. Allen: "simplify the form to make it look like its just some buttons to click and not a proper form until they get to the part where they enter details."
+- **Rule:** In a multi step enquiry flow, the choice steps are not a form. No card, no surface, no progress bars: just the question and full width buttons on the page background, each one a real button with a white fill, a soft shadow, a lift on hover and a chevron on the right. Keep a small muted line of orientation ("Question 1 of 3"). The card, the progress bar and the form styling appear only on the step that asks for name and contact details. Drive it from the visible step with `:has(.step[data-step="n"]:not([hidden]))` so no extra JavaScript is needed, and check that the card returns on the details step and the back button still works.
+- **Where in skill:** Phase 3 skill, component step (enquiry flow, extends C23 and C36).
+- **Date:** 17 Sep 2026
+
+## C49. Scroll reveal animation that can leave a section blank
+- **Wrong:** The "How it starts" steps and the key facts were hidden with `opacity:0` and revealed by an IntersectionObserver adding a class. In a full page capture the observer fired for one group and not the other, so an entire section rendered as half a screen of empty background with a stray button under it. The always visible fallback existed, but it was locked inside the `prefers-reduced-motion:reduce` block, so it helped nobody else.
+- **Rule:** Any reveal on scroll must fail open. Keep the observer, and add a timer (about 2 seconds) that adds the visible class to every observed element regardless. Never put the always visible fallback only inside a reduced motion query. Check every reveal section in a full page screenshot and assert in the browser that no element is left below full opacity after the page has settled.
+- **Where in skill:** Phase 3 skill, page design step and the check step; Phase 5 visual testing.
+- **Date:** 17 Sep 2026
+
+## C50. Two rounds of hero layouts before the shape was right
+- **Wrong:** Three rounds of hero fixes were tried before asking what the hero should be. Tweaks first (line breaks, column ratio, centring), then a stretched photo Allen rejected, then three fresh layouts, then two more from reference sites Allen supplied. He said it plainly: "Nothing has changed, Just the hero section desperately needs another layout."
+- **Rule:** When the operator says a section feels wrong twice in a row, stop adjusting it. Build two or three genuinely different layouts, not variations, and show them side by side in one round. Ask for a reference site early: one screenshot from the operator settles more than three rounds of guessing. When a reference is given, build it properly (cut out the photo, match the composition), do not approximate it.
+- **Where in skill:** Phase 3 skill, page design step.
+- **Date:** 17 Sep 2026
+
+## C51. A multi step flow sized by its tallest step, and a mis-diagnosis of why
+- **Wrong:** The Home enquiry flow was locked into a fixed 516px box so the panel stayed the same size on every stage. The box was set by question 2's ten location buttons. Question 1 needed 284px, so 232px of panel sat empty and nothing could fill it. The note left in OPEN-ITEMS said to fix it by splitting the details stage in two. Measuring every stage showed the details stage was 439px, not the tallest, so that fix would have changed nothing and cost a round.
+- **Rule:** Before padding a multi step box, measure every step and print the numbers. If the tallest is more than about 25 percent taller than the shortest, do not pad the short ones, redesign the tall one until they match: put long option lists in a grid, move the rare options behind one "Somewhere else" button that opens a field in place rather than below, and split a long details step into several one question steps. Then click every step at every width and print the container height. Equal to within a pixel, or it is not fixed. Never write a rule about a box you have not measured at every step.
+- **Where in skill:** Phase 3 skill, component step and check step.
+- **Date:** 18 Sep 2026
+
+## C52. Satellite elements around a focal shape at wildly different distances
+- **Wrong:** Four chips floated around the circular portrait. Measured from the circle's edge to each chip's nearest point they ran from 81px inside the circle to 66px outside it, a 147px spread. Two crowded the photo, two drifted in dead space. Allen could see it was wrong but had no words for it.
+- **Rule:** Place satellite elements polar, from the focal shape's centre, on one radius: `left:calc(50% + var(--cr) * var(--cx))` with `translate(-50%,-50%)`, where --cx and --cy are the cosine and sine of each element's angle. Choose angles to leave whatever else occupies the frame alone. Animate the `translate` property, never `transform`, so a float or bob composes with the centring transform instead of destroying it. Then print each element's nearest-point distance to the shape and check the spread is under about 25px.
+- **Where in skill:** Phase 3 skill, page design step.
+- **Date:** 18 Sep 2026
+
+## C53. An element bleeding out of its container and stopping 1px short
+- **Wrong:** The dark card was set to `right:-11%` of its parent, which landed its right edge 1px inside the panel's right edge, while every other element in the panel had 58px of breathing room. It read as a collision with the corner.
+- **Rule:** Anything that breaks out of its container's padding must either line up exactly with a real edge, or clear that edge by the container's own padding value. Never stop 1 to 20px short. Print the element's edge and the container's edge and compare the numbers. This is C41's near miss rule applied to container edges, not just to columns.
+- **Where in skill:** Phase 3 skill, page design step. Extends C41.
+- **Date:** 18 Sep 2026
+
+## C54. A display rule silently beating the hidden attribute
+- **Wrong:** `.where-other{display:grid}` was written for a disclosure panel that carries the `hidden` attribute. `display:grid` overrides `[hidden]`'s `display:none`, so an invisible panel was still adding 126px to a fixed height box. Nothing looked broken, the box was just mysteriously too tall.
+- **Rule:** Any rule that sets `display` on an element that also uses the `hidden` attribute must be written `:not([hidden])`, or the sheet must carry `[hidden]{display:none!important}`. After adding any disclosure, measure the container with it closed and assert the height is unchanged.
+- **Where in skill:** Phase 3 skill, component step; Phase 5 testing.
+- **Date:** 18 Sep 2026
+
+## C55. A new class name colliding with an existing one
+- **Wrong:** A new `.creds` class was added for the hero credentials. `.creds` already existed in the portrait component with `max-width:560px`, so the credentials rendered squashed into a narrow column with every label broken one word per line.
+- **Rule:** Before introducing a class name, grep every CSS file and build script in the pack for it. If it already exists anywhere, prefix the new one to its block. Component sheets that get merged into one page share a global namespace.
+- **Where in skill:** Phase 3 skill, page design step.
+- **Date:** 18 Sep 2026
+
+## C56. A build pack that could not rebuild its own locked output
+- **Wrong:** Phase 3 was locked with a build pack that could not run. `rebuild_all.sh` and `fullcheck.py` hardcoded the previous session's cloud paths. Four build inputs were missing from the repo entirely (the design system CSS, the design system markup, the web font, axe-core). `rebuild_all.sh` ran `add_dev.py` on a page whose builder it never called, so it always failed on the last line. Worst of all, the logo, favicon and photo files committed to the repo were not the ones inlined in the built pages, so a rebuild silently inflated every page by 10 to 46KB. The optimised assets existed only inside the built HTML and had to be recovered by decoding them back out.
+- **Rule:** A phase is not locked until a clean checkout rebuilds the locked output byte for byte. Every path in the pack is relative to the pack. Every input is committed, including the exact optimised assets that get inlined, not the originals they came from. The pack ships a reproduce check that rebuilds and diffs against the committed output and fails loudly on any difference. Run it as the last step before writing the lock file.
+- **Where in skill:** Phase 3 lock step, and every phase that hands over a build pack.
+- **Date:** 18 Sep 2026
+
+## C57. A check that asserted the value set, not the pixels the browser drew
+- **Wrong:** The new progress bar was verified by reading `bar.style.width`, which returned 93%. The browser was painting 33%. Allen spotted it on screen after the check had passed. A stale `max-width:56px` from the superseded three-segment bar was clamping the fill.
+- **Rule:** Never assert the value you just wrote. Every visual check measures what the browser painted: `getBoundingClientRect()` on the element and its container, and a ratio. If a check can pass while the screen is wrong, it is not a check.
+- **Where in skill:** Phase 3 check step; Phase 5 testing.
+- **Date:** 18 Sep 2026
+
+## C58. Repurposing an element inherits every constraint, not just display
+- **Wrong:** C54 caught `display` beating `[hidden]` and C55 caught a class name collision. The same class of bug returned twice more in one session: a `max-width` from a superseded design clamped a reused element, and a `margin-top:32px` from an earlier layout silently inflated a box that was supposed to be a fixed height.
+- **Rule:** When reusing a class from a design that has been replaced, print every computed property that can constrain it: display, width, max-width, min-width, flex, position, margin, padding. Reset the ones you are not using explicitly. An old rule that no longer has a matching design is still in the sheet.
+- **Where in skill:** Phase 3 page design and check steps. Extends C54 and C55.
+- **Date:** 18 Sep 2026
+
+## C59. A deploy step that reused one staging filename shipped a stale copy
+- **Wrong:** Every push used the same staging filename. The transfer sent a cached older copy twice, so Allen was reviewing a different page from the one being checked, and said twice that a change had not appeared. The same script also defaulted to the wrong layout variant, so two pushes sent a rejected arrangement.
+- **Rule:** Stamp every deploy with a unique version in the filename. Never default a variant flag to a value the operator has not chosen. After writing to the operator's machine, read the file back and assert the change is present. Trust the target, not the send.
+- **Where in skill:** Phase 3 delivery habits; any phase with a live preview loop.
+- **Date:** 18 Sep 2026
+
+## C60. A fixed height box must choose which end the slack sits at
+- **Wrong:** A fixed-height enquiry box was tried three ways in one session. Content centred put the gap between the progress bar and the question. Content top-aligned put a large gap above the next section. Only bottom-aligned read correctly, because the box sits directly above a divider.
+- **Rule:** A fixed-height container always has slack on some step. Decide deliberately where it collects. Above a rule or a following section, pin the content to the bottom so the slack reads as breathing room above. Never leave it centred by default.
+- **Where in skill:** Phase 3 component step.
+- **Date:** 18 Sep 2026
+
+## C61. The fold is a budget with a ceiling, and the ceiling must be stated
+- **Wrong:** The hero was 947px tall. Allen could not see the credentials strip on his laptop. Each later request to enlarge type ate the remaining margin without anyone tracking it.
+- **Rule:** Measure the hero against real laptop content heights (1280x800 and 1512x850 as the floor cases) and print the remaining pixels with every change. When the margin drops below about 15px, say the ceiling has been reached and offer the trades (shorter lead, fewer credentials, or accept it slipping below the fold on the smallest laptops). Never silently cap the operator's request.
+- **Where in skill:** Phase 3 page design step.
+- **Date:** 18 Sep 2026
+
+## C62. A progress indicator that was half full before anyone touched it
+- **Wrong:** The bar was set to a non-linear curve starting at 40% so the flow would feel nearly done. On an untouched form it read as dishonest. Allen: "it is already half filled before any one clicks on anything".
+- **Rule:** A progress indicator starts near empty, about 8%. The first answer earns the biggest jump. After that it runs ahead of the real progress so later steps feel close to done (for example 8, 45, 66, 82, 93, 100 across five steps). Never show meaningful progress for work not yet done.
+- **Where in skill:** Phase 3 component step.
+- **Date:** 18 Sep 2026
+
+## C63. Emotional copy written with no research behind it
+- **Wrong:** Asked to make a comparison band speak to pain points and emotions. The Phase 2 findings for this client contained no customer emotions at all: questions, trust builders and accessibility needs only. Any emotional line would have been a guess about how a vulnerable person feels, printed on the client's site as if understood.
+- **Rule:** Emotional copy needs a source in the Phase 2 audience findings. If it is not there, say so before writing, offer a version grounded in the locked facts, mark every new line in `copy.md` as NEW with the date, and add it to the open items for the client to confirm. Never put words in a customer's mouth without the client agreeing they sound right.
+- **Where in skill:** Phase 3 copy step; Phase 2 audience research.
+- **Date:** 18 Sep 2026
+
+## C64. Amplifying pain for a vulnerable audience
+- **Wrong:** The request was to lean harder into the pain points. For an audience that may include people in psychosocial crisis, the standard direct-response move is the wrong instrument.
+- **Rule:** For vulnerable audiences, name the feeling once in plain words and resolve it immediately. One line of recognition, one line of relief. No dwelling, no stacking, no second pass over the same wound. Say this to the operator before building, then build what they decide.
+- **Where in skill:** Phase 3 copy step. Extends C44.
+- **Date:** 18 Sep 2026
+
+## C65. Muted text made with opacity, which broke AA
+- **Wrong:** A comparison panel was dimmed with `opacity:.86` to push the contrast between the two sides. Its text was already a muted grey token, so the extra opacity dropped five nodes below WCAG AA and axe failed the page.
+- **Rule:** Never get "muted" from `opacity`. Muted comes from colour tokens that have been contrast-tested. Get visual de-emphasis from weight, size, elevation and border instead. Opacity on text is a contrast bug waiting to happen.
+- **Where in skill:** Phase 3 design system and page design steps.
+- **Date:** 18 Sep 2026
+
+## C66. A proper noun split across two lines
+- **Wrong:** A credential wrapped as "Master of Social Work, University / of Queensland", splitting the institution name.
+- **Rule:** Keep proper nouns, phone numbers and short phrases together with non-breaking spaces inside the string, not with an optional `<br>`. A non-breaking space survives every width. A `<br>` only works at the width it was tuned for and carries the C42 word-space trap.
+- **Where in skill:** Phase 3 page design step. Extends C42.
+- **Date:** 18 Sep 2026
+
+## C67. Guessing which element the operator meant
+- **Wrong:** The operator said "remove the tile like thing and make it seamless with the background". Two elements on screen could be called a tile: the white form card and the large rounded panel. Guessing would have cost a full build and review round.
+- **Rule:** When the operator points at something with a vague word and more than one element fits, ask one short either or question before building. One question costs a minute. A wrong guess costs a round, and after two wrong guesses C50 applies and the cost is three.
+- **Where in skill:** Phase 3, all steps.
+- **Date:** 18 Sep 2026
+
+## C68. A reference's small element made into a big one
+- **Wrong:** The operator supplied a reference hero whose signature move was a small dark teaser card overlapping a photo. Built to that arrangement with the client's actual enquiry form in the card, the form covered the subject and left a meaningless strip of shoulder. The proportions of the reference were right. The mass of the content was not.
+- **Rule:** When adapting a reference, check whether your content weighs the same as the element you are copying. A teaser card and a five step form are not the same object. If the mass differs, the arrangement must change even though the reference was measured correctly. Build it, look at it yourself, and show the operator the failure rather than shipping it.
+- **Where in skill:** Phase 3 page design step. Extends C50.
+- **Date:** 18 Sep 2026

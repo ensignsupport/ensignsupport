@@ -279,4 +279,8 @@ dd{overflow-wrap:anywhere}
   ['click','keydown','touchstart','scroll'].forEach(function(t){document.addEventListener(t,function(){ if(!app.hidden) armIdle(); },{passive:true});});
   window.__admin={enter:function(){ $('#pw').value=DEMO_PW; $('#login-form').requestSubmit(); }, open:function(i){ open(tab==='enq'?enq[i]:ref[i],null); }, tab:function(t){ document.querySelector('.tabs button[data-t="'+t+'"]').click(); }};
 })();
+</script><script>/* dev only: auto reload while served from localhost. Stripped in Phase 4. */
+(function(){var h=location.hostname;if(h!=='localhost'&&h!=='127.0.0.1')return;var last=null;
+setInterval(function(){fetch('dev-version.txt?'+Date.now(),{cache:'no-store'}).then(function(r){return r.text()})
+.then(function(t){t=t.trim();if(last===null){last=t;return}if(t!==last){location.reload()}}).catch(function(){});},1500);})();
 </script></body></html>
