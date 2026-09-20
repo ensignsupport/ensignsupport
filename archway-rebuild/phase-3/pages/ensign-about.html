@@ -39,6 +39,12 @@ a{color:var(--accent)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
 
 /* ===== Site: header ===== */
+html{scroll-padding-top:96px}
+.site-head{position:sticky;top:0;z-index:60;background:var(--page);transition:box-shadow var(--dur-ui) var(--ease-out)}
+.site-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line);opacity:0;transition:opacity var(--dur-ui) var(--ease-out)}
+.site-head.stuck::after{opacity:1}
+.site-head.stuck{box-shadow:0 10px 24px -22px rgba(15,34,94,.5)}
+@media (prefers-reduced-motion:reduce){.site-head,.site-head::after{transition:none}}
 .site-head .wrap{display:flex;align-items:center;justify-content:space-between;min-height:88px}
 .brand{font-family:var(--f-head);font-size:26px;letter-spacing:-0.02em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:var(--s2)}
 .brand-dot{width:12px;height:12px;border-radius:50%;background:var(--accent)}
@@ -474,6 +480,13 @@ p,li,dd{text-wrap:pretty}
 .swap .after{background:var(--surface);box-shadow:0 18px 40px -26px rgba(35,31,25,.45)}
 .swap .after .ptag{color:var(--accent-strong)}
 .swap .after li{font-weight:600}
+/* a short line of feeling under each panel, and one line that resolves it */
+.swap .pfoot{margin:auto 0 0;padding-top:var(--s3);font-size:16px;line-height:1.45}
+.swap .before .pfoot{color:var(--muted)}
+.swap .after .pfoot{color:var(--accent-strong);font-weight:600}
+.swap-close{margin:var(--s6) 0 0;max-width:none;text-align:center;font-size:20px;font-weight:600;color:var(--text)}
+
+.swap .after{box-shadow:0 22px 48px -24px rgba(35,31,25,.5),0 0 0 1px rgba(35,31,25,.04)}
 .swap .after svg{width:24px;height:24px;color:var(--accent);margin-top:1px}
 .swap-arrow{display:grid;place-items:center;color:var(--indigo-400,#6993fa);padding:0 var(--s2)}
 .swap-arrow svg{width:88px;height:38px;overflow:visible}
@@ -623,7 +636,12 @@ p,li,dd{text-wrap:pretty}
     <div><p class="crisis">Ensign does not provide crisis support. In an emergency call <a href="tel:000">000</a>. For 24 hour crisis support call Lifeline on <a href="tel:131114">13 11 14</a>.</p></div>
   </div>
   <div class="base"><span>Ensign is an unregistered NDIS provider, working with self managed and plan managed participants. <span class="nowrap">ABN 19 518 036 825</span></span><span>Built by Archway Automation</span></div>
-</div></footer><script>/* dev only: auto reload while served from localhost. Stripped in Phase 4. */
+</div></footer><script>/* sticky header: show a hairline once the page has moved */
+(function(){var h=document.querySelector('.site-head');if(!h)return;var on=false;
+function f(){var s=(window.scrollY||document.documentElement.scrollTop)>4;
+if(s!==on){on=s;h.classList.toggle('stuck',s)}}
+f();addEventListener('scroll',f,{passive:true});addEventListener('resize',f,{passive:true});})();
+</script><script>/* dev only: auto reload while served from localhost. Stripped in Phase 4. */
 (function(){var h=location.hostname;if(h!=='localhost'&&h!=='127.0.0.1')return;var last=null;
 setInterval(function(){fetch('dev-version.txt?'+Date.now(),{cache:'no-store'}).then(function(r){return r.text()})
 .then(function(t){t=t.trim();if(last===null){last=t;return}if(t!==last){location.reload()}}).catch(function(){});},1500);})();

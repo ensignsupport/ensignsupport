@@ -417,3 +417,9 @@ Status: all entries are PROPOSED until Step E (skill-creator pass). Nothing here
 - **Rule:** When adapting a reference, check whether your content weighs the same as the element you are copying. A teaser card and a five step form are not the same object. If the mass differs, the arrangement must change even though the reference was measured correctly. Build it, look at it yourself, and show the operator the failure rather than shipping it.
 - **Where in skill:** Phase 3 page design step. Extends C50.
 - **Date:** 18 Sep 2026
+
+## C69. Header scrolled away and no review caught it
+- **Wrong:** The site header was never given a sticky rule. It scrolled off the top and stayed gone on all seven pages. Four rounds of whole-site blind review, an axe pass on every page, and a fold measurement to the pixel all passed, because every check looked at the page at rest. Nobody scrolled. The operator found it.
+- **Rule:** Page behaviour on scroll is a checked item, not an assumption. Before a page is called done, assert the header's position after a scroll, not just at rest. If it is meant to stay, prove it stays, prove nothing paints over it across its full width, and prove it does not eat fold budget. The wider rule: every check must exercise the state the visitor will actually be in. A page at rest is one state out of many.
+- **Where in skill:** Phase 3 verification step (A5). Add scroll state to the per page checks alongside overflow and axe.
+- **Date:** 20 Sep 2026

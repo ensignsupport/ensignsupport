@@ -50,6 +50,12 @@ a{color:var(--accent)}
 .divider{border:0;border-top:1px dashed var(--line);margin:0}
 
 /* ===== Site: header ===== */
+html{scroll-padding-top:96px}
+.site-head{position:sticky;top:0;z-index:60;background:var(--page);transition:box-shadow var(--dur-ui) var(--ease-out)}
+.site-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line);opacity:0;transition:opacity var(--dur-ui) var(--ease-out)}
+.site-head.stuck::after{opacity:1}
+.site-head.stuck{box-shadow:0 10px 24px -22px rgba(15,34,94,.5)}
+@media (prefers-reduced-motion:reduce){.site-head,.site-head::after{transition:none}}
 .site-head .wrap{display:flex;align-items:center;justify-content:space-between;min-height:88px}
 .brand{font-family:var(--f-head);font-size:26px;letter-spacing:-0.02em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:var(--s2)}
 .brand-dot{width:12px;height:12px;border-radius:50%;background:var(--accent)}

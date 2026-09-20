@@ -15,7 +15,7 @@
   --lh-body:1.6;--lh-head:1.05;--track-display:-0.04em;--track-h2:-0.025em;
 
   /* Layout */
-  --page-max:1240px;--measure:60ch;--gutter:clamp(16px,4vw,48px);--section:clamp(64px,8vw,128px);
+  --page-max:1340px;--measure:60ch;--gutter:clamp(16px,4vw,48px);--section:clamp(64px,8vw,128px);
 
   /* Shape and motion */
   --r-sm:12px;--r-md:20px;--r-lg:32px;--r-pill:999px;--tap:48px;
@@ -283,4 +283,9 @@ dd{overflow-wrap:anywhere}
 (function(){var h=location.hostname;if(h!=='localhost'&&h!=='127.0.0.1')return;var last=null;
 setInterval(function(){fetch('dev-version.txt?'+Date.now(),{cache:'no-store'}).then(function(r){return r.text()})
 .then(function(t){t=t.trim();if(last===null){last=t;return}if(t!==last){location.reload()}}).catch(function(){});},1500);})();
+</script><script>/* sticky header: show a hairline once the page has moved */
+(function(){var h=document.querySelector('.site-head');if(!h)return;var on=false;
+function f(){var s=(window.scrollY||document.documentElement.scrollTop)>4;
+if(s!==on){on=s;h.classList.toggle('stuck',s)}}
+f();addEventListener('scroll',f,{passive:true});addEventListener('resize',f,{passive:true});})();
 </script></body></html>
