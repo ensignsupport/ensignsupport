@@ -599,6 +599,53 @@
   color: var(--text-3);
 }
 
+/* ---------- Hero fits the first screen (raised by Allen, 2 Oct 2026) ----------
+   The design sizes the hero by screen width only, so on a 13 inch laptop the
+   photo was mostly below the fold and on a 27 inch monitor the next section
+   peeked in. Above 760px the hero now also follows screen height:
+   - the headline shrinks on short screens (never past the design's 150px),
+   - the gaps tighten on screens under 960px tall,
+   - the photo fills whatever height is left, between 360px and 860px.
+   On a screen tall enough for the whole designed hero it matches the design exactly.
+   See docs/decisions/0005-hero-fits-the-screen.md. */
+
+@media (min-width: 761px) {
+  .heroFold {
+    display: flex;
+    flex-direction: column;
+    min-height: calc(100svh - var(--header-height));
+  }
+
+  .heroSection {
+    padding-top: clamp(18px, calc(36px - (960px - 100svh) / 10), 36px);
+  }
+
+  .heroLine1,
+  .heroLine2 {
+    font-size: clamp(60px, min(10.4vw, 12svh), 150px);
+  }
+
+  .heroFoot {
+    margin-top: clamp(18px, calc(36px - (960px - 100svh) / 10), 36px);
+  }
+
+  .heroImageSection {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    padding-top: clamp(16px, calc(32px - (960px - 100svh) / 10), 32px);
+  }
+
+  .heroImage {
+    flex: 1 1 0;
+    width: 100%;
+    box-sizing: border-box;
+    height: auto;
+    min-height: 360px;
+    max-height: 860px;
+  }
+}
+
 /* ---------- Breakpoints from the design ---------- */
 
 @media (max-width: 900px) {

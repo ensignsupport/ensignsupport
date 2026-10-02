@@ -34,6 +34,12 @@
 - [ ] Allen pushes, checks Netlify created the database, adds SITE_URL and ALERT_TO
 - [ ] Resend account and domain (alerts wait in the outbox until then)
 
+## Fix: Home hero fits the screen (2 Oct 2026)
+
+- [x] Hero follows screen height above 760px, photo fills the rest of the first screen
+- [x] Fold test at 1280x800 to 2560x1300, design still matched on a tall screen
+- [ ] Allen checks on his 13 inch Mac and 27 inch monitor
+
 ## M5. Admin
 
 - [ ] Sign in and sessions

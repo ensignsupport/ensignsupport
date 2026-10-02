@@ -55,7 +55,8 @@ const STATS = [
 export default function HomePage() {
   return (
     <>
-      {/* Hero */}
+      {/* Hero: on laptops and monitors the text and photo fill the first screen */}
+      <div className={styles.heroFold}>
       <section className={styles.heroSection}>
         <div className={`${styles.container} ${styles.heroInner}`}>
           <div className={styles.kicker}>
@@ -123,7 +124,7 @@ export default function HomePage() {
                 fill
                 priority
                 // object-fit: cover crops this photo to the box height, so it is requested wider than its box.
-                sizes="(max-width: 760px) 100vw, min(65vw, 920px)"
+                sizes="(max-width: 760px) 100vw, min(65vw, 1160px)"
                 className={styles.photo}
                 style={{ objectPosition: "22% center" }}
               />
@@ -135,7 +136,7 @@ export default function HomePage() {
                 fill
                 priority
                 // A wide photo in a tall box: requested at box height times its 2.33 aspect ratio.
-                sizes="(max-width: 760px) 660px, min(112vw, 1600px)"
+                sizes="(max-width: 760px) 660px, min(112vw, 2000px)"
                 className={styles.photo}
                 style={{ objectPosition: "96% center" }}
               />
@@ -181,6 +182,7 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+      </div>
 
       {/* Service teaser row */}
       <section className={styles.teaserSection} aria-label="Our services">

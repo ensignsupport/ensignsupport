@@ -38,3 +38,4 @@ See `docs/OPEN-ITEMS.md` for decisions waiting on Allen and facts waiting on And
 - 2 Oct 2026: build started from the design v2 handover (`design-pack/HANDOVER-PROMPT.md`).
 - 2 Oct 2026: M1 and M2 approved. Header made sticky and hero photo tags removed (Allen). M3 built.
 - 2 Oct 2026: M3 approved. M4 built: referral and enquiry forms save to Netlify Database, alerts by Resend (reference and link only).
+- 2 Oct 2026: Home hero now fits the first screen on laptops and monitors (Allen's 13 and 27 inch screenshots). See docs/decisions/0005-hero-fits-the-screen.md.

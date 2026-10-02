@@ -50,6 +50,7 @@ npm test              # unit tests (alerts), then browser tests:
                       # forms really save, alerts carry no details, a database outage is never "sent",
                       # every page at 390, 768, 1024, 1280, 1440, 1600px:
                       # loads clean, no sideways scroll, WCAG 2.2 AA (axe),
-                      # shared parts pixel-compared with the design
+                      # shared parts pixel-compared with the design,
+                      # Home hero fills the first screen from 1280x800 to 2560x1300
 npm run check:launch  # must pass before launch: no placeholders, stand-ins or sample data
 ```

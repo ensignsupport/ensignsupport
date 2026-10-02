@@ -3,6 +3,7 @@
 /* Extra values used in the approved design source that design-tokens.css
    does not name. Named here so components never hard code a hex value. */
 :root {
+  --header-height: 92px;     /* sticky header, components/SiteHeader.module.css */
   --ink-2: #4A5373;          /* inactive nav, wordmark second word */
   --ink-footer: #3A3F52;     /* footer links and copy */
   --label-muted: #6B7493;    /* admin labels, footer column heads on phones */

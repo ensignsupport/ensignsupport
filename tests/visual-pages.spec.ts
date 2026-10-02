@@ -9,6 +9,11 @@ import { applyApprovedChanges, compare, openDesignPreview } from "./design-refer
  * because the site serves resized, compressed copies (next/image), which never
  * match the originals pixel for pixel. Everything drawn over a photo is compared.
  * Height must match to within 2px and 98.5% of pixels must be identical.
+ *
+ * Home above 760px: the hero fills the first screen (change raised by Allen, see
+ * docs/decisions/0005-hero-fits-the-screen.md), so the site is opened on a
+ * screen exactly as tall as the designed hero. There it must match the design.
+ * tests/hero-fold.spec.ts checks the shorter and taller screens.
  */
 const HIDE_PHOTOS = "img { opacity: 0 !important; }";
 
@@ -32,6 +37,10 @@ for (const pg of PAGES) {
       const designShot = await designPage.screenshot({ fullPage: true, animations: "disabled" });
 
       const sitePage = await context.newPage();
+      if (pg.design === "home" && width > 760) {
+        const fold = await designPage.evaluate(() => Math.round(document.querySelector(".es-hero-img")!.getBoundingClientRect().bottom + window.scrollY));
+        await sitePage.setViewportSize({ width, height: fold });
+      }
       await sitePage.goto(pg.site);
       await sitePage.evaluate(() => document.fonts.ready);
       const siteHeight = await sitePage.evaluate(() => document.documentElement.scrollHeight);

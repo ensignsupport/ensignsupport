@@ -12,7 +12,7 @@
   position: relative;
   max-width: var(--container);
   margin: 0 auto;
-  min-height: 92px;
+  min-height: var(--header-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
