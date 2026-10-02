@@ -36,26 +36,26 @@
   /* Type */
   --font-sans: var(--font-geist), 'Helvetica Neue', system-ui, sans-serif;  /* everything */
   --font-script: var(--font-caveat), cursive;                                /* one hand-written note on the Home hero only */
-  --h1-home: clamp(60px, 10.4vw, 150px);   /* weight 600, line-height .92, letter-spacing -0.045em */
-  --h1-page: clamp(52px, 7.6vw, 112px);    /* weight 600, line-height .95, letter-spacing -0.045em */
-  --h2: clamp(34px, 4vw, 52px);            /* weight 600, line-height 1.04, letter-spacing -0.035em */
-  --h2-band: clamp(38px, 4.4vw, 58px);     /* headings on dark bands, line-height 1, -0.04em */
-  --body-lg: 18px;  --body: 15.5px;  --small: 14px;  --eyebrow: 14px;
+  --h1-home: clamp(calc(60 * var(--px)), 10.4vw, calc(150 * var(--px)));   /* weight 600, line-height .92, letter-spacing -0.045em */
+  --h1-page: clamp(calc(52 * var(--px)), 7.6vw, calc(112 * var(--px)));    /* weight 600, line-height .95, letter-spacing -0.045em */
+  --h2: clamp(calc(34 * var(--px)), 4vw, calc(52 * var(--px)));            /* weight 600, line-height 1.04, letter-spacing -0.035em */
+  --h2-band: clamp(calc(38 * var(--px)), 4.4vw, calc(58 * var(--px)));     /* headings on dark bands, line-height 1, -0.04em */
+  --body-lg: calc(18 * var(--px));  --body: calc(15.5 * var(--px));  --small: calc(14 * var(--px));  --eyebrow: calc(14 * var(--px));
 
   /* Shape */
-  --radius-hero: 28px;   /* hero image, dark bands, big cards */
-  --radius-card: 22px;   /* soft cards */
-  --radius-input: 14px;
-  --radius-pill: 999px;  /* all buttons */
+  --radius-hero: calc(28 * var(--px));   /* hero image, dark bands, big cards */
+  --radius-card: calc(22 * var(--px));   /* soft cards */
+  --radius-input: calc(14 * var(--px));
+  --radius-pill: calc(999 * var(--px));  /* all buttons */
 
   /* Layout */
-  --container: 1280px;
-  --gutter: 32px;        /* 24px on phones in the footer, 16px in admin on phones */
-  --section-gap: 110px;  /* 120px between major sections on Home */
+  --container: calc(1280 * var(--px));
+  --gutter: calc(32 * var(--px));        /* 24px on phones in the footer, 16px in admin on phones */
+  --section-gap: calc(110 * var(--px));  /* 120px between major sections on Home */
 
   /* Shadows */
-  --shadow-accent: 0 16px 32px -14px rgba(34, 54, 181, .75);  /* referral buttons */
-  --shadow-band: 0 26px 40px -28px rgba(20, 27, 82, .55);     /* dark referral band */
+  --shadow-accent: 0 calc(16 * var(--px)) calc(32 * var(--px)) -14px rgba(34, 54, 181, .75);  /* referral buttons */
+  --shadow-band: 0 calc(26 * var(--px)) calc(40 * var(--px)) -28px rgba(20, 27, 82, .55);     /* dark referral band */
 }
 
 /* Breakpoints used in the design

@@ -8,7 +8,7 @@
 /* ---------- Hero text ---------- */
 
 .heroSection {
-  padding: 36px var(--gutter) 0;
+  padding: calc(36 * var(--px)) var(--gutter) 0;
 }
 
 .heroInner {
@@ -19,10 +19,10 @@
 .kicker {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: calc(8 * var(--px));
   color: var(--text-3);
-  font-size: 14px;
-  margin-bottom: 18px;
+  font-size: calc(14 * var(--px));
+  margin-bottom: calc(18 * var(--px));
 }
 
 .heroLine1,
@@ -50,37 +50,37 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 24px 48px;
+  gap: calc(24 * var(--px)) calc(48 * var(--px));
   flex-wrap: wrap;
 }
 
 .heroIntro {
-  margin: 0 0 18px;
-  max-width: 330px;
-  font-size: 15.5px;
+  margin: 0 0 calc(18 * var(--px));
+  max-width: calc(330 * var(--px));
+  font-size: calc(15.5 * var(--px));
   line-height: 1.55;
   color: var(--text-3);
 }
 
 .heroFoot {
-  margin-top: 36px;
+  margin-top: calc(36 * var(--px));
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: calc(24 * var(--px));
   flex-wrap: wrap;
 }
 
 .heroFootLeft {
   display: flex;
   align-items: center;
-  gap: 36px;
+  gap: calc(36 * var(--px));
   flex-wrap: wrap;
 }
 
 .whoLine {
   margin: 0;
-  font-size: 15px;
+  font-size: calc(15 * var(--px));
   line-height: 1.45;
   color: var(--ink);
   font-weight: 500;
@@ -89,7 +89,7 @@
 .heroActions {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: calc(22 * var(--px));
   flex-wrap: wrap;
 }
 
@@ -97,10 +97,10 @@
   color: var(--ink);
   text-decoration: none;
   font-weight: 500;
-  font-size: 15px;
+  font-size: calc(15 * var(--px));
   display: inline-flex;
   align-items: center;
-  min-height: 44px;
+  min-height: calc(44 * var(--px));
   border-bottom: 1px solid var(--indigo-200);
 }
 
@@ -111,7 +111,7 @@
 .experience {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: calc(14 * var(--px));
 }
 
 .avatars {
@@ -119,10 +119,10 @@
 }
 
 .avatar {
-  width: 44px;
-  height: 44px;
+  width: calc(44 * var(--px));
+  height: calc(44 * var(--px));
   border-radius: 50%;
-  border: 3px solid var(--page);
+  border: calc(3 * var(--px)) solid var(--page);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -152,21 +152,21 @@
 
 .expNumber {
   font-weight: 600;
-  font-size: 28px;
+  font-size: calc(28 * var(--px));
   letter-spacing: -0.03em;
   line-height: 1;
 }
 
 .expLabel {
-  font-size: 13.5px;
+  font-size: calc(13.5 * var(--px));
   color: var(--text-3);
-  margin-top: 4px;
+  margin-top: calc(4 * var(--px));
 }
 
 /* ---------- Hero image ---------- */
 
 .heroImageSection {
-  padding: 32px var(--gutter) 0;
+  padding: calc(32 * var(--px)) var(--gutter) 0;
 }
 
 .heroImage {
@@ -176,7 +176,7 @@
   border-radius: var(--radius-hero);
   overflow: hidden;
   background: var(--indigo-100);
-  height: clamp(420px, 48vw, 680px);
+  height: clamp(calc(420 * var(--px)), 48vw, calc(680 * var(--px)));
 }
 
 .split {
@@ -184,7 +184,7 @@
   inset: 0;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 6px;
+  gap: calc(6 * var(--px));
   background: var(--page);
 }
 
@@ -203,11 +203,11 @@
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  width: 64px;
-  height: 64px;
+  width: calc(64 * var(--px));
+  height: calc(64 * var(--px));
   border-radius: 50%;
   background: var(--white);
-  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.35), 0 14px 30px -12px rgba(18, 20, 31, 0.45);
+  box-shadow: 0 0 0 calc(8 * var(--px)) rgba(255, 255, 255, 0.35), 0 calc(14 * var(--px)) calc(30 * var(--px)) -12px rgba(18, 20, 31, 0.45);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -222,23 +222,23 @@
 
 .whoCard {
   position: absolute;
-  left: 24px;
-  top: 24px;
-  width: 290px;
+  left: calc(24 * var(--px));
+  top: calc(24 * var(--px));
+  width: calc(290 * var(--px));
   background: var(--white);
-  border-radius: 18px;
-  padding: 10px 10px 16px;
+  border-radius: calc(18 * var(--px));
+  padding: calc(10 * var(--px)) calc(10 * var(--px)) calc(16 * var(--px));
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: calc(12 * var(--px));
 }
 
 .whoCardImage {
   position: relative;
   display: block;
-  height: 110px;
-  border-radius: 12px;
+  height: calc(110 * var(--px));
+  border-radius: calc(12 * var(--px));
   overflow: hidden;
   background: var(--indigo-100);
 }
@@ -246,30 +246,30 @@
 .whoCardText {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 0 6px;
+  gap: calc(4 * var(--px));
+  padding: 0 calc(6 * var(--px));
 }
 
 .whoCardTitle {
   font-weight: 600;
-  font-size: 15px;
+  font-size: calc(15 * var(--px));
   letter-spacing: -0.01em;
 }
 
 .whoCardBody {
-  font-size: 13.5px;
+  font-size: calc(13.5 * var(--px));
   color: var(--text-3);
   line-height: 1.4;
 }
 
 .note {
   position: absolute;
-  left: 36px;
-  bottom: 34px;
+  left: calc(36 * var(--px));
+  bottom: calc(34 * var(--px));
   margin: 0;
   font-family: var(--font-script);
   font-weight: 500;
-  font-size: clamp(34px, 3.4vw, 50px);
+  font-size: clamp(calc(34 * var(--px)), 3.4vw, calc(50 * var(--px)));
   line-height: 0.9;
   color: var(--white);
   transform: rotate(-6deg);
@@ -278,11 +278,11 @@
 
 .refer {
   position: absolute;
-  right: 28px;
-  bottom: 28px;
+  right: calc(28 * var(--px));
+  bottom: calc(28 * var(--px));
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: calc(16 * var(--px));
   text-decoration: none;
   color: var(--white);
 }
@@ -292,18 +292,18 @@
 }
 
 .referText {
-  font-size: 15px;
+  font-size: calc(15 * var(--px));
   line-height: 1.25;
   text-align: right;
   font-weight: 500;
 }
 
 .referDot {
-  width: 64px;
-  height: 64px;
+  width: calc(64 * var(--px));
+  height: calc(64 * var(--px));
   border-radius: 50%;
   background: var(--indigo-700);
-  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.28);
+  box-shadow: 0 0 0 calc(8 * var(--px)) rgba(255, 255, 255, 0.28);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -316,22 +316,22 @@
 
 .refer:focus-visible {
   outline-color: var(--white);
-  outline-offset: 4px;
-  border-radius: 999px;
+  outline-offset: calc(4 * var(--px));
+  border-radius: calc(999 * var(--px));
 }
 
 /* ---------- Service teaser row ---------- */
 
 .teaserSection {
-  padding: 20px var(--gutter) 0;
+  padding: calc(20 * var(--px)) var(--gutter) 0;
 }
 
 .teaserGrid {
   max-width: var(--container);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(260 * var(--px)), 100%), 1fr));
+  gap: calc(20 * var(--px));
 }
 
 .teaserPhoto {
@@ -339,17 +339,17 @@
   border-radius: var(--radius-card);
   overflow: hidden;
   background: var(--indigo-100);
-  min-height: 290px;
+  min-height: calc(290 * var(--px));
 }
 
 .teaserLink {
   text-decoration: none;
   color: inherit;
-  padding: 8px 4px;
+  padding: calc(8 * var(--px)) calc(4 * var(--px));
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  gap: 14px;
+  gap: calc(14 * var(--px));
 }
 
 .teaserLink:hover {
@@ -359,48 +359,48 @@
 .teaserBody {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: calc(10 * var(--px));
 }
 
 .number {
-  width: 48px;
-  height: 48px;
+  width: calc(48 * var(--px));
+  height: calc(48 * var(--px));
   border-radius: 50%;
   border: 1px solid var(--indigo-150);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: calc(14 * var(--px));
   font-weight: 500;
 }
 
 .teaserTitle {
   margin: 0;
   font-weight: 600;
-  font-size: 22px;
+  font-size: calc(22 * var(--px));
   line-height: 1.15;
   letter-spacing: -0.02em;
 }
 
 .teaserCopy {
   margin: 0;
-  font-size: 14.5px;
+  font-size: calc(14.5 * var(--px));
   line-height: 1.55;
   color: var(--text-3);
 }
 
 .teaserLast {
-  padding: 8px 4px;
+  padding: calc(8 * var(--px)) calc(4 * var(--px));
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: calc(14 * var(--px));
 }
 
 .explore {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: calc(12 * var(--px));
   text-decoration: none;
   color: var(--ink);
 }
@@ -411,7 +411,7 @@
 
 .exploreText {
   font-weight: 500;
-  font-size: 16px;
+  font-size: calc(16 * var(--px));
 }
 
 .teaserLinkBottom {
@@ -420,7 +420,7 @@
   color: inherit;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: calc(10 * var(--px));
 }
 
 .teaserLinkBottom:hover {
@@ -430,33 +430,33 @@
 /* ---------- What we do ---------- */
 
 .section {
-  padding: 120px var(--gutter) 0;
+  padding: calc(120 * var(--px)) var(--gutter) 0;
 }
 
 .stack48 {
   display: flex;
   flex-direction: column;
-  gap: 48px;
+  gap: calc(48 * var(--px));
 }
 
 .stack44 {
   display: flex;
   flex-direction: column;
-  gap: 44px;
+  gap: calc(44 * var(--px));
 }
 
 .aside {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 18px;
-  max-width: 340px;
+  gap: calc(18 * var(--px));
+  max-width: calc(340 * var(--px));
 }
 
 .asideCopy {
   margin: 0;
-  max-width: 340px;
-  font-size: 15px;
+  max-width: calc(340 * var(--px));
+  font-size: calc(15 * var(--px));
   line-height: 1.55;
   color: var(--text-3);
 }
@@ -464,11 +464,11 @@
 .viewAll {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: calc(12 * var(--px));
   text-decoration: none;
   color: var(--ink);
   font-weight: 500;
-  font-size: 15px;
+  font-size: calc(15 * var(--px));
 }
 
 .viewAll:hover {
@@ -477,8 +477,8 @@
 
 .cardGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(260 * var(--px)), 100%), 1fr));
+  gap: calc(20 * var(--px));
   margin: 0;
   padding: 0;
   list-style: none;
@@ -487,17 +487,17 @@
 .doCard {
   background: var(--indigo-50);
   border-radius: var(--radius-card);
-  padding: 28px;
+  padding: calc(28 * var(--px));
   display: flex;
   flex-direction: column;
-  gap: 36px;
-  min-height: 250px;
+  gap: calc(36 * var(--px));
+  min-height: calc(250 * var(--px));
   box-sizing: border-box;
 }
 
 .doIcon {
-  width: 60px;
-  height: 60px;
+  width: calc(60 * var(--px));
+  height: calc(60 * var(--px));
   border-radius: 50%;
   background: var(--tile-icon);
   display: flex;
@@ -509,19 +509,19 @@
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: calc(8 * var(--px));
 }
 
 .doTitle {
   margin: 0;
   font-weight: 600;
-  font-size: 19px;
+  font-size: calc(19 * var(--px));
   letter-spacing: -0.015em;
 }
 
 .doCopy {
   margin: 0;
-  font-size: 14.5px;
+  font-size: calc(14.5 * var(--px));
   line-height: 1.5;
   color: var(--text-3);
 }
@@ -530,8 +530,8 @@
 
 .valueGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(calc(280 * var(--px)), 100%), 1fr));
+  gap: calc(20 * var(--px));
   margin: 0;
   padding: 0;
   list-style: none;
@@ -540,16 +540,16 @@
 .value {
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: calc(18 * var(--px));
   background: var(--indigo-50);
   border-radius: var(--radius-card);
-  padding: 22px;
+  padding: calc(22 * var(--px));
 }
 
 .valueIcon {
-  width: 56px;
-  height: 56px;
-  border-radius: 16px;
+  width: calc(56 * var(--px));
+  height: calc(56 * var(--px));
+  border-radius: calc(16 * var(--px));
   background: var(--white);
   display: flex;
   align-items: center;
@@ -559,7 +559,7 @@
 
 .valueName {
   font-weight: 600;
-  font-size: 19px;
+  font-size: calc(19 * var(--px));
   letter-spacing: -0.015em;
 }
 
@@ -574,10 +574,10 @@
 
 .stat {
   margin: 0;
-  padding: 30px 32px;
+  padding: calc(30 * var(--px)) calc(32 * var(--px));
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: calc(10 * var(--px));
 }
 
 .stat + .stat {
@@ -587,7 +587,7 @@
 .statNumber {
   margin: 0;
   font-weight: 600;
-  font-size: 40px;
+  font-size: calc(40 * var(--px));
   letter-spacing: -0.04em;
   line-height: 1;
   color: var(--ink);
@@ -595,7 +595,7 @@
 
 .statLabel {
   margin: 0;
-  font-size: 14.5px;
+  font-size: calc(14.5 * var(--px));
   color: var(--text-3);
 }
 
@@ -616,7 +616,7 @@
 @media (min-width: 761px) {
   .heroFold,
   .teaserSection {
-    --hero-gap: 32px;
+    --hero-gap: calc(32 * var(--px));
   }
 
   .heroFold {
@@ -624,7 +624,7 @@
     flex-direction: column;
     /* 1345px: the designed hero at full size with the tallest photo (860px).
        On taller screens the next section shows rather than an empty band. */
-    min-height: min(calc(100svh - var(--header-height) - var(--hero-gap)), 1345px);
+    min-height: min(calc(100svh - var(--header-height) - var(--hero-gap)), calc(1345 * var(--px)));
   }
 
   .teaserSection {
@@ -632,23 +632,23 @@
   }
 
   .heroSection {
-    padding-top: clamp(18px, calc(36px - (960px - 100svh) / 10), 36px);
+    padding-top: clamp(calc(18 * var(--px)), calc(calc(36 * var(--px)) - (calc(960 * var(--px)) - 100svh) / 10), calc(36 * var(--px)));
   }
 
   .heroLine1,
   .heroLine2 {
-    font-size: clamp(60px, min(10.4vw, calc(15svh - 40px)), 150px);
+    font-size: clamp(calc(60 * var(--px)), min(10.4vw, calc(15svh - calc(40 * var(--px)))), calc(150 * var(--px)));
   }
 
   .heroFoot {
-    margin-top: clamp(18px, calc(36px - (960px - 100svh) / 10), 36px);
+    margin-top: clamp(calc(18 * var(--px)), calc(calc(36 * var(--px)) - (calc(960 * var(--px)) - 100svh) / 10), calc(36 * var(--px)));
   }
 
   .heroImageSection {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    padding-top: clamp(16px, calc(32px - (960px - 100svh) / 10), 32px);
+    padding-top: clamp(calc(16 * var(--px)), calc(calc(32 * var(--px)) - (calc(960 * var(--px)) - 100svh) / 10), calc(32 * var(--px)));
   }
 
   .heroImage {
@@ -656,7 +656,7 @@
     width: 100%;
     box-sizing: border-box;
     height: auto;
-    min-height: 360px;
+    min-height: calc(360 * var(--px));
   }
 }
 
@@ -679,7 +679,7 @@
   }
 
   .heroImage {
-    height: 560px;
+    height: calc(560 * var(--px));
   }
 
   .referText {
@@ -687,6 +687,6 @@
   }
 
   .note {
-    font-size: 30px;
+    font-size: calc(30 * var(--px));
   }
 }

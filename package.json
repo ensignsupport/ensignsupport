@@ -11,9 +11,10 @@
     "test": "vitest run && playwright test",
     "check:emdash": "node scripts/check-em-dash.mjs",
     "check:launch": "node scripts/check-launch.mjs",
-    "check": "npm run lint && npm run typecheck && npm run check:emdash && npm run build && npm test",
+    "check": "npm run lint && npm run typecheck && npm run check:emdash && npm run check:scale && npm run build && npm test",
     "test:unit": "vitest run",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "check:scale": "node scripts/check-scale.mjs"
   },
   "dependencies": {
     "@netlify/database": "^2.0.1",

@@ -3,7 +3,14 @@
 /* Extra values used in the approved design source that design-tokens.css
    does not name. Named here so components never hard code a hex value. */
 :root {
-  --header-height: 92px;     /* sticky header, components/SiteHeader.module.css */
+  /* One scale for the whole site (C76, docs/decisions/0006-the-site-scales-to-every-screen.md).
+     Every size in the styles is written as N * var(--px). It is exactly 1px at the
+     design's own screen (1440 wide, 900 tall) and anything smaller, so the design
+     is matched pixel for pixel there. On bigger screens it grows with whichever is
+     tighter, width or height, up to 1.6px, so the whole page grows evenly instead of
+     sitting in a small strip. Phones and tablets use the design's breakpoints. */
+  --px: clamp(1px, min(100vw / 1440, 100svh / 900), 1.6px);
+  --header-height: calc(92 * var(--px));     /* sticky header, components/SiteHeader.module.css */
   --ink-2: #4A5373;          /* inactive nav, wordmark second word */
   --ink-footer: #3A3F52;     /* footer links and copy */
   --label-muted: #6B7493;    /* admin labels, footer column heads on phones */
@@ -36,7 +43,7 @@
 
 html {
   /* In-page jumps land below the sticky header. */
-  scroll-padding-top: 100px;
+  scroll-padding-top: calc(100 * var(--px));
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
@@ -73,7 +80,7 @@ textarea {
 /* One visible focus ring everywhere. Dark bands switch it to white. */
 :focus-visible {
   outline: 2px solid var(--indigo-700);
-  outline-offset: 3px;
+  outline-offset: calc(3 * var(--px));
 }
 
 .on-dark :focus-visible {
@@ -94,20 +101,20 @@ textarea {
 
 .skip-link {
   position: absolute;
-  left: 16px;
+  left: calc(16 * var(--px));
   top: -100px;
   z-index: 100;
   background: var(--white);
   color: var(--ink);
-  padding: 12px 18px;
+  padding: calc(12 * var(--px)) calc(18 * var(--px));
   border-radius: var(--radius-pill);
   font-weight: 500;
   text-decoration: none;
-  box-shadow: 0 10px 24px -10px rgba(18, 20, 31, 0.4);
+  box-shadow: 0 calc(10 * var(--px)) calc(24 * var(--px)) -10px rgba(18, 20, 31, 0.4);
 }
 
 .skip-link:focus {
-  top: 16px;
+  top: calc(16 * var(--px));
 }
 
 /* Motion stops for anyone who asks for less of it. */

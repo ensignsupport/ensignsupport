@@ -2,14 +2,14 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 24px 48px;
+  gap: calc(24 * var(--px)) calc(48 * var(--px));
   flex-wrap: wrap;
 }
 
 .lead {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: calc(16 * var(--px));
 }
 
 .title {
@@ -21,7 +21,7 @@
 
 /* Home uses a slightly larger heading than the inner pages. */
 .home {
-  font-size: clamp(36px, 4.2vw, 56px);
+  font-size: clamp(calc(36 * var(--px)), 4.2vw, calc(56 * var(--px)));
 }
 
 .page {

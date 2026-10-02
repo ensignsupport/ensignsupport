@@ -15,11 +15,11 @@ a:hover > .circle,
 }
 
 .s40 {
-  width: 40px;
-  height: 40px;
+  width: calc(40 * var(--px));
+  height: calc(40 * var(--px));
 }
 
 .s52 {
-  width: 52px;
-  height: 52px;
+  width: calc(52 * var(--px));
+  height: calc(52 * var(--px));
 }

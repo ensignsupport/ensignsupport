@@ -124,7 +124,7 @@ export default function HomePage() {
                 fill
                 priority
                 // object-fit: cover crops this photo to the box height, so it is requested wider than its box.
-                sizes="(max-width: 760px) 100vw, min(65vw, 1160px)"
+                sizes="(max-width: 760px) 100vw, (orientation: portrait) 1600px, min(65vw, 1860px)"
                 className={styles.photo}
                 style={{ objectPosition: "22% center" }}
               />
@@ -136,7 +136,7 @@ export default function HomePage() {
                 fill
                 priority
                 // A wide photo in a tall box: requested at box height times its 2.33 aspect ratio.
-                sizes="(max-width: 760px) 660px, min(112vw, 2000px)"
+                sizes="(max-width: 760px) 660px, (orientation: portrait) 2400px, min(112vw, 3200px)"
                 className={styles.photo}
                 style={{ objectPosition: "96% center" }}
               />
@@ -153,7 +153,7 @@ export default function HomePage() {
                 src={recoveryCoaching}
                 alt=""
                 fill
-                sizes="270px"
+                sizes="(min-width: 1441px) 19vw, 270px"
                 className={styles.photo}
                 style={{ objectPosition: "50% 62%" }}
               />
@@ -192,7 +192,7 @@ export default function HomePage() {
               src={supportCoordination}
               alt="A coordinator on a video call with a participant and therapist, cross-checking the support plan"
               fill
-              sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 310px"
+              sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, (min-width: 1441px) 22vw, 310px"
               className={styles.photo}
               style={{ objectPosition: "center 40%" }}
             />
@@ -219,7 +219,7 @@ export default function HomePage() {
               src={recoveryCoaching}
               alt="A participant writing her goals in a notebook during a coaching session"
               fill
-              sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, 310px"
+              sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, (min-width: 1441px) 22vw, 310px"
               className={styles.photo}
               style={{ objectPosition: "60% 30%" }}
             />

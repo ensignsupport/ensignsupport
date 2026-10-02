@@ -1,5 +1,5 @@
 .section {
-  padding: 120px var(--gutter) 0;
+  padding: calc(120 * var(--px)) var(--gutter) 0;
 }
 
 .band {
@@ -16,8 +16,8 @@
   position: absolute;
   right: -90px;
   top: -40px;
-  width: 700px;
-  height: 420px;
+  width: calc(700 * var(--px));
+  height: calc(420 * var(--px));
 }
 
 .grid {
@@ -25,16 +25,16 @@
   box-sizing: border-box;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr);
-  padding: clamp(36px, 4.4vw, 56px);
+  padding: clamp(calc(36 * var(--px)), 4.4vw, calc(56 * var(--px)));
   align-items: center;
-  gap: 40px 48px;
+  gap: calc(40 * var(--px)) calc(48 * var(--px));
 }
 
 .lead {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 16px;
+  gap: calc(16 * var(--px));
 }
 
 .heading {
@@ -47,13 +47,13 @@
 }
 
 .button {
-  margin-top: 14px;
+  margin-top: calc(14 * var(--px));
 }
 
 .feats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px 24px;
+  gap: calc(28 * var(--px)) calc(24 * var(--px));
   align-items: start;
   margin: 0;
   padding: 0;
@@ -68,15 +68,15 @@
 }
 
 .featRule {
-  margin-top: 16px;
-  width: 32px;
+  margin-top: calc(16 * var(--px));
+  width: calc(32 * var(--px));
   height: 1px;
   background: rgba(255, 255, 255, 0.4);
 }
 
 .featText {
-  margin-top: 16px;
-  font-size: 15px;
+  margin-top: calc(16 * var(--px));
+  font-size: calc(15 * var(--px));
   line-height: 1.75;
   color: var(--indigo-100);
 }

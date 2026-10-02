@@ -30,6 +30,7 @@ Rules every change must keep. If a change breaks one, it is not done.
 - Accent `#2236B5` is for Make a Referral actions only (plus focus rings and selected states).
 - Three colours are darkened slightly to pass WCAG 2.2 AA. See `docs/decisions/0002-accessibility-colours.md`.
 - One CSS Module per component, so class names never collide (C55).
+- Every size is written as `N * var(--px)`, never a fixed px (C76). The whole site then scales evenly on screens bigger than the design's 1440 by 900, and is the design pixel for pixel at that size and below. See `docs/decisions/0006-the-site-scales-to-every-screen.md`.
 
 ## Security and privacy
 
@@ -45,12 +46,14 @@ Rules every change must keep. If a change breaks one, it is not done.
 npm run lint          # code style
 npm run typecheck     # types
 npm run check:emdash  # no em dashes in anything we wrote
+npm run check:scale   # every size follows the site scale, no fixed px
 npm run build         # production build
 npm test              # unit tests (alerts), then browser tests:
                       # forms really save, alerts carry no details, a database outage is never "sent",
                       # every page at 390, 768, 1024, 1280, 1440, 1600px:
                       # loads clean, no sideways scroll, WCAG 2.2 AA (axe),
                       # shared parts pixel-compared with the design,
-                      # Home hero fills the first screen from 1280x800 to 2560x1300
+                      # Home hero fills the first screen from 1280x800 to 2560x1300,
+                      # every page on 14 real screens, phone to 4K, nothing looks broken
 npm run check:launch  # must pass before launch: no placeholders, stand-ins or sample data
 ```

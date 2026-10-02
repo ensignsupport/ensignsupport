@@ -16,14 +16,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: calc(24 * var(--px));
   flex-wrap: wrap;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: calc(10 * var(--px));
   text-decoration: none;
   color: var(--ink);
   flex: 1 1 0;
@@ -34,9 +34,9 @@
 }
 
 .logoTile {
-  width: 40px;
-  height: 40px;
-  border-radius: 11px;
+  width: calc(40 * var(--px));
+  height: calc(40 * var(--px));
+  border-radius: calc(11 * var(--px));
   background: var(--indigo-100);
   display: flex;
   align-items: center;
@@ -46,7 +46,7 @@
 
 .wordmark {
   font-weight: 600;
-  font-size: 20px;
+  font-size: calc(20 * var(--px));
   letter-spacing: -0.02em;
 }
 
@@ -58,8 +58,8 @@
 .nav {
   display: flex;
   align-items: center;
-  gap: 36px;
-  font-size: 14.5px;
+  gap: calc(36 * var(--px));
+  font-size: calc(14.5 * var(--px));
 }
 
 .navLink {
@@ -77,13 +77,13 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
-  padding-top: 10px;
+  gap: calc(5 * var(--px));
+  padding-top: calc(10 * var(--px));
 }
 
 .navDot {
-  width: 4px;
-  height: 4px;
+  width: calc(4 * var(--px));
+  height: calc(4 * var(--px));
   border-radius: 50%;
   background: var(--ink);
 }
@@ -92,13 +92,13 @@
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 14px;
+  gap: calc(14 * var(--px));
   flex: 1 1 0;
 }
 
 .circle {
-  width: 46px;
-  height: 46px;
+  width: calc(46 * var(--px));
+  height: calc(46 * var(--px));
   border-radius: 50%;
   background: var(--circle-bg);
   display: flex;
@@ -124,12 +124,12 @@
   position: absolute;
   left: 0;
   right: 0;
-  top: 84px;
+  top: calc(84 * var(--px));
   z-index: 30;
   background: var(--white);
   border-radius: var(--radius-card);
-  padding: 10px 18px 20px;
-  box-shadow: 0 24px 48px -20px rgba(18, 20, 31, 0.3);
+  padding: calc(10 * var(--px)) calc(18 * var(--px)) calc(20 * var(--px));
+  box-shadow: 0 calc(24 * var(--px)) calc(48 * var(--px)) -20px rgba(18, 20, 31, 0.3);
   display: flex;
   flex-direction: column;
 }
@@ -138,12 +138,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 52px;
-  padding: 0 6px;
+  height: calc(52 * var(--px));
+  padding: 0 calc(6 * var(--px));
   border-bottom: 1px solid var(--divider-menu);
   color: var(--ink);
   text-decoration: none;
-  font-size: 17px;
+  font-size: calc(17 * var(--px));
 }
 
 .mlink:hover {
@@ -155,7 +155,7 @@
 }
 
 .menuButton {
-  margin-top: 18px;
+  margin-top: calc(18 * var(--px));
 }
 
 @media (max-width: 760px) {
@@ -169,6 +169,6 @@
   }
 
   .wordmark {
-    font-size: 17px;
+    font-size: calc(17 * var(--px));
   }
 }

@@ -66,7 +66,7 @@ export default function AboutPage() {
             fill
             priority
             // On narrow screens the box is taller than the photo's shape, so the photo is requested wider.
-            sizes="(max-width: 900px) 760px, (max-width: 1344px) 100vw, 1280px"
+            sizes="(max-width: 900px) 760px, (max-width: 1344px) 100vw, (min-width: 1441px) 89vw, 1280px"
             className={styles.img}
             style={{ objectPosition: "40% 62%" }}
           />

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { siteScale } from "./screens";
 
 /**
  * The Home hero fits the first screen on laptops and monitors (C61, raised by
@@ -19,6 +20,7 @@ for (const { w, h } of SCREENS) {
     const page = await context.newPage();
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
+    const scale = await siteScale(page);
     const m = await page.evaluate(() => {
       const box = (el: Element | null) => el!.getBoundingClientRect();
       const ctas = [...document.querySelectorAll("main a")].filter((a) => a.textContent?.includes("Make a Referral"));
@@ -32,8 +34,8 @@ for (const { w, h } of SCREENS) {
     // The headline, buttons and the whole photo are on the first screen,
     expect(m.cta).toBeLessThan(h);
     expect(m.image.height).toBeGreaterThanOrEqual(360);
-    // with 32px of space under the photo so its rounded corners show,
-    expect(Math.abs(h - m.image.bottom - 32)).toBeLessThanOrEqual(1);
+    // with 32px of space under the photo (grown with the site scale) so its rounded corners show,
+    expect(Math.abs(h - m.image.bottom - 32 * scale)).toBeLessThanOrEqual(1);
     // and the service row starts at the fold, not part way up the screen.
     expect(Math.abs(m.cards - h)).toBeLessThanOrEqual(1);
     await context.close();
@@ -79,12 +81,13 @@ for (const { w, h } of [{ w: 2560, h: 1600 }, { w: 3840, h: 2000 }, { w: 1080, h
     const page = await context.newPage();
     await page.goto("/");
     await page.evaluate(() => document.fonts.ready);
+    const scale = await siteScale(page);
     const gap = await page.evaluate(() => {
       const photo = document.querySelector('[class*="heroImageSection"] > div')!.getBoundingClientRect();
       const row = document.querySelector('section[aria-label="Our services"] > div')!.getBoundingClientRect();
       return row.top - photo.bottom;
     });
-    expect(Math.abs(gap - 32)).toBeLessThanOrEqual(1);
+    expect(Math.abs(gap - 32 * scale)).toBeLessThanOrEqual(1);
     await context.close();
   });
 }

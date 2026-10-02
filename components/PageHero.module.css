@@ -1,5 +1,5 @@
 .section {
-  padding: 48px var(--gutter) 0;
+  padding: calc(48 * var(--px)) var(--gutter) 0;
 }
 
 .inner {
@@ -7,13 +7,13 @@
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 22px;
+  gap: calc(22 * var(--px));
 }
 
 .kicker {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: calc(8 * var(--px));
   color: var(--text-3);
   font-size: var(--eyebrow);
 }
@@ -22,7 +22,7 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 24px 48px;
+  gap: calc(24 * var(--px)) calc(48 * var(--px));
   flex-wrap: wrap;
 }
 
@@ -40,9 +40,9 @@
 }
 
 .intro {
-  margin: 0 0 14px;
-  max-width: 360px;
-  font-size: 16px;
+  margin: 0 0 calc(14 * var(--px));
+  max-width: calc(360 * var(--px));
+  font-size: calc(16 * var(--px));
   line-height: 1.55;
   color: var(--text-3);
 }
@@ -53,10 +53,10 @@
    upwards they are exactly the design. Page content below scrolls as designed. */
 @media (min-width: 761px) {
   .section {
-    padding-top: clamp(28px, calc(48px - (900px - 100svh) / 5), 48px);
+    padding-top: clamp(calc(28 * var(--px)), calc(calc(48 * var(--px)) - (calc(900 * var(--px)) - 100svh) / 5), calc(48 * var(--px)));
   }
 
   .title {
-    font-size: clamp(52px, min(7.6vw, calc(15svh - 25px)), 112px);
+    font-size: clamp(calc(52 * var(--px)), min(7.6vw, calc(15svh - calc(25 * var(--px)))), calc(112 * var(--px)));
   }
 }

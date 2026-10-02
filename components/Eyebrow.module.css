@@ -1,14 +1,14 @@
 .eyebrow {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: calc(8 * var(--px));
   color: var(--text-3);
   font-size: var(--eyebrow);
 }
 
 .dot {
-  width: 6px;
-  height: 6px;
+  width: calc(6 * var(--px));
+  height: calc(6 * var(--px));
   border-radius: 50%;
   background: var(--ink);
   flex: 0 0 auto;

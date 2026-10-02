@@ -70,7 +70,7 @@ export default function ServicesPage() {
                   src={service.image}
                   alt={service.alt}
                   fill
-                  sizes="(max-width: 1020px) 100vw, 610px"
+                  sizes="(max-width: 1020px) 100vw, (min-width: 1441px) 43vw, 610px"
                   className={styles.img}
                   style={{ objectPosition: service.position }}
                 />

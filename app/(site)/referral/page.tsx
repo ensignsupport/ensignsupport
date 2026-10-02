@@ -24,7 +24,7 @@ export default function ReferralPage() {
         intro="Participants, families and professionals can refer to Ensign Support Services. We work with self-managed and plan-managed NDIS participants."
       />
       <ReferralForm />
-      <div style={{ height: 40 }} aria-hidden="true" />
+      <div style={{ height: "calc(40 * var(--px))" }} aria-hidden="true" />
     </>
   );
 }

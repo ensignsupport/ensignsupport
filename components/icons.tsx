@@ -11,9 +11,13 @@ type IconProps = {
   className?: string;
 };
 
+// Sizes follow the site-wide scale (--px), like every other size on the site.
+const scaled = (n: number) => `calc(${n} * var(--px, 1px))`;
+
 const base = (size: number) => ({
   width: size,
   height: size,
+  style: { width: scaled(size), height: scaled(size) },
   viewBox: "0 0 24 24",
   fill: "none",
   "aria-hidden": true as const,

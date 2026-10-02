@@ -3,23 +3,23 @@
 .form {
   background: var(--indigo-50);
   border-radius: var(--radius-hero);
-  padding: clamp(28px, 3.4vw, 44px);
+  padding: clamp(calc(28 * var(--px)), 3.4vw, calc(44 * var(--px)));
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: calc(20 * var(--px));
 }
 
 .head {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: calc(8 * var(--px));
+  margin-bottom: calc(4 * var(--px));
 }
 
 .title {
   margin: 0;
   font-weight: 600;
-  font-size: 30px;
+  font-size: calc(30 * var(--px));
   letter-spacing: -0.03em;
 }
 
@@ -29,35 +29,35 @@
 
 .sub {
   margin: 0;
-  font-size: 15px;
+  font-size: calc(15 * var(--px));
   color: var(--text-3);
 }
 
 .button {
   align-self: flex-start;
-  margin-top: 4px;
+  margin-top: calc(4 * var(--px));
 }
 
 /* Added 2 Oct 2026 (Allen): one line linking to the privacy policy. */
 .privacy {
   margin: 0;
-  font-size: 14px;
+  font-size: calc(14 * var(--px));
   line-height: 1.5;
   color: var(--text-3);
 }
 
 .privacy a {
   color: var(--ink);
-  text-underline-offset: 3px;
+  text-underline-offset: calc(3 * var(--px));
 }
 
 .error {
   margin: 0;
-  padding: 14px 16px;
+  padding: calc(14 * var(--px)) calc(16 * var(--px));
   border-radius: var(--radius-input);
   background: var(--error-bg);
   color: var(--error);
-  font-size: 14.5px;
+  font-size: calc(14.5 * var(--px));
   line-height: 1.5;
 }
 
@@ -70,8 +70,8 @@
 }
 
 .doneIcon {
-  width: 64px;
-  height: 64px;
+  width: calc(64 * var(--px));
+  height: calc(64 * var(--px));
   border-radius: 50%;
   background: var(--white);
   display: flex;
@@ -83,12 +83,12 @@
   align-self: flex-start;
   display: inline-flex;
   align-items: center;
-  height: 52px;
-  padding: 0 6px;
+  height: calc(52 * var(--px));
+  padding: 0 calc(6 * var(--px));
   border: 0;
   background: transparent;
   font: inherit;
-  font-size: 15px;
+  font-size: calc(15 * var(--px));
   font-weight: 500;
   color: var(--ink-2);
   cursor: pointer;
