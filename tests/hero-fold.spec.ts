@@ -70,3 +70,21 @@ for (const path of ["/services", "/about", "/contact", "/referral"]) {
     expect(sizes[1300]).toBeCloseTo(109.44, 1); // 7.6% of 1440, the design size
   });
 }
+
+// Very tall screens: the hero stops growing, and the next section follows
+// 32px under the photo instead of leaving an empty band.
+for (const { w, h } of [{ w: 2560, h: 1600 }, { w: 3840, h: 2000 }, { w: 1080, h: 1800 }]) {
+  test(`Home hero on a very tall ${w}x${h} screen leaves no empty band`, async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: w, height: h } });
+    const page = await context.newPage();
+    await page.goto("/");
+    await page.evaluate(() => document.fonts.ready);
+    const gap = await page.evaluate(() => {
+      const photo = document.querySelector('[class*="heroImageSection"] > div')!.getBoundingClientRect();
+      const row = document.querySelector('section[aria-label="Our services"] > div')!.getBoundingClientRect();
+      return row.top - photo.bottom;
+    });
+    expect(Math.abs(gap - 32)).toBeLessThanOrEqual(1);
+    await context.close();
+  });
+}

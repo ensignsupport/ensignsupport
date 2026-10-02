@@ -15,7 +15,8 @@ Above 760px wide, the hero also follows the screen height (`app/(site)/home.modu
 
 - The headline is the smaller of the design size and a height-based size (15% of the screen height less 40px), never under 60px or over 150px.
 - The gaps above the headline, above the buttons and above the photo tighten on screens under 960px tall.
-- The photo fills whatever height is left, between 360px and 860px.
+- The photo fills whatever height is left, at least 360px tall.
+- The hero stops growing at 1345px tall (full-size headline plus an 860px photo). On taller screens (a 16 inch MacBook Pro, a 4K monitor, a monitor turned sideways) the next section shows below the photo rather than an empty band or a stretched photo.
 - The photo stops 32px above the bottom of the screen so its rounded corners show (Allen, 2 Oct 2026: the photo touching the screen edge looked cut off). The service row starts right at the fold, so nothing peeks in.
 - Because of that, the gap between the photo and the service row is 32px on screens wider than 760px. The design had 20px.
 
@@ -34,7 +35,8 @@ On a screen tall enough for the whole designed hero, the hero is exactly the des
 | 1440 x 900 | 95px | 414px | 32px gap, service row at the fold |
 | 1920 x 1080 | 122px | 524px | 32px gap, service row at the fold |
 | 2560 x 1300 | 150px | 691px | 32px gap, service row at the fold |
-| 1280 x 720, 1024 x 768 | smaller | 360px (its minimum) | runs a little past the fold |
+| 1280 x 720, 1366 x 768, 1024 x 768, iPad portrait | smaller | 360px or more | runs up to about 25px past the fold |
+| 2560 x 1600, 3840 x 2000 | 150px | 860px | 32px gap, then the next section shows |
 
 ## Other pages
 

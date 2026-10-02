@@ -605,7 +605,7 @@
    peeked in. Above 760px the hero now also follows screen height:
    - the headline shrinks on short screens (never past the design's 150px),
    - the gaps tighten on screens under 960px tall,
-   - the photo fills whatever height is left, between 360px and 860px,
+   - the photo fills whatever height is left, at least 360px tall,
    - the photo stops 32px above the bottom of the screen, so its rounded
      corners show, and the service row starts right at the fold. (The design's
      gap between the photo and the service row was 20px. Allen asked for more
@@ -622,7 +622,9 @@
   .heroFold {
     display: flex;
     flex-direction: column;
-    min-height: calc(100svh - var(--header-height) - var(--hero-gap));
+    /* 1345px: the designed hero at full size with the tallest photo (860px).
+       On taller screens the next section shows rather than an empty band. */
+    min-height: min(calc(100svh - var(--header-height) - var(--hero-gap)), 1345px);
   }
 
   .teaserSection {
@@ -655,7 +657,6 @@
     box-sizing: border-box;
     height: auto;
     min-height: 360px;
-    max-height: 860px;
   }
 }
 
