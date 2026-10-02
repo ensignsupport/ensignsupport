@@ -54,7 +54,10 @@ home_css='''
 .referrers .side{display:flex;flex-direction:column;align-items:flex-start;gap:var(--s3)}
 .referrers .side .btn{min-height:56px;padding:0 var(--s6);font-size:18px}
 .close{text-align:center}
-.close h2{font-size:clamp(40px,3vw + 22px,72px)}
+/* The page title has to be the largest heading on its own page. The hero H1
+   is capped at 50px by the laptop fold, so the section headings come down to
+   48px rather than the 60px site token. Home only. */
+.scene-grid h2,.head h2,.steps-head h2,.f1 h2,.meet h2,.close h2{font-size:clamp(28px,2.2vw + 16px,48px)}
 .close p{margin:var(--s4) auto 0;max-width:40ch}
 .close .btn{margin-top:var(--s6);min-height:60px;padding:0 var(--s7);font-size:18px}
 .foot{background:var(--indigo-900);color:var(--indigo-100);padding:var(--s8) 0 var(--s6);font-size:16px}
@@ -88,7 +91,7 @@ main .btn-primary,main .btn-ghost{min-height:56px;padding:0 var(--s6);font-size:
 .nowrap{white-space:nowrap}
 h1,h2,h3{text-wrap:balance}
 p,li,dd{text-wrap:pretty}
-.skip{position:absolute;left:-999px;top:8px;background:var(--n-0);padding:var(--s2) var(--s4);border-radius:8px;z-index:50}
+.skip{position:absolute;left:-999px;top:8px;background:var(--n-0);padding:var(--s2) var(--s4);border-radius:8px;z-index:70}
 .skip:focus{left:8px}
 @media (max-width:820px){
   .home-hero{padding-top:var(--s4)}
@@ -108,6 +111,13 @@ p,li,dd{text-wrap:pretty}
   .nav{gap:var(--s2)}.site-head .logo img{height:34px!important}.call-link{display:none!important}.call-btn{display:inline-flex!important;min-height:44px;padding:0 var(--s4)}
   .trust{padding-bottom:var(--s6)}.trust ul{grid-template-columns:1fr 1fr;gap:var(--s4)}
   .foot .grid{grid-template-columns:1fr;gap:var(--s6)}
+  /* On a phone the footer is the navigation, so its links have to be as
+     tappable as anything else. They were 19px tall. */
+  .foot ul{gap:0}
+  .foot ul li a{display:flex;align-items:center;min-height:48px}
+  .foot .base{gap:var(--s2)}
+  .foot .base a{display:inline-flex;align-items:center;min-height:44px}
+  .foot .crisis a{display:inline-flex;align-items:center;min-height:44px}
 }
 .pt-phone{display:none}
 

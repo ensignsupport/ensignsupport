@@ -20,7 +20,7 @@
 .ref-head .small{margin-top:var(--s4)}
 
 .ref-body{display:grid;grid-template-columns:4fr 8fr;gap:var(--s8);align-items:start;padding-bottom:var(--section)}
-.aside{position:sticky;top:var(--s6)}
+.aside{position:sticky;top:112px} /* 88px sticky header + 24px */
 .aside h2{font-size:var(--t-h3);font-weight:600;letter-spacing:-.01em;margin-bottom:var(--s4)}
 .ready{list-style:none;padding:0;margin:0 0 var(--s7);display:grid;gap:var(--s3)}
 .ready li{display:grid;grid-template-columns:24px 1fr;gap:var(--s3);font-size:16px;line-height:1.45}
@@ -175,3 +175,9 @@ fieldset.f{border:0;margin:0;padding:0}
 .ref-head{padding-top:var(--s7)!important}
 @media (min-width:821px){.grid2{align-items:start}.pills.three .pill label{font-size:16px;padding:0 var(--s3)}}
 .f>.hint{margin:0!important}
+
+/* Phone tap targets for the two controls the page owns. */
+@media (max-width:820px){
+  a.call{display:flex;align-items:center;justify-content:center;min-height:48px}
+  .areas summary{display:inline-flex;align-items:center;min-height:44px;padding-block:0}
+}

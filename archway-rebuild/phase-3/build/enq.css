@@ -5,10 +5,12 @@
 .demo-grid .lead{margin-top:var(--s5)}
 
 .enq{position:relative;max-width:560px}
-.enq-progress{display:flex;gap:6px;margin-bottom:var(--s5)}
-.enq-progress span{height:3px;flex:1;max-width:56px;border-radius:3px;background:var(--line);overflow:hidden;position:relative}
-.enq-progress span::after{content:"";position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 320ms var(--ease-out)}
-.enq-progress span.on::after{transform:scaleX(1)}
+/* One continuous bar. The three segment version this replaced left a
+   max-width:56px behind that clamped the fill, so the bar was dead on any
+   page without an override. The superseded rules are deleted, not overridden. */
+.enq-progress{display:block;width:170px;height:5px;border-radius:999px;background:var(--n-200,#e3e0da);overflow:hidden;margin-bottom:var(--s5)}
+.enq-progress .bar{display:block;height:100%;width:8%;border-radius:999px;max-width:none;min-width:0;flex:none;position:static;background:var(--accent);transition:width 420ms var(--ease-out)}
+@media (prefers-reduced-motion:reduce){.enq-progress .bar{transition:none}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 .enq-step{border:0;padding:0;margin:0;min-width:0}
@@ -96,7 +98,7 @@
 }
 @media (prefers-reduced-motion:reduce){
   .enq-step.enter{animation:none}
-  .row label::before,.row .txt,.row .arrow,.enq-progress span::after{transition:none}
+  .row label::before,.row .txt,.row .arrow{transition:none}
   .row .ink path{transition:none}
   .done .tick path{animation:none;stroke-dashoffset:0}
 }
@@ -128,7 +130,8 @@
 
 /* ---- shorter flow: 'Somewhere else' opens a field in place --------------- */
 .enq .where-pick{display:grid;gap:10px}
-.enq .other-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:var(--s3);
+.enq .other-btn:not([hidden]){display:flex}
+.enq .other-btn{width:100%;align-items:center;justify-content:space-between;gap:var(--s3);
   font:inherit;font-size:17px;font-weight:600;color:var(--text);text-align:left;cursor:pointer;
   background:var(--n-0);border:0;border-radius:14px;min-height:58px;padding:0 var(--s4) 0 var(--s5);
   box-shadow:0 1px 2px rgba(35,31,25,.07),0 14px 28px -20px rgba(35,31,25,.55);
@@ -141,7 +144,10 @@
   .enq .other-btn:hover .arrow{color:var(--accent);transform:translateX(3px)}
 }
 .enq .other-btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
-.enq .where-other:not([hidden]){display:grid;gap:var(--s3)}
+.enq .other-slot{position:relative}
+.enq .other-field:not([hidden]){display:block}
+.enq .other-field input{width:100%}
+.enq .other-field .err{position:absolute;left:0;top:100%;margin:2px 0 0}
 .enq .fields.two{grid-template-columns:1fr 1fr}
 .enq .ph{font-size:13px;font-weight:600;color:#8a5a00;background:#fff3d6;border-radius:6px;
   padding:2px 8px;justify-self:start;margin:0}

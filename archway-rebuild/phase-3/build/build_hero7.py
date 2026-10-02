@@ -30,8 +30,8 @@ markup='''<section class="home-hero v7"><div class="wrap"><div class="panel">
       <h1>One coordinator<br><span class="soft">you know <span class="mark-wrap">by name.<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span></span></h1>
       <p class="lead">Andrew reads your NDIS plan with you and comes to you in person.</p>
       <div class="cta">
-        <a class="btn btn-primary" href="#">Submit a referral</a>
-        <a class="btn btn-ghost call" href="tel:[PLACEHOLDER]">Call Andrew</a>
+        <a class="btn btn-primary call" href="tel:[PLACEHOLDER]">Call Andrew</a>
+        <a class="btn btn-ghost" href="#">Submit a referral</a>
       </div>
       <div class="formcard">%s</div>
     </div>
@@ -75,6 +75,14 @@ css='''
 
 .v7 .pcol{grid-column:1;grid-row:1;position:relative;z-index:3;display:grid;align-content:start;justify-items:start;
   gap:16px;padding:0}
+/* Every child gets an explicit order. The superseded hero 6 sheet still
+   carries .home-hero order rules that were deciding three of these five,
+   which put the buttons above the headline on a phone. */
+.v7 .pcol>.status{order:1}
+.v7 .pcol>h1{order:2}
+.v7 .pcol>.lead{order:3}
+.v7 .pcol>.cta{order:4}
+.v7 .pcol>.formcard{order:5}
 .v7 .pcol .lead{margin-top:0}
 .v7 .cta{margin-top:var(--s2)}
 .v7 .formcard{margin-top:18px}
@@ -105,7 +113,12 @@ css='''
 .v7 .formcard{position:relative;z-index:4;width:100%;background:none;
   border-radius:0;padding:0;box-shadow:none;
   min-height:var(--stage-h,280px);padding-bottom:16px;box-sizing:border-box;
-  display:flex;flex-direction:column;justify-content:flex-end}
+  display:flex;flex-direction:column}
+/* The form fills the fixed stage, so the progress bar and the question line
+   sit in exactly the same place on every step. Bottom aligning the form made
+   the box constant but slid the question up and down inside it by 100px. */
+.v7 .formcard .enq{flex:1;display:flex;flex-direction:column}
+.v7 .formcard .enq .enq-step{flex:1;display:flex;flex-direction:column;justify-content:flex-end}
 .v7 .formcard .enq{background:transparent;box-shadow:none;padding:0;max-width:none;margin:0;
   display:flex;flex-direction:column;min-height:0}
 .v7 .formcard .enq-top{flex:none}
@@ -125,13 +138,13 @@ css='''
 .v7 .rows{display:grid;gap:5px}
 .v7 .rows.two{grid-template-columns:1fr 1fr;column-gap:5px}
 .v7 .row{border-bottom:0}
-.v7 .row label,.v7 .other-btn{min-height:38px;padding:0 9px 0 12px;background:var(--n-0);
+.v7 .row label,.v7 .other-btn{min-height:44px;padding:0 9px 0 12px;background:var(--n-0);
   border-radius:10px;box-shadow:0 1px 2px rgba(35,31,25,.07),0 8px 18px -16px rgba(35,31,25,.55);
   justify-content:space-between}
 .v7 .other-slot{margin-top:5px}
 /* the two-column area rows carry a 56px rule from the component sheet: match the rest */
-.v7 .rows.two .row label{min-height:38px;padding:0 9px 0 12px}
-.v7 .other-field input{min-height:38px;height:38px;border-radius:10px;box-sizing:border-box;padding:0 12px;max-width:340px}
+.v7 .rows.two .row label{min-height:44px;padding:0 9px 0 12px}
+.v7 .other-field input{min-height:44px;height:44px;border-radius:10px;box-sizing:border-box;padding:0 12px;max-width:340px}
 .v7 .row .txt,.v7 .other-btn{font-size:14px;font-weight:600}
 .v7 .row .arrow,.v7 .other-btn .arrow{display:grid;width:22px;height:22px;border-radius:50%;
   background:transparent;box-shadow:none;color:var(--muted);transform:none}
@@ -141,7 +154,7 @@ css='''
 .v7 .fields{gap:8px;margin-top:0;max-width:340px}
 .v7 .fields.two{max-width:500px}
 .v7 .field label{font-size:13px;margin-bottom:3px}
-.v7 .field input,.v7 .field textarea{min-height:38px;font-size:15px;padding:0 12px;
+.v7 .field input,.v7 .field textarea{min-height:44px;font-size:15px;padding:0 12px;
   background:var(--n-0);border:0;border-bottom:0;border-radius:10px;
   box-shadow:0 1px 2px rgba(35,31,25,.07),inset 0 0 0 1.5px var(--field-line)}
 .v7 .field textarea{min-height:56px;padding:9px 12px;line-height:1.45}
@@ -152,7 +165,7 @@ css='''
 .v7 .field .help,.v7 .field .err{font-size:12px;margin-top:3px}
 .v7 .actions{margin-top:8px;align-items:center}
 /* a smaller Next / Send button, in proportion with the rows */
-.v7 .actions .btn{min-height:36px;padding:0 14px;font-size:14px;border-radius:999px}
+.v7 .actions .btn{min-height:44px;min-width:44px;padding:0 18px;font-size:15px;border-radius:999px}
 .v7 .actions .btn svg{width:15px;height:15px}
 .v7 .actions .back{font-size:14px}
 /* the placeholder tag rides in the actions row, so it adds no height and hits nothing */
@@ -161,7 +174,7 @@ css='''
 /* the answers-so-far chips sit above the question */
 .v7 .enq-step[data-step="4"] .enq-q{margin:0}
 .v7 .enq .recap{margin:0 0 8px;gap:6px}
-.v7 .enq .recap button{font-size:12px;padding:3px 8px;gap:5px}
+.v7 .enq .recap button{font-size:13px;padding:3px 10px;gap:5px;min-height:44px}
 .v7 .enq .recap button svg{width:12px;height:12px}
 .v7 .enq .help{font-size:12px;margin-top:4px}
 .v7 .enq .done .tick{width:36px;height:36px}
@@ -189,18 +202,31 @@ css='''
   .v7 .formcard{width:auto;justify-self:stretch;grid-column:auto}
   .v7 .hcreds ul{grid-template-columns:1fr 1fr}
 }
+/* On a phone the visitor is using a thumb, and there is no fold to protect,
+   so every control in the flow goes up to the 48px tap target. */
+@media (max-width:820px){
+  /* one fixed stage on the phone too, sized to the tallest step */
+  .v7 .formcard{--stage-h:340px}
+  .v7 .row label,.v7 .other-btn,.v7 .rows.two .row label{min-height:48px}
+  .v7 .other-field input,.v7 .field input,.v7 .field textarea{min-height:48px}
+  .v7 .other-field input{height:48px}
+  .v7 .actions .btn{min-height:48px}
+}
 @media (max-width:900px){
   .v7{padding-top:var(--s4)}
   .v7 .panel{border-radius:0}
   .v7 .top{grid-template-columns:1fr;row-gap:var(--s5);padding:var(--s5) 0 0}
-  .v7 .pt{grid-column:1;grid-row:auto;order:1;justify-self:center;max-width:250px;margin:0 0 var(--s4)}
-  .v7 .pcol{grid-column:1;grid-row:auto}
-  .v7 .pcol{order:2;padding:0}
-  .v7 .formcard{order:3}
-  .v7 h1{font-size:clamp(32px,8vw,42px)}
+  /* On a phone the headline comes first. The old order put the photo and
+     both buttons above it, so the visitor was asked to ring a stranger
+     before being told what he does. */
+  .v7 .pcol{grid-column:1;grid-row:auto;order:1;padding:0}
+  .v7 .pt{grid-column:1;grid-row:auto;order:2;justify-self:center;max-width:250px;margin:var(--s4) 0}
+  .v7 h1{font-size:clamp(36px,8vw,42px)}
   .v7 .hcreds{padding:0 0 var(--s5)}
   .v7 .hcreds ul{grid-template-columns:1fr 1fr;gap:var(--s4)}
-  .v7 .formcard{min-height:0;display:block}
+  /* the stage stays fixed on the phone too, so nothing below the card jumps
+     between questions. Bottom aligned, so the question line does not move. */
+  .v7 .formcard{min-height:var(--stage-h);display:flex;flex-direction:column;justify-content:flex-end}
   .v7 .fields.two{grid-template-columns:1fr}
 }
 '''

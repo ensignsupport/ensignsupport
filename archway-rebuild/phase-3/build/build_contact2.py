@@ -83,6 +83,24 @@ css='''
 .bc-rows b{display:block;font-size:18px;font-weight:600;overflow-wrap:anywhere}
 .bc-foot{margin:var(--s4) 0 0;padding-top:var(--s4);border-top:1px solid var(--line);font-size:15px;font-weight:600;color:var(--accent-strong)}
 .ct-right .enq{max-width:none}
+/* One fixed stage for the whole flow. Allen's rule: the box never changes size
+   between questions, so nothing below it jumps. Sized to the tallest step and
+   measured, not guessed. The steps sit at the bottom of the stage so the
+   question line stays in the same place on every screen. */
+.ct-right .enq{min-height:var(--ct-stage,700px);height:var(--ct-stage,700px);display:flex;flex-direction:column}
+.ct-right .enq .enq-step{flex:1;display:flex;flex-direction:column;justify-content:flex-start}
+@media (max-width:820px){
+  /* Same compact controls as the home page flow, so the widget is one thing
+     across the site and the fixed stage does not have to be taller than the
+     phone screen. 48px keeps every control at the tap target. */
+  .ct-right .enq .rows .row label,.ct-right .enq .other-btn{min-height:48px}
+  .ct-right .enq .field input,.ct-right .enq .field textarea{min-height:48px}
+  .ct-right .enq .actions .btn{min-height:48px}
+  /* the four areas stay two across on the phone, same as the home flow.
+     One column made this step 725px tall, taller than the phone screen. */
+  .ct-right .enq .rows.two{grid-template-columns:1fr 1fr;column-gap:var(--s3)}
+  .ct-right .enq{--ct-stage:670px}
+}
 .or{display:none}
 .send-h{font-size:var(--t-h3);font-weight:500;margin:0 0 var(--s4)}
 .enq{margin-top:0}
@@ -116,6 +134,10 @@ css='''
   .ct{padding-top:var(--s4)}
   .ct-grid{grid-template-columns:1fr;gap:var(--s6)}
   .bcard{padding:var(--s5)}
+  /* At 320 the name and role block refuses to shrink beside the avatar and
+     pushes the whole card past the screen. */
+  .ct-left,.ct-right,.bcard,.bc-top,.bc-top>*{min-width:0}
+  .bc-top{flex-wrap:wrap}
   .or{display:flex;align-items:center;gap:var(--s3);color:var(--muted);margin:0 0 var(--s4)}
   .or::before,.or::after{content:"";flex:1;border-top:1px solid var(--line)}
   .h-card{padding:var(--s5)}

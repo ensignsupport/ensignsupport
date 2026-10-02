@@ -81,7 +81,7 @@ css='''
 .short span{font-size:16px;color:var(--muted)}
 .pv-body{display:grid;grid-template-columns:3fr 8fr;gap:var(--s8);align-items:start;padding-bottom:var(--section)}
 .pv-body>*{min-width:0}
-.pv-nav{position:sticky;top:var(--s5)}
+.pv-nav{position:sticky;top:104px} /* 88px sticky header + 16px */
 .pv-nav summary{list-style:none;cursor:default}.pv-nav summary::-webkit-details-marker{display:none}
 .lbl{font-size:15px;font-weight:600;color:var(--muted);margin:0 0 var(--s3)}
 .toc{list-style:none;margin:0;padding:0;border-left:2px solid var(--line)}

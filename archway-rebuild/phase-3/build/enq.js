@@ -2,9 +2,9 @@
   var ANDREW_SMS='+61400000000'; // [PLACEHOLDER: Andrew's mobile]
   var STEPS=5, DONE_WEB=5, DONE_SMS=6;
   var form=document.getElementById('enq'), steps=[].slice.call(form.querySelectorAll('.enq-step')),
-      bars=[].slice.call(form.querySelectorAll('.enq-progress span')), live=document.getElementById('enq-live'),
+      bar=form.querySelector('.enq-progress .bar'), live=document.getElementById('enq-live'),
       logEl=document.getElementById('log');
-  var pick=form.querySelector('.where-pick'), other=form.querySelector('.where-other'),
+  var other=form.querySelector('.other-field'),
       otherBtn=form.querySelector('.other-btn'), nextOnWhere=form.querySelector('[data-step="1"] .next');
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var forced=null; // demo override: 'phone' | 'computer'
@@ -13,12 +13,17 @@
   function areaVal(){ return form.elements.area ? form.elements.area.value.trim() : ''; }
   function whereLabel(){ return val('where') || areaVal(); }
 
+  function cancelAdvance(){ clearTimeout(timer); timer=null; }
   function show(i,focus){
+    cancelAdvance();
     steps.forEach(function(s,k){ s.hidden=k!==i; s.classList.remove('enter'); });
     var s=steps[i]; if(!reduce){ void s.offsetWidth; s.classList.add('enter'); }
-    bars.forEach(function(b,k){ b.classList.toggle('on',k<=Math.min(i,STEPS-1)); });
+    // starts near empty (nothing answered yet), then runs ahead of the real
+    // progress so every step after the first feels nearly done
+    var PCT=[8,45,66,82,93];
+    if(bar) bar.style.width=(i<STEPS?PCT[i]:100)+'%';
     var label = i<STEPS ? 'Question '+(i+1)+' of '+STEPS : 'Done';
-    if(i<STEPS) live.textContent=label;
+    live.textContent=label;
     form.querySelector('.enq-count').textContent=label;
     form.querySelector('.meta').hidden = i>=STEPS-1;
     if(i===4){ paintRecap(); paintButton(); }
@@ -28,12 +33,32 @@
 
   // ---- choice steps: pick an answer, the line draws, then move on ----------
   var arrowNav=false, timer=null;
+  // Arrow keys move between answers without committing, so reveal the step's
+  // Next button as soon as one is chosen that way. Nothing on screen said
+  // Enter or Space would work.
+  function showNextFor(t){
+    var st=t.closest('.enq-step'); if(!st) return;
+    var n=st.querySelector('.next'); if(n) n.hidden=false;
+  }
   function advanceFrom(t){ var i=t.name==='who'?0:1; clearTimeout(timer); timer=setTimeout(function(){ show(i+1,true); }, reduce?0:480); }
   form.addEventListener('keydown',function(e){
     var t=e.target; if(t.type!=='radio') return;
-    if(e.key.indexOf('Arrow')===0){ arrowNav=true; return; }
+    if(e.key.indexOf('Arrow')===0){ arrowNav=true; showNextFor(t); return; }
     if(e.key==='Enter'){ e.preventDefault(); t.checked=true; if(t.name==='who') wording(); advanceFrom(t); }
     if(e.key===' '){ arrowNav=false; if(t.checked) advanceFrom(t); }
+  });
+  // Enter in a text field means "next question", not "send the form".
+  // Without this, Enter on the phone field skipped question 5 and submitted,
+  // and Enter on the name field set an error on a step nobody could see.
+  form.addEventListener('keydown',function(e){
+    if(e.key!=='Enter') return;
+    var t=e.target;
+    if(t.type==='radio'||t.tagName==='TEXTAREA'||t.tagName==='BUTTON') return;
+    var st=t.closest('.enq-step'); if(!st) return;
+    var cur=Number(st.dataset.step);
+    if(isNaN(cur)||cur>=STEPS-1) return; // last step: let the real submit run
+    e.preventDefault();
+    if(validate(cur)) show(cur+1,true);
   });
   form.addEventListener('change',function(e){
     var t=e.target; if(t.type!=='radio') return;
@@ -43,17 +68,29 @@
     advanceFrom(t);
   });
 
+  // Coming Back and then clicking the same answer fires no change event, so
+  // mouse and touch had no way forward. Keyboard already worked via Space.
+  form.addEventListener('click',function(e){
+    var lab=e.target.closest('label'); if(!lab) return;
+    var inp=lab.htmlFor?document.getElementById(lab.htmlFor):lab.querySelector('input');
+    if(!inp||inp.type!=='radio'||!inp.checked) return;
+    arrowNav=false; advanceFrom(inp);
+  });
+
   // ---- 'Somewhere else' opens a field in place, so the box never grows -----
   function clearArea(){ if(form.elements.area) form.elements.area.value=''; }
+  // the button itself becomes the field, in the same row, so nothing moves
   function openOther(){
+    cancelAdvance();
     var w=form.querySelector('input[name="where"]:checked'); if(w) w.checked=false;
-    pick.hidden=true; other.hidden=false; nextOnWhere.hidden=false;
+    otherBtn.hidden=true; other.hidden=false; nextOnWhere.hidden=false;
     otherBtn.setAttribute('aria-expanded','true');
     var inp=form.elements.area; if(inp) inp.focus({preventScroll:true});
   }
   function closeOther(){
-    pick.hidden=false; other.hidden=true; nextOnWhere.hidden=true;
-    otherBtn.setAttribute('aria-expanded','false'); clearArea(); clearErr('area');
+    otherBtn.hidden=false; other.hidden=true; nextOnWhere.hidden=true;
+    otherBtn.setAttribute('aria-expanded','false'); clearErr('area');
+    // the typed area is kept, so reopening restores it. Picking a suburb clears it.
   }
   if(otherBtn) otherBtn.onclick=openOther;
 
@@ -97,7 +134,13 @@
     var ok=true;
     if(step===1){
       if(!val('where')){
-        if(!areaVal()){ setErr('area','Please tell Andrew which area you are in.'); ok=false; }
+        if(!areaVal()){
+          // the message lives inside the 'Somewhere else' field, so open it,
+          // or the error is set on something nobody can see and the form
+          // fails silently. The suburb buttons stay available either way.
+          if(other && other.hidden) openOther();
+          setErr('area','Please tell Andrew which area you are in.'); ok=false;
+        }
         else clearErr('area');
       }
     }
@@ -124,6 +167,7 @@
   form.querySelectorAll('.back').forEach(function(b){
     if(b.classList.contains('again')||!b.dataset.to) return;
     b.onclick=function(){
+      cancelAdvance();
       var cur=Number(b.closest('.enq-step').dataset.step);
       if(cur===1 && !other.hidden){ closeOther(); return; }
       show(Number(b.dataset.to),true);
@@ -139,7 +183,11 @@
   }
   var lastHref='';
   form.addEventListener('submit',function(e){
-    e.preventDefault(); if(!validate(1)||!validate(2)||!validate(3)) return;
+    e.preventDefault();
+    // Never fail silently on a step the visitor cannot see. Take them to it.
+    for(var st=1; st<=3; st++){
+      if(!validate(st)){ if(steps[st].hidden) show(st,true); else validate(st); return; }
+    }
     var btn=form.querySelector('.btn-send'), label=btn.querySelector('span'), before=label.textContent;
     var data={who:val('who'),where:whereLabel(),name:form.elements.name.value.trim(),
       phone:form.elements.phone.value.trim(),email:form.elements.email.value.trim(),

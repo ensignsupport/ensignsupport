@@ -423,3 +423,27 @@ Status: all entries are PROPOSED until Step E (skill-creator pass). Nothing here
 - **Rule:** Page behaviour on scroll is a checked item, not an assumption. Before a page is called done, assert the header's position after a scroll, not just at rest. If it is meant to stay, prove it stays, prove nothing paints over it across its full width, and prove it does not eat fold budget. The wider rule: every check must exercise the state the visitor will actually be in. A page at rest is one state out of many.
 - **Where in skill:** Phase 3 verification step (A5). Add scroll state to the per page checks alongside overflow and axe.
 - **Date:** 20 Sep 2026
+
+## C70. A superseded design left rules behind that broke the replacement
+- **Wrong:** Three separate failures with one cause. The progress bar's old three segment design left `max-width:56px` in the base sheet, so the bar was dead on the Contact page while working on Home, which had an override. The superseded hero 6 sheet left `.home-hero` order rules behind, which silently decided three of five children in the new hero and put the buttons above the headline on a phone. C54's `[hidden]` versus `display` clash came back a third time.
+- **Rule:** When a design is replaced, delete its rules. Do not override them. An override fixes the one surface you are looking at and leaves the old rule live everywhere else, and the failure surfaces on the page you did not check. After replacing a component, grep the sheets for the old class names and remove them, then prove the new component behaves identically on every page that uses it, not just the one you built it on. For whole classes of bug, prefer one rule that makes the mistake impossible: `[hidden]{display:none!important}` is now in the base sheet and C54 cannot happen again.
+- **Where in skill:** Phase 3, design system step and verification step.
+- **Date:** 21 Sep 2026
+
+## C71. A timer that outlives the thing it was waiting for
+- **Wrong:** Choosing an answer started a 480ms timer to advance. Tapping "Somewhere else" or Back inside that window did not cancel it, so the form jumped a step with no location recorded. The visitor then filled in three more questions, pressed Send, and nothing happened, ever, with no error, because the failed check set its message on a step that was hidden. A silent dead end on the primary conversion path.
+- **Rule:** Any deferred action must be cancelled by every event that changes the state it was going to act on. And a validation failure must never land on something the visitor cannot see: if a check fails on a hidden step, show that step first, and make sure the message itself is visible before setting it. Test every control pair at 100, 200, 300 and 400ms apart, not just at human speed.
+- **Where in skill:** Phase 3 enquiry flow step and verification step.
+- **Date:** 21 Sep 2026
+
+## C72. Scroll reveals that strand content
+- **Wrong:** The four recovery coaching steps used an IntersectionObserver with a negative rootMargin. A fast flick past them, or a jump down the page, carried them through without ever intersecting, so they stayed at opacity 0 permanently. A reviewer reading a screenshot reported the card as a broken empty box, and they were right.
+- **Rule:** A reveal is decoration. Content that never arrives is a defect. Every reveal needs two fail-safes: a scroll sweep that shows anything which has reached the screen whether or not the observer fired, and an absolute timeout that shows everything. Verify by jumping straight to the bottom of the page and asserting that nothing is left under 5 percent opacity. Capture review screenshots by scrolling in viewport steps, never one jump, or the reviewer judges a page that no visitor sees.
+- **Where in skill:** Phase 3 verification step.
+- **Date:** 21 Sep 2026
+
+## C73. Only the surface being looked at got checked
+- **Wrong:** The same enquiry flow exists on Home and on Contact. Every fix went onto Home, where the operator was looking. Contact kept a dead progress bar, a box that changed height by 305px between steps, and one column areas that made one step taller than the phone screen. The operator's rule that the box never grows had been stated once and enforced on one page.
+- **Rule:** A component used on more than one page is verified on every page that uses it, at every breakpoint, before it is called done. Write the check as a loop over pages, not as a one off on the page in front of you. The same applies to a rule the operator states: it is a rule for the component, not for the screen where they said it.
+- **Where in skill:** Phase 3 components step and verification step.
+- **Date:** 21 Sep 2026

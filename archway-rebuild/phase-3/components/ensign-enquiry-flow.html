@@ -15,7 +15,7 @@
   --lh-body:1.6;--lh-head:1.05;--track-display:-0.04em;--track-h2:-0.025em;
 
   /* Layout */
-  --page-max:1240px;--measure:60ch;--gutter:clamp(16px,4vw,48px);--section:clamp(64px,8vw,128px);
+  --page-max:1340px;--measure:60ch;--gutter:clamp(16px,4vw,48px);--section:clamp(64px,8vw,128px);
 
   /* Shape and motion */
   --r-sm:12px;--r-md:20px;--r-lg:32px;--r-pill:999px;--tap:48px;
@@ -23,6 +23,14 @@
 }
 body{--f-head:"Figtree";--f-body:"Figtree";--w-head:400}
 *{box-sizing:border-box;margin:0}
+/* C54, third occurrence. A display rule must never resurrect a hidden element.
+   One line makes that impossible for every component, now and later. */
+[hidden]{display:none!important}
+/* A long unbroken web address or reference must never push the page sideways. */
+p,li,dd,dt,td,th,figcaption,a{overflow-wrap:anywhere}
+/* Grid and flex children refuse to shrink below their content by default,
+   which is how one long word drags a whole page sideways. */
+.alpha li>*,.cl>*,.ch-text>*{min-width:0}
 html{background:var(--page)}
 body{background:var(--page);color:var(--text);font-family:var(--f-body),system-ui,sans-serif;font-size:var(--t-body);line-height:var(--lh-body);-webkit-font-smoothing:antialiased}
 img,svg{display:block;max-width:100%}
@@ -39,7 +47,46 @@ a{color:var(--accent)}
 :focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
 
 /* ===== Site: header ===== */
+html{scroll-padding-top:96px}
+.site-head{position:sticky;top:0;z-index:60;background:var(--page);transition:box-shadow var(--dur-ui) var(--ease-out)}
+.site-head::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line);opacity:0;transition:opacity var(--dur-ui) var(--ease-out)}
+.site-head.stuck::after{opacity:1}
+.site-head.stuck{box-shadow:0 10px 24px -22px rgba(15,34,94,.5)}
+@media (prefers-reduced-motion:reduce){.site-head,.site-head::after{transition:none}}
 .site-head .wrap{display:flex;align-items:center;justify-content:space-between;min-height:88px}
+/* At 320 the logo and the Call button ended up touching. The nav has to be
+   allowed to shrink, or the gap pushes it off the right edge instead. */
+.site-head .wrap{gap:var(--s4)}
+@media (max-width:360px){.site-head .wrap{gap:var(--s2)}}
+.site-head .logo{flex:0 1 auto;min-width:0}
+.site-head .logo img{max-width:100%}
+.site-head .nav{min-width:0;flex-wrap:nowrap}
+/* Phone and tablet menu. Overlays the page rather than pushing it, so opening
+   it never moves the content underneath. Hidden above 820px, where the real
+   nav is visible. */
+.mnav{position:absolute;left:0;right:0;top:100%;background:var(--page);border-top:1px solid var(--line);box-shadow:0 18px 30px -24px rgba(15,34,94,.55)}
+.mnav .wrap{display:flex;flex-direction:column;padding-block:var(--s2) var(--s4)}
+.mnav a{display:flex;align-items:center;min-height:56px;font-size:19px;color:var(--text);text-decoration:none;border-bottom:1px solid var(--line)}
+.mnav a:last-child{border-bottom:0}
+.mnav a[aria-current="page"]{font-weight:600;color:var(--accent-strong)}
+.mnav a:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+@media (min-width:821px){.mnav{display:none}}
+/* Phone tap targets. Every standalone control reaches 44px. Links sitting
+   inside a sentence keep their line rhythm and get their hit area grown with
+   padding instead, which matters most for the crisis numbers. */
+@media (max-width:820px){
+  .site-head .logo{display:flex;align-items:center;min-height:48px}
+  summary{min-height:44px;display:flex;align-items:center;gap:var(--s3)}
+  .pv-nav li a,.pv-nav a{display:flex;align-items:center;min-height:44px}
+  li>a:not(.btn):not(.chip){min-height:44px;display:flex;align-items:center}
+  /* Links inside a sentence keep their place in the line. The hit area is
+     grown with padding and pulled back with a matching negative margin, so
+     a finger gets 44px without the text moving. */
+  p a:not(.btn),li a:not(.btn):not([class]),dd a:not(.btn),summary a{display:inline-block;padding-block:13px;margin-block:-13px}
+  .crisis a,.crisis-card a{display:inline-flex;align-items:center;min-height:44px}
+  a.btn,button.btn{min-height:44px}
+}
+.nojs{margin:var(--s5) 0;padding:var(--s4) var(--s5);border-radius:var(--r-md);border:1px solid var(--line);background:var(--surface)}
 .brand{font-family:var(--f-head);font-size:26px;letter-spacing:-0.02em;color:var(--text);text-decoration:none;display:flex;align-items:center;gap:var(--s2)}
 .brand-dot{width:12px;height:12px;border-radius:50%;background:var(--accent)}
 .nav{display:flex;gap:var(--s6);align-items:center}
@@ -58,10 +105,12 @@ a{color:var(--accent)}
 .demo-grid .lead{margin-top:var(--s5)}
 
 .enq{position:relative;max-width:560px}
-.enq-progress{display:flex;gap:6px;margin-bottom:var(--s5)}
-.enq-progress span{height:3px;flex:1;max-width:56px;border-radius:3px;background:var(--line);overflow:hidden;position:relative}
-.enq-progress span::after{content:"";position:absolute;inset:0;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform 320ms var(--ease-out)}
-.enq-progress span.on::after{transform:scaleX(1)}
+/* One continuous bar. The three segment version this replaced left a
+   max-width:56px behind that clamped the fill, so the bar was dead on any
+   page without an override. The superseded rules are deleted, not overridden. */
+.enq-progress{display:block;width:170px;height:5px;border-radius:999px;background:var(--n-200,#e3e0da);overflow:hidden;margin-bottom:var(--s5)}
+.enq-progress .bar{display:block;height:100%;width:8%;border-radius:999px;max-width:none;min-width:0;flex:none;position:static;background:var(--accent);transition:width 420ms var(--ease-out)}
+@media (prefers-reduced-motion:reduce){.enq-progress .bar{transition:none}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 .enq-step{border:0;padding:0;margin:0;min-width:0}
@@ -149,7 +198,7 @@ a{color:var(--accent)}
 }
 @media (prefers-reduced-motion:reduce){
   .enq-step.enter{animation:none}
-  .row label::before,.row .txt,.row .arrow,.enq-progress span::after{transition:none}
+  .row label::before,.row .txt,.row .arrow{transition:none}
   .row .ink path{transition:none}
   .done .tick path{animation:none;stroke-dashoffset:0}
 }
@@ -178,6 +227,41 @@ a{color:var(--accent)}
 .row input:checked+label .ink path{stroke-dashoffset:0;opacity:1}
 .enq .meta{margin-top:var(--s5)}
 @media (max-width:820px){ .enq{padding:var(--s5)} .row label{padding:0 var(--s5)} }
+
+/* ---- shorter flow: 'Somewhere else' opens a field in place --------------- */
+.enq .where-pick{display:grid;gap:10px}
+.enq .other-btn:not([hidden]){display:flex}
+.enq .other-btn{width:100%;align-items:center;justify-content:space-between;gap:var(--s3);
+  font:inherit;font-size:17px;font-weight:600;color:var(--text);text-align:left;cursor:pointer;
+  background:var(--n-0);border:0;border-radius:14px;min-height:58px;padding:0 var(--s4) 0 var(--s5);
+  box-shadow:0 1px 2px rgba(35,31,25,.07),0 14px 28px -20px rgba(35,31,25,.55);
+  transition:transform 200ms var(--ease-out),box-shadow 200ms ease}
+.enq .other-btn .arrow{display:grid;place-items:center;width:26px;height:26px;color:var(--muted);flex:none}
+.enq .other-btn .arrow svg{width:17px;height:17px}
+@media (hover:hover) and (pointer:fine){
+  .enq .other-btn:hover{transform:translateY(-2px);
+    box-shadow:0 0 0 2px var(--accent),0 18px 34px -20px rgba(35,31,25,.55)}
+  .enq .other-btn:hover .arrow{color:var(--accent);transform:translateX(3px)}
+}
+.enq .other-btn:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.enq .other-slot{position:relative}
+.enq .other-field:not([hidden]){display:block}
+.enq .other-field input{width:100%}
+.enq .other-field .err{position:absolute;left:0;top:100%;margin:2px 0 0}
+.enq .fields.two{grid-template-columns:1fr 1fr}
+.enq .ph{font-size:13px;font-weight:600;color:#8a5a00;background:#fff3d6;border-radius:6px;
+  padding:2px 8px;justify-self:start;margin:0}
+.enq .next{margin-right:var(--s3)}
+@media (prefers-reduced-motion:reduce){ .enq .other-btn{transition:none} }
+@media (max-width:820px){ .enq .fields.two{grid-template-columns:1fr} }
+/* a reserved, empty actions row keeps step 1 the same height as step 0 */
+.enq .actions.spacer{min-height:44px;pointer-events:none}
+/* the confirmation screens stay inside the same box */
+.enq .done{text-align:left}
+.enq .done .tick{width:44px;height:44px}
+.enq .done h2{font-size:20px;line-height:1.3;margin:var(--s3) 0 var(--s2)}
+.enq .done p{margin:0;font-size:15px}
+.enq .done .again{margin-top:var(--s3)}
 </style></head><body><div class="sheet-bar"><div class="wrap"><strong>Component 1 · Enquiry flow</strong>
 <button data-dev="computer" aria-pressed="false">Preview as computer</button><button data-dev="phone" aria-pressed="false">Preview as phone</button>
 <span class="note">Prototype: nothing is sent. The grey box shows what would be saved.</span></div></div>
@@ -187,107 +271,244 @@ a{color:var(--accent)}
 <div><h1>One coordinator you know by name.</h1><p class="lead">Andrew reads your NDIS plan with you and comes to you in person.</p></div>
 <div>
 <form id="enq" class="enq" action="/api/enquiries" method="post" novalidate aria-label="Start an enquiry">
-  <div class="enq-top"><div class="enq-progress" aria-hidden="true"><span></span><span></span><span></span></div><span class="enq-count" aria-hidden="true">Question 1 of 3</span></div>
+  <div class="enq-top"><div class="enq-progress" aria-hidden="true"><span class="bar"></span></div><span class="enq-count" aria-hidden="true">Question 1 of 5</span></div>
   <p id="enq-live" class="sr" aria-live="polite"></p>
-  <fieldset class="enq-step" data-step="0"><legend class="enq-q">Who is this for?</legend><ul class="rows"><li class="row"><input type="radio" id="who-0" name="who" value="Me" required><label for="who-0"><span class="txt">Me<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="who-1" name="who" value="Someone I support" required><label for="who-1"><span class="txt">Someone I support<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="who-2" name="who" value="I’m referring someone" required><label for="who-2"><span class="txt">I’m referring someone<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li></ul></fieldset>
-  <fieldset class="enq-step" data-step="1" hidden><legend class="enq-q">Where are they?</legend><ul class="rows two"><li class="row"><input type="radio" id="where-0" name="where" value="Brisbane" required><label for="where-0"><span class="txt">Brisbane<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-1" name="where" value="Ipswich" required><label for="where-1"><span class="txt">Ipswich<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-2" name="where" value="Logan" required><label for="where-2"><span class="txt">Logan<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-3" name="where" value="Moreton Bay" required><label for="where-3"><span class="txt">Moreton Bay<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-4" name="where" value="Redlands" required><label for="where-4"><span class="txt">Redlands<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-5" name="where" value="Gold Coast" required><label for="where-5"><span class="txt">Gold Coast<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-6" name="where" value="Sunshine Coast" required><label for="where-6"><span class="txt">Sunshine Coast<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-7" name="where" value="Scenic Rim" required><label for="where-7"><span class="txt">Scenic Rim<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-8" name="where" value="Lockyer Valley" required><label for="where-8"><span class="txt">Lockyer Valley<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-9" name="where" value="Somewhere else" required><label for="where-9"><span class="txt">Somewhere else<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li></ul><p class="hint">Outside these areas? Choose Somewhere else and Andrew will let you know if he can help.</p>
-    <div class="actions"><button type="button" class="back" data-to="0">Back</button></div></fieldset>
-  <fieldset class="enq-step" data-step="2" hidden><legend class="enq-q">How can Andrew reach you?</legend>
-    <div class="recap" aria-label="Your answers"></div>
-    <div class="fields">
-      <div class="field"><label for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name" required><p class="err" id="f-name-e" hidden></p></div>
-      <div class="field"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required><p class="err" id="f-phone-e" hidden></p></div>
-      <div class="field"><label for="f-note">Anything Andrew should know first? <span class="opt">(optional)</span></label><textarea id="f-note" name="note" rows="2" aria-describedby="f-note-h"></textarea><p class="help" id="f-note-h">Please don’t include health details.</p></div>
+
+  <fieldset class="enq-step" data-step="0"><legend class="enq-q">Who is this for?</legend><ul class="rows"><li class="row"><input type="radio" id="who-0" name="who" value="Me" required><label for="who-0"><span class="txt">Me<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="who-1" name="who" value="Someone I support" required><label for="who-1"><span class="txt">Someone I support<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="who-2" name="who" value="I'm referring someone" required><label for="who-2"><span class="txt">I'm referring someone<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li></ul>
+    <div class="actions spacer" aria-hidden="true"></div></fieldset>
+
+  <fieldset class="enq-step" data-step="1" hidden><legend class="enq-q">Where are you?</legend>
+    <div class="where-pick">
+      <ul class="rows two"><li class="row"><input type="radio" id="where-0" name="where" value="Brisbane" required><label for="where-0"><span class="txt">Brisbane<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-1" name="where" value="Ipswich" required><label for="where-1"><span class="txt">Ipswich<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-2" name="where" value="Logan" required><label for="where-2"><span class="txt">Logan<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li><li class="row"><input type="radio" id="where-3" name="where" value="Moreton Bay" required><label for="where-3"><span class="txt">Moreton Bay<svg class="ink" viewBox="0 0 100 12" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M2 8 C 22 4, 48 3, 70 5 S 94 9, 98 5"/></svg></span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10h12M11 5l5 5-5 5"/></svg></span></label></li></ul>
+      <div class="other-slot">
+        <button type="button" class="other-btn" aria-expanded="false"><span class="txt">Somewhere else</span><span class="arrow" aria-hidden="true"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4l6 6-6 6"/></svg></span></button>
+        <div class="field other-field" hidden><label class="sr" for="f-area">Which area are you in?</label><input id="f-area" name="area" placeholder="Type your area" autocomplete="address-level2"><p class="err" id="f-area-e" hidden></p></div>
+      </div>
     </div>
-    <p class="hint">Andrew replies within 1 business day.</p>
+    <div class="actions"><button type="button" class="btn btn-primary next" data-to="2" hidden><span>Next</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="0">Back</button><p class="ph">PLACEHOLDER: Andrew to confirm these four areas</p></div>
+  </fieldset>
+
+  <fieldset class="enq-step" data-step="2" hidden><legend class="enq-q">What is your name?</legend>
+    <div class="fields"><div class="field"><label class="sr" for="f-name">Your name</label><input id="f-name" name="name" autocomplete="name" required><p class="err" id="f-name-e" hidden></p></div></div>
+    <div class="actions"><button type="button" class="btn btn-primary next" data-to="3"><span>Next</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="1">Back</button></div>
+  </fieldset>
+
+  <fieldset class="enq-step" data-step="3" hidden><legend class="enq-q">How can Andrew reach you?</legend>
+    <div class="fields two">
+      <div class="field"><label for="f-phone">Phone</label><input id="f-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required><p class="err" id="f-phone-e" hidden></p></div>
+      <div class="field"><label for="f-email">Email <span class="opt">(optional)</span></label><input id="f-email" name="email" type="email" inputmode="email" autocomplete="email"><p class="err" id="f-email-e" hidden></p></div>
+    </div>
+    <div class="actions"><button type="button" class="btn btn-primary next" data-to="4"><span>Next</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="2">Back</button></div>
+  </fieldset>
+
+  <fieldset class="enq-step" data-step="4" hidden aria-labelledby="q4">
+    <div class="recap" aria-label="Your answers"></div>
+    <p class="enq-q" id="q4">Anything Andrew should know first?</p>
+    <div class="fields"><div class="field"><label class="sr" for="f-note">Anything Andrew should know first, optional</label><textarea id="f-note" name="note" rows="2" aria-describedby="f-note-h"></textarea><p class="help" id="f-note-h">Optional. Please don't include health details.</p></div></div>
     <p class="hint ref-note" hidden>Sending a full referral with documents? <a href="#">Use the referral form</a>.</p>
-    <p class="err save-err" role="alert" hidden>That didn’t go through. Please try again, or call Andrew on [PLACEHOLDER: phone].</p>
-    <div class="actions"><button class="btn btn-primary btn-send" type="submit"><span>Send to Andrew</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="1">Back</button></div></fieldset>
-  <div class="enq-step done" data-step="3" hidden><div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h2>Sent. Andrew will reply within 1 business day.</h2><p>Available 7am to 7pm, seven days.</p><button type="button" class="back again">Start a new enquiry</button></div>
-  <div class="enq-step done" data-step="4" hidden><div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h2>Your details are saved. Now press send in your messages app.</h2><p>Andrew replies within 1 business day.</p><div class="actions"><button type="button" class="btn btn-ghost retry">Messages didn’t open? Try again</button><a class="back" href="tel:[PLACEHOLDER]">Or call Andrew</a></div><button type="button" class="back again">Start a new enquiry</button></div>
+    <p class="err save-err" role="alert" hidden>That didn't go through. Please try again, or call Andrew on [PLACEHOLDER: phone].</p>
+    <div class="actions"><button class="btn btn-primary btn-send" type="submit"><span>Send to Andrew</span><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10h12M11 5l5 5-5 5"/></svg></button><button type="button" class="back" data-to="3">Back</button></div>
+  </fieldset>
+
+  <div class="enq-step done" data-step="5" hidden><div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h2>Sent. Andrew will reply within 1 business day.</h2><p>Available 7am to 7pm, seven days.</p><button type="button" class="back again">Start a new enquiry</button></div>
+  <div class="enq-step done" data-step="6" hidden><div class="tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg></div><h2>Your details are saved. Now press send in your messages app.</h2><p>Andrew replies within 1 business day.</p><div class="actions"><button type="button" class="btn btn-ghost retry">Messages didn't open? Try again</button><a class="back" href="tel:[PLACEHOLDER]">Or call Andrew</a></div><button type="button" class="back again">Start a new enquiry</button></div>
   <p class="meta">Replies within 1 business day. Available 7am to 7pm, seven days.</p>
 </form>
 <pre id="log" class="log" aria-label="Prototype log"></pre>
 </div></div></main><script>(function(){
   var ANDREW_SMS='+61400000000'; // [PLACEHOLDER: Andrew's mobile]
+  var STEPS=5, DONE_WEB=5, DONE_SMS=6;
   var form=document.getElementById('enq'), steps=[].slice.call(form.querySelectorAll('.enq-step')),
-      bars=[].slice.call(form.querySelectorAll('.enq-progress span')), live=document.getElementById('enq-live'),
+      bar=form.querySelector('.enq-progress .bar'), live=document.getElementById('enq-live'),
       logEl=document.getElementById('log');
+  var other=form.querySelector('.other-field'),
+      otherBtn=form.querySelector('.other-btn'), nextOnWhere=form.querySelector('[data-step="1"] .next');
   var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var forced=null; // demo override: 'phone' | 'computer'
   function isPhone(){ if(forced) return forced==='phone'; return window.matchMedia('(pointer:coarse)').matches && window.matchMedia('(max-width: 820px)').matches; }
   function val(n){var c=form.querySelector('input[name="'+n+'"]:checked');return c?c.value:'';}
+  function areaVal(){ return form.elements.area ? form.elements.area.value.trim() : ''; }
+  function whereLabel(){ return val('where') || areaVal(); }
+
+  function cancelAdvance(){ clearTimeout(timer); timer=null; }
   function show(i,focus){
+    cancelAdvance();
     steps.forEach(function(s,k){ s.hidden=k!==i; s.classList.remove('enter'); });
     var s=steps[i]; if(!reduce){ void s.offsetWidth; s.classList.add('enter'); }
-    bars.forEach(function(b,k){ b.classList.toggle('on',k<=Math.min(i,2)); });
-    if(i<3) live.textContent='Question '+(i+1)+' of 3';
-    form.querySelector('.enq-count').textContent = i<3 ? 'Question '+(i+1)+' of 3' : 'Done';
-    form.querySelector('.meta').hidden = i>=2;
-    if(i===2) paintRecap();
-    if(i===2) paintButton();
+    // starts near empty (nothing answered yet), then runs ahead of the real
+    // progress so every step after the first feels nearly done
+    var PCT=[8,45,66,82,93];
+    if(bar) bar.style.width=(i<STEPS?PCT[i]:100)+'%';
+    var label = i<STEPS ? 'Question '+(i+1)+' of '+STEPS : 'Done';
+    live.textContent=label;
+    form.querySelector('.enq-count').textContent=label;
+    form.querySelector('.meta').hidden = i>=STEPS-1;
+    if(i===4){ paintRecap(); paintButton(); }
     if(focus){ var h=s.querySelector('.enq-q,h2'); if(h){h.setAttribute('tabindex','-1'); h.focus({preventScroll:true});} }
   }
   function log(t){ if(logEl) logEl.textContent=t; }
-  // step 1 and 2: choose, draw line, then move on
+
+  // ---- choice steps: pick an answer, the line draws, then move on ----------
   var arrowNav=false, timer=null;
+  // Arrow keys move between answers without committing, so reveal the step's
+  // Next button as soon as one is chosen that way. Nothing on screen said
+  // Enter or Space would work.
+  function showNextFor(t){
+    var st=t.closest('.enq-step'); if(!st) return;
+    var n=st.querySelector('.next'); if(n) n.hidden=false;
+  }
   function advanceFrom(t){ var i=t.name==='who'?0:1; clearTimeout(timer); timer=setTimeout(function(){ show(i+1,true); }, reduce?0:480); }
   form.addEventListener('keydown',function(e){
     var t=e.target; if(t.type!=='radio') return;
-    if(e.key.indexOf('Arrow')===0){ arrowNav=true; return; }
+    if(e.key.indexOf('Arrow')===0){ arrowNav=true; showNextFor(t); return; }
     if(e.key==='Enter'){ e.preventDefault(); t.checked=true; if(t.name==='who') wording(); advanceFrom(t); }
     if(e.key===' '){ arrowNav=false; if(t.checked) advanceFrom(t); }
+  });
+  // Enter in a text field means "next question", not "send the form".
+  // Without this, Enter on the phone field skipped question 5 and submitted,
+  // and Enter on the name field set an error on a step nobody could see.
+  form.addEventListener('keydown',function(e){
+    if(e.key!=='Enter') return;
+    var t=e.target;
+    if(t.type==='radio'||t.tagName==='TEXTAREA'||t.tagName==='BUTTON') return;
+    var st=t.closest('.enq-step'); if(!st) return;
+    var cur=Number(st.dataset.step);
+    if(isNaN(cur)||cur>=STEPS-1) return; // last step: let the real submit run
+    e.preventDefault();
+    if(validate(cur)) show(cur+1,true);
   });
   form.addEventListener('change',function(e){
     var t=e.target; if(t.type!=='radio') return;
     if(t.name==='who') wording();
+    if(t.name==='where') clearArea();
     if(arrowNav){ arrowNav=false; return; }
     advanceFrom(t);
   });
+
+  // Coming Back and then clicking the same answer fires no change event, so
+  // mouse and touch had no way forward. Keyboard already worked via Space.
+  form.addEventListener('click',function(e){
+    var lab=e.target.closest('label'); if(!lab) return;
+    var inp=lab.htmlFor?document.getElementById(lab.htmlFor):lab.querySelector('input');
+    if(!inp||inp.type!=='radio'||!inp.checked) return;
+    arrowNav=false; advanceFrom(inp);
+  });
+
+  // ---- 'Somewhere else' opens a field in place, so the box never grows -----
+  function clearArea(){ if(form.elements.area) form.elements.area.value=''; }
+  // the button itself becomes the field, in the same row, so nothing moves
+  function openOther(){
+    cancelAdvance();
+    var w=form.querySelector('input[name="where"]:checked'); if(w) w.checked=false;
+    otherBtn.hidden=true; other.hidden=false; nextOnWhere.hidden=false;
+    otherBtn.setAttribute('aria-expanded','true');
+    var inp=form.elements.area; if(inp) inp.focus({preventScroll:true});
+  }
+  function closeOther(){
+    otherBtn.hidden=false; other.hidden=true; nextOnWhere.hidden=true;
+    otherBtn.setAttribute('aria-expanded','false'); clearErr('area');
+    // the typed area is kept, so reopening restores it. Picking a suburb clears it.
+  }
+  if(otherBtn) otherBtn.onclick=openOther;
+
   function wording(){
     var w=val('who');
     form.querySelector('[data-step="1"] .enq-q').textContent = w==='Me'?'Where are you?':(w==="I'm referring someone"?'Where is the participant?':'Where are they?');
-    form.querySelector('[data-step="2"] .enq-q').textContent = w==="I'm referring someone"?'Your details, so Andrew can reply':'How can Andrew reach you?';
     form.querySelector('.ref-note').hidden = w!=="I'm referring someone";
   }
+
   function paintRecap(){
     var r=form.querySelector('.recap'); r.innerHTML='';
-    [['who',0],['where',1]].forEach(function(p){
+    [[val('who'),0],[whereLabel(),1]].forEach(function(p){
+      if(!p[0]) return;
       var b=document.createElement('button'); b.type='button';
-      b.innerHTML=val(p[0])+' <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M11 2.5l2.5 2.5L6 12.5 3 13l.5-3z"/></svg>';
-      b.setAttribute('aria-label','Change: '+val(p[0])); b.onclick=function(){ show(p[1],true); }; r.appendChild(b);
+      b.innerHTML=p[0]+' <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M11 2.5l2.5 2.5L6 12.5 3 13l.5-3z"/></svg>';
+      b.setAttribute('aria-label','Change: '+p[0]); b.onclick=function(){ show(p[1],true); }; r.appendChild(b);
     });
   }
   function paintButton(){
     var phone=isPhone(), b=form.querySelector('.btn-send');
     b.querySelector('span').textContent=phone?'Open my messages':'Send to Andrew';
-    form.querySelector('[data-step="2"] .hint').textContent=phone?"Next, your messages app opens with this written for you. You just press send. Andrew gets your details either way.":'Andrew replies within 1 business day.';
   }
-  form.querySelectorAll('.back').forEach(function(b){ b.onclick=function(){ show(Number(b.dataset.to),true); }; });
-  function check(){
+
+  // ---- validation, one step at a time --------------------------------------
+  function setErr(name,msg){
+    var inp=form.elements[name]; if(!inp) return;
+    var wrap=inp.closest('.field'), err=wrap.querySelector('.err');
+    wrap.setAttribute('data-invalid',''); inp.setAttribute('aria-invalid','true');
+    err.textContent=msg; err.hidden=false; inp.setAttribute('aria-describedby',err.id);
+  }
+  function clearErr(name){
+    var inp=form.elements[name]; if(!inp) return;
+    var wrap=inp.closest('.field'), err=wrap.querySelector('.err');
+    wrap.removeAttribute('data-invalid'); inp.removeAttribute('aria-invalid');
+    inp.removeAttribute('aria-describedby'); err.hidden=true;
+  }
+  function okPhone(v){ var d=v.replace(/\D/g,''); return /^(0[2-478]\d{8}|61[2-478]\d{8})$/.test(d); }
+  function okEmail(v){ return /^[^@\s]+@[^@\s.]+\.[^@\s]{2,}$/.test(v); }
+
+  function validate(step){
     var ok=true;
-    [['name',function(v){return v.trim().length>1;},'Please add your name.'],
-     ['phone',function(v){var d=v.replace(/\D/g,'');return /^(0[2-478]\d{8}|61[2-478]\d{8})$/.test(d);},'Please add an Australian phone number, like 0412 345 678.']
-    ].forEach(function(f){
-      var inp=form.elements[f[0]], wrap=inp.closest('.field'), err=wrap.querySelector('.err');
-      if(!f[1](inp.value)){ ok=false; wrap.setAttribute('data-invalid',''); inp.setAttribute('aria-invalid','true'); err.textContent=f[2]; err.hidden=false; inp.setAttribute('aria-describedby',err.id); }
-      else { wrap.removeAttribute('data-invalid'); inp.removeAttribute('aria-invalid'); inp.removeAttribute('aria-describedby'); err.hidden=true; }
-    });
-    if(!ok){ var first=form.querySelector('[aria-invalid="true"]'); first.focus(); }
+    if(step===1){
+      if(!val('where')){
+        if(!areaVal()){
+          // the message lives inside the 'Somewhere else' field, so open it,
+          // or the error is set on something nobody can see and the form
+          // fails silently. The suburb buttons stay available either way.
+          if(other && other.hidden) openOther();
+          setErr('area','Please tell Andrew which area you are in.'); ok=false;
+        }
+        else clearErr('area');
+      }
+    }
+    if(step===2){
+      var n=form.elements.name.value;
+      if(n.trim().length>1){ clearErr('name'); } else { setErr('name','Please add your name.'); ok=false; }
+    }
+    if(step===3){
+      var p=form.elements.phone.value;
+      if(okPhone(p)){ clearErr('phone'); } else { setErr('phone','Please add an Australian phone number, like 0412 345 678.'); ok=false; }
+      var em=form.elements.email.value.trim();
+      if(!em || okEmail(em)){ clearErr('email'); } else { setErr('email','Please check this email address.'); ok=false; }
+    }
+    if(!ok){ var first=form.querySelector('[aria-invalid="true"]'); if(first) first.focus(); }
     return ok;
   }
+
+  form.querySelectorAll('.next').forEach(function(b){
+    b.onclick=function(){
+      var cur=Number(b.closest('.enq-step').dataset.step);
+      if(validate(cur)) show(Number(b.dataset.to),true);
+    };
+  });
+  form.querySelectorAll('.back').forEach(function(b){
+    if(b.classList.contains('again')||!b.dataset.to) return;
+    b.onclick=function(){
+      cancelAdvance();
+      var cur=Number(b.closest('.enq-step').dataset.step);
+      if(cur===1 && !other.hidden){ closeOther(); return; }
+      show(Number(b.dataset.to),true);
+    };
+  });
+
   function saveLead(data){ // Phase 4: fetch('/api/enquiries',{method:'POST',body:JSON.stringify(data)})
     return new Promise(function(res){ setTimeout(res, 450); });
   }
   function smsText(d){
     var who = d.who==='Me' ? "I'd like to ask about support for myself" : (d.who==="I'm referring someone" ? "I'd like to refer a participant" : "I'm asking for someone I support");
-    return "Hi Andrew, I'm "+d.name+". "+who+" in "+(d.where==='Somewhere else'?'an area outside your list':d.where)+". My number is "+d.phone+"."+(d.note?' '+d.note:'');
+    return "Hi Andrew, I'm "+d.name+". "+who+" in "+d.where+". My number is "+d.phone+"."+(d.note?' '+d.note:'');
   }
   var lastHref='';
   form.addEventListener('submit',function(e){
-    e.preventDefault(); if(!check()) return;
+    e.preventDefault();
+    // Never fail silently on a step the visitor cannot see. Take them to it.
+    for(var st=1; st<=3; st++){
+      if(!validate(st)){ if(steps[st].hidden) show(st,true); else validate(st); return; }
+    }
     var btn=form.querySelector('.btn-send'), label=btn.querySelector('span'), before=label.textContent;
-    var data={who:val('who'),where:val('where'),name:form.elements.name.value.trim(),phone:form.elements.phone.value.trim(),note:form.elements.note.value.trim(),channel:isPhone()?'sms':'web',at:new Date().toISOString()};
+    var data={who:val('who'),where:whereLabel(),name:form.elements.name.value.trim(),
+      phone:form.elements.phone.value.trim(),email:form.elements.email.value.trim(),
+      note:form.elements.note.value.trim(),channel:isPhone()?'sms':'web',at:new Date().toISOString()};
     btn.disabled=true; label.textContent= data.channel==='sms' ? 'Getting your message ready' : 'Sending';
     saveLead(data).then(function(){
       btn.disabled=false; label.textContent=before;
@@ -295,21 +516,21 @@ a{color:var(--accent)}
       if(data.channel==='sms'){
         lastHref='sms:'+ANDREW_SMS+'?&body='+encodeURIComponent(smsText(data));
         log(saved+'\n\nMessage text: '+smsText(data));
-        show(4,true);
+        show(DONE_SMS,true);
         if(!forced) window.location.href=lastHref;
       } else {
         log(saved+'\n\nServer then emails Andrew with Resend.');
-        show(3,true);
+        show(DONE_WEB,true);
       }
     }, function(){
       btn.disabled=false; label.textContent=before;
       form.querySelector('.save-err').hidden=false;
     });
   });
-  form.querySelector('.retry').onclick=function(){ if(lastHref && !forced) window.location.href=lastHref; };
-  form.querySelectorAll('.again').forEach(function(a){ a.onclick=function(){ form.reset(); wording(); show(0,true); log(''); }; });
+  var retry=form.querySelector('.retry'); if(retry) retry.onclick=function(){ if(lastHref && !forced) window.location.href=lastHref; };
+  form.querySelectorAll('.again').forEach(function(a){ a.onclick=function(){ form.reset(); closeOther(); wording(); show(0,true); log(''); }; });
   // demo switch
-  document.querySelectorAll('[data-dev]').forEach(function(b){ b.onclick=function(){ forced=b.dataset.dev; document.querySelectorAll('[data-dev]').forEach(function(x){x.setAttribute('aria-pressed',x===b);}); if(!steps[2].hidden) paintButton(); }; });
+  document.querySelectorAll('[data-dev]').forEach(function(b){ b.onclick=function(){ forced=b.dataset.dev; document.querySelectorAll('[data-dev]').forEach(function(x){x.setAttribute('aria-pressed',x===b);}); if(!steps[4].hidden) paintButton(); }; });
   form.classList.add('js'); show(0,false);
   window.__enq={show:show,setDev:function(d){forced=d;}};
 })();

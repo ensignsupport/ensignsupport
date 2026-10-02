@@ -29,7 +29,7 @@ m='''<div class="sheet-bar"><div class="wrap"><strong>Component 1 · Enquiry flo
 <div><h1>One coordinator you know by name.</h1><p class="lead">Andrew reads your NDIS plan with you and comes to you in person.</p></div>
 <div>
 <form id="enq" class="enq" action="/api/enquiries" method="post" novalidate aria-label="Start an enquiry">
-  <div class="enq-top"><div class="enq-progress" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div><span class="enq-count" aria-hidden="true">Question 1 of 5</span></div>
+  <div class="enq-top"><div class="enq-progress" aria-hidden="true"><span class="bar"></span></div><span class="enq-count" aria-hidden="true">Question 1 of 5</span></div>
   <p id="enq-live" class="sr" aria-live="polite"></p>
 
   <fieldset class="enq-step" data-step="0"><legend class="enq-q">Who is this for?</legend><ul class="rows">%(who)s</ul>
@@ -38,14 +38,12 @@ m='''<div class="sheet-bar"><div class="wrap"><strong>Component 1 · Enquiry flo
   <fieldset class="enq-step" data-step="1" hidden><legend class="enq-q">Where are you?</legend>
     <div class="where-pick">
       <ul class="rows two">%(where)s</ul>
-      <button type="button" class="other-btn" aria-expanded="false"><span class="txt">Somewhere else</span><span class="arrow" aria-hidden="true">%(chev)s</span></button>
-      <p class="ph">PLACEHOLDER: Andrew to confirm these four areas</p>
+      <div class="other-slot">
+        <button type="button" class="other-btn" aria-expanded="false"><span class="txt">Somewhere else</span><span class="arrow" aria-hidden="true">%(chev)s</span></button>
+        <div class="field other-field" hidden><label class="sr" for="f-area">Which area are you in?</label><input id="f-area" name="area" placeholder="Type your area" autocomplete="address-level2"><p class="err" id="f-area-e" hidden></p></div>
+      </div>
     </div>
-    <div class="where-other" hidden>
-      <div class="field"><label for="f-area">Which area are you in?</label><input id="f-area" name="area" autocomplete="address-level2"><p class="err" id="f-area-e" hidden></p></div>
-      <p class="hint">Andrew will let you know if he can help.</p>
-    </div>
-    <div class="actions"><button type="button" class="btn btn-primary next" data-to="2" hidden><span>Next</span>%(nxt)s</button><button type="button" class="back" data-to="0">Back</button></div>
+    <div class="actions"><button type="button" class="btn btn-primary next" data-to="2" hidden><span>Next</span>%(nxt)s</button><button type="button" class="back" data-to="0">Back</button><p class="ph">PLACEHOLDER: Andrew to confirm these four areas</p></div>
   </fieldset>
 
   <fieldset class="enq-step" data-step="2" hidden><legend class="enq-q">What is your name?</legend>
@@ -61,8 +59,9 @@ m='''<div class="sheet-bar"><div class="wrap"><strong>Component 1 · Enquiry flo
     <div class="actions"><button type="button" class="btn btn-primary next" data-to="4"><span>Next</span>%(nxt)s</button><button type="button" class="back" data-to="2">Back</button></div>
   </fieldset>
 
-  <fieldset class="enq-step" data-step="4" hidden><legend class="enq-q">Anything Andrew should know first?</legend>
+  <fieldset class="enq-step" data-step="4" hidden aria-labelledby="q4">
     <div class="recap" aria-label="Your answers"></div>
+    <p class="enq-q" id="q4">Anything Andrew should know first?</p>
     <div class="fields"><div class="field"><label class="sr" for="f-note">Anything Andrew should know first, optional</label><textarea id="f-note" name="note" rows="2" aria-describedby="f-note-h"></textarea><p class="help" id="f-note-h">Optional. Please don%(rsq)st include health details.</p></div></div>
     <p class="hint ref-note" hidden>Sending a full referral with documents? <a href="#">Use the referral form</a>.</p>
     <p class="err save-err" role="alert" hidden>That didn%(rsq)st go through. Please try again, or call Andrew on [PLACEHOLDER: phone].</p>

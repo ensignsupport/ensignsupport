@@ -54,7 +54,12 @@
     e.preventDefault();
     var errs=validate(); var ul=sum.querySelector('ul'); ul.innerHTML='';
     form.querySelector('.send-err').hidden=true;
-    if(errs.length){ errs.forEach(function(x){ var li=document.createElement('li'), a=document.createElement('a'); a.href='#'+x[0]; a.textContent=x[1]; a.onclick=function(ev){ev.preventDefault(); (x[2]||document.getElementById(x[0])).focus();}; li.appendChild(a); ul.appendChild(li); }); sum.hidden=false; sum.focus(); return; }
+    if(errs.length){ errs.forEach(function(x){ var li=document.createElement('li'), a=document.createElement('a'); a.href='#'+x[0]; a.textContent=x[1]; a.onclick=function(ev){ev.preventDefault(); (x[2]||document.getElementById(x[0])).focus();}; li.appendChild(a); ul.appendChild(li); }); sum.hidden=false; sum.focus({preventScroll:true});
+      // A tall summary in a short viewport gets its BOTTOM scrolled into
+      // view by the browser, which pushes the heading off the top and the
+      // visitor sees a red list with no explanation. Pin the top instead.
+      window.scrollTo({top:sum.getBoundingClientRect().top+scrollY-104});
+      return; }
     sum.hidden=true;
     var btn=form.querySelector('.submit .btn'), lab=btn.querySelector('span'); btn.disabled=true; lab.textContent='Sending referral';
     setTimeout(function(){
@@ -65,7 +70,7 @@
       data.files=files.map(function(f){return f.name+' ('+kb(f.size)+')';}); data.reference=ref;
       logEl.textContent='Saved: POST /api/referrals (files to private storage)\n'+JSON.stringify(data,null,2)+'\n\nServer then emails Andrew with Resend (no documents attached, link to admin page), and emails the referrer a copy with the reference number (no health details).';
       dirty=false; form.hidden=true; done.hidden=false; document.querySelector('.aside').hidden=true; document.querySelector('.ref-body').classList.add('is-done'); done.querySelector('.refval').textContent=ref; done.querySelector('.refmail').textContent=v('remail');
-      var h=done.querySelector('h2'); h.setAttribute('tabindex','-1'); h.focus(); window.scrollTo({top:done.getBoundingClientRect().top+scrollY-24});
+      var h=done.querySelector('h2'); h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); window.scrollTo({top:done.getBoundingClientRect().top+scrollY-104});
     },700);
   });
   done.querySelector('.again').onclick=function(){ form.reset(); files=[]; paint(); document.getElementById('nom').hidden=true; form.hidden=false; done.hidden=true; document.querySelector('.aside').hidden=false; document.querySelector('.ref-body').classList.remove('is-done'); logEl.textContent=''; form.querySelector('h2').scrollIntoView(); };

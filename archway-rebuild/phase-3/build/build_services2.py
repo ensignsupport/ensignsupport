@@ -108,6 +108,9 @@ css='''
 .sv-intro{display:grid;grid-template-columns:7fr 5fr;gap:var(--s7);align-items:end}
 .sv-intro h1{font-size:clamp(44px,5vw + 16px,96px);letter-spacing:var(--track-display);line-height:1}
 .mk{position:relative;white-space:nowrap}
+/* On a narrow phone a nowrap button is wider than the screen and drags
+   the whole column sideways. Let it wrap there. */
+@media (max-width:420px){.mk{white-space:normal}.chapter .btn{white-space:normal;padding-inline:var(--s4);min-width:0}.ch-text{min-width:0}}
 .uline{position:absolute;left:-1%;bottom:-.16em;width:102%;height:.24em;overflow:visible}
 .uline path{fill:none;stroke:#6993fa;stroke-width:9;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 900ms var(--ease-out) 200ms}
 .in .uline path,.uline.in path{stroke-dashoffset:0}
@@ -207,7 +210,19 @@ css='''
 @media (prefers-reduced-motion:reduce){.uline path,.tick path,.wave path,.wave-list li{transition:none!important;stroke-dashoffset:0!important;opacity:1!important;transform:none!important}}
 '''
 css+='\n/* terms v2: count on vs not part of */\n.terms{padding:var(--section) 0}\n.terms-h{text-align:center;margin-bottom:var(--s7)}\n.tw{display:grid;grid-template-columns:1fr 1fr;gap:var(--s5);align-items:stretch}\n.tw-card{border-radius:var(--r-lg);padding:var(--s6);display:flex;flex-direction:column}\n.tw-card.yes{background:var(--indigo-900);color:var(--n-0)}\n.tw-card.no{background:var(--surface);box-shadow:inset 0 0 0 1px var(--line)}\n.tw-lbl{display:flex;align-items:center;gap:var(--s3);font-size:20px;font-weight:600;margin:0 0 var(--s4)}\n.badge{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;flex:none}\n.badge svg{width:20px;height:20px}\n.yes-b{background:#a0bdfe;color:var(--indigo-900)}\n.no-b{background:var(--n-100);color:var(--muted)}\n.tw-card ul{list-style:none;margin:0;padding:0}\n.tw-card li{display:grid;grid-template-columns:44px 1fr;gap:var(--s4);align-items:center;padding:var(--s4) 0;border-top:1px solid rgba(160,189,254,.22)}\n.tw-card.no li{border-top-color:var(--line)}\n.tw-card .ic{width:44px;height:44px;border-radius:12px;display:grid;place-items:center}\n.tw-card.yes .ic{background:rgba(160,189,254,.14);color:#a0bdfe}\n.tw-card.no .ic{background:var(--n-100);color:var(--muted)}\n.tw-card .ic svg{width:24px;height:24px}\n.tw-card b{display:block;font-size:18px;font-weight:600;line-height:1.35}\n.tw-card.no b{font-weight:500;color:var(--text)}\n.tw-card li span:not(.ic){display:block;font-size:15px;line-height:1.4;margin-top:2px}\n.tw-card.yes li span:not(.ic){color:var(--indigo-200)}\n.tw-crisis{margin:auto 0 0;padding-top:var(--s4);border-top:1px solid var(--line);font-size:16px;color:var(--muted);max-width:none}\n@media (max-width:820px){.tw{grid-template-columns:1fr;gap:var(--s4)}.tw-card{padding:var(--s5)}.terms-h{text-align:left;margin-bottom:var(--s5)}.tw-crisis{margin-top:var(--s3)}}\n'
-js='''(function(){var els=document.querySelectorAll('.sheet,.wave-card,.uline');if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{rootMargin:'0px 0px -20% 0px'});els.forEach(function(e){io.observe(e)});})();'''
+js='''(function(){var els=[].slice.call(document.querySelectorAll('.sheet,.wave-card,.uline'));
+function on(e){e.classList.add('in')}
+if(!('IntersectionObserver' in window)){els.forEach(on);return;}
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){on(e.target);io.unobserve(e.target);}})},{rootMargin:'0px 0px -20% 0px'});
+els.forEach(function(e){io.observe(e)});
+/* Fail safe. A fast flick or a jump down the page can carry an element past
+   the observer's shrunken root without it ever intersecting, which left the
+   four recovery coaching steps invisible for good. Anything that has reached
+   the screen is shown, observer or not, and everything shows after 2.2s. */
+function sweep(){els.forEach(function(e){if(e.classList.contains('in'))return;
+  if(e.getBoundingClientRect().top < innerHeight){on(e);io.unobserve(e)}})}
+addEventListener('scroll',sweep,{passive:true});addEventListener('resize',sweep,{passive:true});sweep();
+setTimeout(function(){els.forEach(on)},2200);})();'''
 html=g['html']; head=html[:html.index('</style>')]
 head=head.replace('<title>Support Coordination and Recovery Coaching in South East Queensland | Ensign</title>','<title>NDIS Support Coordination and Psychosocial Recovery Coaching | Ensign</title>').replace('content="Andrew Manoba provides NDIS support coordination and psychosocial recovery coaching across South East Queensland. Taking new participants now. Replies within 1 business day."','content="What support coordination and psychosocial recovery coaching involve with Andrew Manoba, for self managed and plan managed NDIS participants across South East Queensland."')
 out=head+css+'</style></head><body>'+header+main+footer+'<script>'+js+'</script></body></html>'

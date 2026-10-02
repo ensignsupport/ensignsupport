@@ -124,3 +124,77 @@ A blind reviewer ranked 1, then 3, then 2. Allen picked 6 after seeing the refer
 ### Still open
 - The hero photo is a phone snapshot. It holds up at 334px but a plain backdrop photo would be better. Prompt supplied to Allen.
 - Heading sizes across the page run to four different values. Worth one pass to tidy.
+
+---
+
+# Round 5. Whole site blind review, 21 Sep 2026
+
+Four reviewers, each given only the pages. None saw the brief, Allen's preferences, the other reviewers, or each other's lens.
+Scores: visitor experience 6, design craft 6.5, behaviour and robustness 5, trust 6.
+
+## Blockers, reproduced and confirmed by me after the review
+
+1. **The Menu button does nothing.** At 820px and below the CSS hides every nav link, leaving only Call and Menu. Menu has no handler in any file. Verified: DOM length identical before and after the click, only "Call" visible. Every phone and tablet visitor has no navigation except the footer. On Privacy that is 15,500px of scrolling.
+2. **Phantom Next button on question 2.** The button carries `hidden` but `.btn{display:inline-flex}` outranks the UA `[hidden]` rule. Verified: `hidden:true, display:flex, 83x36`. It is visible, it is a tab stop, and clicking it does nothing. The validation message it triggers lives inside a genuinely hidden element, so nothing is shown. **This is C54 for the third time.**
+3. **Enter key breaks the flow.** Enter on the phone field skips question 5 and submits. Enter on the name field does nothing, because the error it sets is on a hidden step.
+4. **Back then forward is a dead end for mouse and touch.** Re-clicking an already-checked radio fires no change event and step 0 has no Next. Keyboard escapes it, mouse and touch do not.
+5. **Home enquiry tap targets are 36 to 38px at 390.** The same flow on Contact measures 56 to 64px. A home-page-only regression from the `.v7` overrides, on the primary conversion widget.
+6. **Sticky sidebars slide under the sticky header.** Privacy `.pv-nav` at top:24 and Refer `.aside` at top:32 against an 88px header. First items permanently covered. Introduced by C69's fix.
+7. **The skip link is covered by the header** (z-index 50 against 60) and `<main>` has no tabindex, so skip to content does nothing.
+8. **The enquiry form is unusable with JavaScript off.** No noscript, no fallback, no submit in step 0.
+9. **Horizontal overflow at 320px** on Services (49px, caused by a nowrap button) and Privacy (15px, an unbreakable URL).
+
+## Not defects, decisions
+
+- The non-linear progress bar (8/45/66/82/93) was asked for by Allen and built deliberately. One reviewer called it designed to mislead. Allen's call.
+- Yellow PLACEHOLDER tags were excluded from scoring, but three reviewers said the empty "How it works" card on Services reads as a broken page rather than a pending fact, and the Privacy draft banner invalidates the policy for a cautious reader.
+
+## Strongest agreement across reviewers
+
+- **No external voice anywhere.** Not one testimonial, reference, or verifiable credential number. Three of four named this as the single biggest gap.
+- **The hero's primary button says "Submit a referral"**, which is written for professionals, not for the participant or family member it sits in front of.
+- **The home hero is off the site grid.** Portrait right edge 1264 against 1342 everywhere else, and the H1 at 50px is smaller than every H2 below it.
+- **The same enquiry widget exists in two visual languages** on Home and Contact.
+- Praised by all four: the "Not part of Ensign" exclusions list, the crisis panel in every footer, and the privacy policy's drafting.
+
+## What passed clean
+
+Console and network on all 8 pages at four viewports. Sticky header behaviour. All 31 in-page anchors. Reduced motion. Reveal fail-safes. Focus rings. The referral form's validation, file gate and unsaved-changes guard. The admin page's focus trap, scroll lock and idle logout.
+
+---
+
+# Round 6. After the fixes, 21 Sep 2026
+
+Two fresh reviewers, neither of whom saw round 5 or knew anything had changed.
+Scores: behaviour 6 (was 5), visitor 6, craft 6.
+
+Round 5's nine blockers were all fixed and confirmed gone. Round 6 found five more that round 5 had missed, all on the enquiry flow, and all now fixed too:
+
+1. **A 480ms timer that outlived its step.** Tapping a suburb then "Somewhere else" inside that window skipped the Where question with no location recorded, and Send then did nothing at all, forever, with no error. A silent dead end on the primary conversion path. Fixed: every state change cancels the pending advance, and a failed check on a hidden step now shows that step and opens the field its message lives in. 33 timing combinations pass.
+2. **Back inside 480ms threw you forward two questions.** Same cause, same fix.
+3. **The Contact progress bar was dead.** `max-width:56px` from the superseded three segment design, still in the base sheet. Home had an override, Contact did not. Fixed in the base sheet by deleting the old rules, not overriding them.
+4. **The question line slid up to 209px between steps** inside a box that was itself fixed. Fixed: the form fills the stage, so the progress bar and the question sit in the same place on every step. Travel is now 0px on both pages at both viewports.
+5. **The buttons sat above the headline on a phone.** Leftover `.home-hero` order rules from hero 6 were deciding three of five children. Fixed with explicit orders. The headline now comes before the ask.
+
+Also fixed in this round: noscript on all 7 pages, the referral error summary landing off screen at 320, every control at 44px or more at 390, the logo and Call button touching at 320, arrow key selection having no visible way forward, and horizontal overflow at 320 on Services, Privacy and Contact.
+
+## Measured after the fixes
+
+| Check | Result |
+|---|---|
+| Enquiry box height, 5 steps, Home and Contact, 1440 and 390 | spread 0px on all four |
+| Question line travel between steps | 0px on all four |
+| Progress bar | blue, monotonic, works on both pages |
+| Timing races, 33 combinations | 0 failures |
+| Horizontal overflow, 8 pages x 5 widths | 0 |
+| axe WCAG 2.2 AA, 7 pages, desktop and phone | clean |
+| Tap targets at 390, all 7 pages | every control 44px or more |
+| Content stranded by scroll reveals | none |
+| Home hero fold at 1280x800 | credentials end at 770, 30px clear |
+
+## Still open, and they are Allen's calls not defects
+
+- **No external voice anywhere.** Both rounds, all six reviewers, named this as the biggest gap. It needs Andrew to supply quotes or a referrer reference. It is in ANDREW-QUESTIONS.md.
+- **The type scale.** Seven pages still carry seven H1 sizes, and the site's own `--t-display` and `--t-h2` tokens are bypassed by bespoke clamps. The home page inversion is fixed (H1 50px over H2 48px, and 36px over 28px on a phone) but the wider scale was not touched, because those pages were approved and the change is taste, not a defect.
+- **The home hero portrait sits inside the right margin rather than on it.** A reviewer called this a grid error. It is not. Allen asked for the image to be smaller and centred, and to match the other portrait on the page. His instruction stands.
+- **The progress bar runs ahead of real progress.** Asked for deliberately. One reviewer called it misleading.
