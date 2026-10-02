@@ -1,0 +1,65 @@
+/* Ensign Support Services: design tokens (design v2, October 2026)
+   Copied from design-pack/design-tokens.css. Use these values exactly.
+   One change: the two font tokens point at the self-hosted fonts that
+   next/font loads in app/layout.tsx (--font-geist and --font-caveat). */
+
+:root {
+  /* Indigo family (the only brand colour) */
+  --indigo-950: #141B52;   /* dark bands: referral section, Why Ensign card, admin sidebar */
+  --indigo-900: #1A2470;   /* dark buttons, icon strokes, primary text accents */
+  --indigo-700: #2236B5;   /* ACCENT: Make a Referral buttons only (plus focus rings, selected states) */
+  --indigo-600: #3A52D6;   /* hover on light-background accent elements */
+  --indigo-400: #7D8DE3;   /* light word in big headlines ("Made", "Works", "Navigate") */
+  --indigo-200: #C9D1F6;   /* text and eyebrows on dark bands */
+  --indigo-150: #D5DAF3;   /* outline circles (01, 02, arrows) */
+  --indigo-100: #E6EAFB;   /* icon tiles, image placeholders */
+  --indigo-50:  #F3F4FA;   /* soft cards (services, values, stats, contact cards, forms) */
+  --indigo-25:  #F1F3FC;   /* selected option background */
+
+  /* Neutrals */
+  --ink:        #12141F;   /* headings and body text */
+  --text-2:     #3A4262;   /* long body copy */
+  --text-3:     #5A6488;   /* supporting copy, labels */
+  --text-4:     #7A8098;   /* footer bottom row */
+  --line:       #E1E4F0;   /* input borders */
+  --line-soft:  #E6E9F4;   /* card borders, dividers */
+  --page:       #FBFBFD;   /* page background, near white */
+  --white:      #FFFFFF;
+
+  /* Admin status colours (admin only, never on the public site) */
+  --st-new-bg: #2236B5;      --st-new-fg: #FFFFFF;
+  --st-contacted-bg: #E6EAFB; --st-contacted-fg: #1A2470;
+  --st-progress-bg: #FDF1DC;  --st-progress-fg: #7A4E00;
+  --st-accepted-bg: #E2F3E8;  --st-accepted-fg: #1D6B3F;
+  --st-closed-bg: #EEF0F4;    --st-closed-fg: #4A5373;
+
+  /* Type */
+  --font-sans: var(--font-geist), 'Helvetica Neue', system-ui, sans-serif;  /* everything */
+  --font-script: var(--font-caveat), cursive;                                /* one hand-written note on the Home hero only */
+  --h1-home: clamp(60px, 10.4vw, 150px);   /* weight 600, line-height .92, letter-spacing -0.045em */
+  --h1-page: clamp(52px, 7.6vw, 112px);    /* weight 600, line-height .95, letter-spacing -0.045em */
+  --h2: clamp(34px, 4vw, 52px);            /* weight 600, line-height 1.04, letter-spacing -0.035em */
+  --h2-band: clamp(38px, 4.4vw, 58px);     /* headings on dark bands, line-height 1, -0.04em */
+  --body-lg: 18px;  --body: 15.5px;  --small: 14px;  --eyebrow: 14px;
+
+  /* Shape */
+  --radius-hero: 28px;   /* hero image, dark bands, big cards */
+  --radius-card: 22px;   /* soft cards */
+  --radius-input: 14px;
+  --radius-pill: 999px;  /* all buttons */
+
+  /* Layout */
+  --container: 1280px;
+  --gutter: 32px;        /* 24px on phones in the footer, 16px in admin on phones */
+  --section-gap: 110px;  /* 120px between major sections on Home */
+
+  /* Shadows */
+  --shadow-accent: 0 16px 32px -14px rgba(34, 54, 181, .75);  /* referral buttons */
+  --shadow-band: 0 26px 40px -28px rgba(20, 27, 82, .55);     /* dark referral band */
+}
+
+/* Breakpoints used in the design
+   960px  referral band and footer stack
+   760px  phone header (menu button), stacked hero split, admin top bar
+   600px  phone footer layout, single-column form fields
+*/

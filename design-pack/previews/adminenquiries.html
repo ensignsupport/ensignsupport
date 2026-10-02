@@ -1,0 +1,249 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>adminenquiries</title></head><body>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7FB}
+a{color:#1A2470}
+.ad-nav{display:flex;align-items:center;gap:12px;height:44px;padding:0 14px;border-radius:12px;color:#C9D1F6;text-decoration:none;font-size:14.5px;transition:background-color .15s ease}
+.ad-nav:hover{background:rgba(255,255,255,.06);color:#FFFFFF}
+.ad-nav.is-on{background:rgba(255,255,255,.1);color:#FFFFFF;font-weight:500}
+.ad-tab{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:999px;border:0;background:transparent;font:inherit;font-size:14px;color:#4A5373;cursor:pointer;transition:background-color .15s ease}
+.ad-tab:hover{background:#EEF0F8;color:#12141F}
+.ad-tab.is-on{background:#12141F;color:#FFFFFF}
+.ad-tab .ad-count{font-size:12px;min-width:22px;height:20px;padding:0 6px;border-radius:999px;background:#E6E9F4;color:#4A5373;display:inline-flex;align-items:center;justify-content:center}
+.ad-tab.is-on .ad-count{background:rgba(255,255,255,.18);color:#FFFFFF}
+.ad-sel,.ad-search{height:42px;border:1px solid #E1E4F0;border-radius:12px;background:#FFFFFF;font:inherit;font-size:14px;color:#12141F;padding:0 12px}
+.ad-sel:focus,.ad-search:focus,.ad-note:focus{outline:2px solid #2236B5;outline-offset:1px;border-color:transparent}
+.ad-row{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1.3fr) minmax(0,.9fr) minmax(0,1.4fr) minmax(0,.9fr) minmax(0,.9fr);gap:16px;align-items:center;width:100%;text-align:left;padding:16px 20px;border:0;border-top:1px solid #EEF0F6;background:#FFFFFF;font:inherit;color:#12141F;cursor:pointer;transition:background-color .12s ease}
+.ad-row:hover{background:#F8F9FD}
+.ad-row.is-sel{background:#F1F3FC;box-shadow:inset 3px 0 0 #2236B5}
+.ad-head{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1.3fr) minmax(0,.9fr) minmax(0,1.4fr) minmax(0,.9fr) minmax(0,.9fr);gap:16px;padding:12px 20px;font-size:12.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:#6B7493}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12.5px;font-weight:500;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.st-new{background:#2236B5;color:#FFFFFF}
+.st-contacted{background:#E6EAFB;color:#1A2470}
+.st-progress{background:#FDF1DC;color:#7A4E00}
+.st-accepted{background:#E2F3E8;color:#1D6B3F}
+.st-closed{background:#EEF0F4;color:#4A5373}
+.svc{display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:8px;background:#F1F2F8;font-size:12.5px;color:#3A4262;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.ad-seg{display:inline-flex;align-items:center;height:36px;padding:0 12px;border-radius:10px;border:1px solid #E1E4F0;background:#FFFFFF;font:inherit;font-size:13.5px;color:#3A4262;cursor:pointer}
+.ad-seg:hover{border-color:#B9C2EE}
+.ad-seg.is-on{border-color:#2236B5;background:#F1F3FC;color:#1A2470;font-weight:500}
+.ad-icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid #E1E4F0;background:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#12141F}
+.ad-icon-btn:hover{background:#F3F4FA}
+.ad-btn{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:12px;border:1px solid #E1E4F0;background:#FFFFFF;font:inherit;font-size:14px;font-weight:500;color:#12141F;cursor:pointer;text-decoration:none}
+.ad-btn:hover{background:#F3F4FA}
+.ad-btn.primary{background:#2236B5;border-color:#2236B5;color:#FFFFFF}
+.ad-btn.primary:hover{background:#1A2470}
+.ad-note{width:100%;box-sizing:border-box;min-height:96px;border:1px solid #E1E4F0;border-radius:12px;padding:12px 14px;font:inherit;font-size:14px;line-height:1.5;resize:vertical}
+.ad-drawer{animation:adIn .22s ease}
+@keyframes adIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.ad-drawer{animation:none}}
+.ad-dl{display:grid;grid-template-columns:130px minmax(0,1fr);gap:10px 16px;margin:0;font-size:14px}
+.ad-dl dt{color:#6B7493}
+.ad-dl dd{margin:0;color:#12141F;overflow-wrap:anywhere}
+.ad-item{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;padding:16px 18px;border:0;border-bottom:1px solid #EEF0F6;background:#FFFFFF;font:inherit;color:#12141F;cursor:pointer;transition:background-color .12s ease}
+.ad-item:hover{background:#F8F9FD}
+.ad-item.is-sel{background:#F1F3FC;box-shadow:inset 3px 0 0 #2236B5}
+.st-replied{background:#E2F3E8;color:#1D6B3F}
+.ad-bubble{border-radius:16px;padding:16px 18px;font-size:15px;line-height:1.6;white-space:pre-line}
+@media (max-width: 760px){
+.es-shell{grid-template-columns:minmax(0,1fr) !important;grid-template-rows:auto minmax(0,1fr)}
+.es-side{flex-direction:row !important;align-items:center;padding:10px 14px !important;gap:10px !important}
+.es-side-nav{flex-direction:row !important;gap:2px !important;margin-left:auto}
+.es-side-nav .ad-nav{height:38px;padding:0 10px;font-size:13.5px;gap:8px}
+.es-side-nav .ad-nav svg{display:none}
+.es-side-foot{display:none !important}
+.es-main{overflow-y:auto !important}
+.es-pad{padding-left:16px !important;padding-right:16px !important}
+.es-pad h1{font-size:26px !important}
+.es-sum{display:none !important}
+.es-tabs{flex-wrap:nowrap !important;overflow-x:auto;max-width:100%;box-sizing:border-box}
+.es-tabs .ad-tab{flex:0 0 auto}
+.es-hdr-tools{width:100%}
+.es-hdr-tools label{flex:1 1 auto}
+.es-hdr-tools .ad-btn{display:none}
+.es-srch{width:100% !important;box-sizing:border-box}
+.es-filters{width:100%}
+.es-filters .ad-sel{flex:1 1 calc(50% - 8px);min-width:0}
+.es-tablewrap{flex:0 0 auto !important;min-height:520px}
+.ad-head{display:none}
+.ad-row{grid-template-columns:minmax(0,1fr) auto !important;grid-template-areas:"a s" "v d";row-gap:8px !important;padding:14px 16px !important}
+.ad-row > :nth-child(1){grid-area:a}
+.ad-row > :nth-child(2){grid-area:v}
+.ad-row > :nth-child(3),.ad-row > :nth-child(4){display:none}
+.ad-row > :nth-child(5){grid-area:d;justify-self:end;font-size:13px !important}
+.ad-row > :nth-child(6){grid-area:s;justify-self:end}
+.es-inbox{grid-template-columns:minmax(0,1fr) !important;flex:0 0 auto !important}
+.es-inbox > section:first-child{max-height:360px}
+.es-inbox > section:last-child{min-height:600px}
+}
+</style>
+
+
+<div class="es-shell" style="font-family: 'Geist', 'Helvetica Neue', system-ui, sans-serif; color: #12141F; background: #F6F7FB; height: 100vh; display: grid; grid-template-columns: 248px minmax(0, 1fr); overflow: hidden">
+
+<!-- SIDEBAR -->
+<aside class="es-side" style="background: #141B52; padding: 22px 16px; display: flex; flex-direction: column; gap: 28px">
+<a href="home.html" style="display: flex; align-items: center; gap: 10px; padding: 0 8px; text-decoration: none">
+<span style="width: 36px; height: 36px; border-radius: 10px; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 21V3" stroke="#1A2470" stroke-width="2.2" stroke-linecap="round"></path><path d="M6 4h12l-3 4 3 4H6" fill="#2236B5"></path></svg></span>
+<span style="display: flex; flex-direction: column; line-height: 1.1"><span style="font-weight: 600; font-size: 15px; color: #FFFFFF">Ensign</span><span style="font-size: 12px; color: #9AA8EE">Admin</span></span>
+</a>
+<nav class="es-side-nav" aria-label="Admin" style="display: flex; flex-direction: column; gap: 4px">
+<a class="ad-nav" href="adminreferrals.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2.5" stroke="currentColor" stroke-width="1.6"></rect><path d="M9 9h6M9 12.5h6M9 16h3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg><span style="flex: 1 1 auto">Referrals</span></a>
+<a class="ad-nav is-on" href="adminenquiries.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"></rect><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg><span style="flex: 1 1 auto">Enquiries</span><span style="font-size: 12px; min-width: 22px; height: 20px; padding: 0 6px; border-radius: 999px; background: #2236B5; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center">3</span></a>
+</nav>
+<div class="es-side-foot" style="margin-top: auto; display: flex; flex-direction: column; gap: 4px">
+<a class="ad-nav" href="home.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>View website</a>
+<div style="display: flex; align-items: center; gap: 10px; padding: 12px 10px 0; border-top: 1px solid rgba(255,255,255,.1); margin-top: 8px">
+<span style="width: 34px; height: 34px; border-radius: 50%; background: #2236B5; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600">ES</span>
+<span style="display: flex; flex-direction: column; line-height: 1.25"><span style="font-size: 14px; color: #FFFFFF">Ensign admin</span><span style="font-size: 12px; color: #9AA8EE">Signed in</span></span>
+</div>
+</div>
+</aside>
+
+<main class="es-main" style="display: flex; flex-direction: column; min-width: 0; overflow: hidden">
+
+<header class="es-pad" style="padding: 26px 32px 18px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 10px">
+<h1 style="margin: 0; font-weight: 600; font-size: 30px; letter-spacing: -0.03em">Enquiries</h1>
+<span style="font-size: 12px; font-weight: 500; color: #7A4E00; background: #FDF1DC; padding: 4px 9px; border-radius: 999px">Sample data</span>
+</div>
+<span style="font-size: 14.5px; color: #5A6488">General enquiries from the Contact page.</span>
+</div>
+<div class="es-tabs" role="tablist" aria-label="Status" style="display: flex; gap: 4px; flex-wrap: wrap; background: #FFFFFF; border: 1px solid #E6E9F4; border-radius: 999px; padding: 4px">
+
+<button type="button" role="tab" aria-selected="true" class="ad-tab is-on">All<span class="ad-count">7</span></button>
+
+<button type="button" role="tab" aria-selected="false" class="ad-tab ">New<span class="ad-count">3</span></button>
+
+<button type="button" role="tab" aria-selected="false" class="ad-tab ">Replied<span class="ad-count">2</span></button>
+
+<button type="button" role="tab" aria-selected="false" class="ad-tab ">Closed<span class="ad-count">2</span></button>
+
+</div>
+</header>
+
+<div class="es-pad es-inbox" style="flex: 1 1 auto; min-height: 0; padding: 0 32px 28px; display: grid; grid-template-columns: minmax(300px, 400px) minmax(0, 1fr); gap: 16px">
+
+<section aria-label="Enquiry list" style="background: #FFFFFF; border: 1px solid #E6E9F4; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; min-height: 0">
+<div style="padding: 14px; border-bottom: 1px solid #EEF0F6; display: flex; flex-direction: column; gap: 10px">
+<label style="position: relative; display: flex; align-items: center">
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search enquiries</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="position: absolute; left: 13px"><circle cx="11" cy="11" r="6.5" stroke="#6B7493" stroke-width="1.8"></circle><path d="M16 16l4 4" stroke="#6B7493" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<input class="ad-search" type="search" placeholder="Search name, email or message" data-v="" style="width: 100%; box-sizing: border-box; padding-left: 38px">
+</label>
+<select class="ad-sel" aria-label="Sort" data-v="new">
+<option value="new">Newest first</option>
+<option value="old">Oldest first</option>
+<option value="unread">Unread first</option>
+</select>
+</div>
+<div style="flex: 1 1 auto; overflow-y: auto">
+
+<button type="button" class="ad-item is-sel">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="display: flex; align-items: center; gap: 8px; min-width: 0"><span style="width: 8px; height: 8px; border-radius: 50%; background: #2236B5; flex: 0 0 auto"></span><span style="font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Sample Enquirer A</span></span>
+<span style="font-size: 12.5px; color: #6B7493; white-space: nowrap">2 Oct, 8:41am</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45; color: #5A6488; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">Hi, my son has just received his first NDIS plan and we are not sure where to start. Is support coordination something that could help us?</span>
+<span><span class="pill st-new">New</span></span>
+</button>
+
+<button type="button" class="ad-item ">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="display: flex; align-items: center; gap: 8px; min-width: 0"><span style="width: 8px; height: 8px; border-radius: 50%; background: #2236B5; flex: 0 0 auto"></span><span style="font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Sample Enquirer B</span></span>
+<span style="font-size: 12.5px; color: #6B7493; white-space: nowrap">1 Oct, 7:02pm</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45; color: #5A6488; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">Do you work with participants who are plan-managed? Our plan manager suggested we get in touch.</span>
+<span><span class="pill st-new">New</span></span>
+</button>
+
+<button type="button" class="ad-item ">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="display: flex; align-items: center; gap: 8px; min-width: 0"><span style="width: 8px; height: 8px; border-radius: 50%; background: #2236B5; flex: 0 0 auto"></span><span style="font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Sample Enquirer C</span></span>
+<span style="font-size: 12.5px; color: #6B7493; white-space: nowrap">1 Oct, 11:27am</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45; color: #5A6488; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">I am a support worker and would like to know more about your psychosocial recovery coaching for one of the people I support.</span>
+<span><span class="pill st-new">New</span></span>
+</button>
+
+<button type="button" class="ad-item ">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="display: flex; align-items: center; gap: 8px; min-width: 0"><span style="width: 8px; height: 8px; border-radius: 50%; background: transparent; flex: 0 0 auto"></span><span style="font-weight: 500; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Sample Enquirer D</span></span>
+<span style="font-size: 12.5px; color: #6B7493; white-space: nowrap">29 Sep, 2:10pm</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45; color: #5A6488; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">Which areas do you currently cover? We are in Ipswich.</span>
+<span><span class="pill st-replied">Replied</span></span>
+</button>
+
+<button type="button" class="ad-item ">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="display: flex; align-items: center; gap: 8px; min-width: 0"><span style="width: 8px; height: 8px; border-radius: 50%; background: transparent; flex: 0 0 auto"></span><span style="font-weight: 500; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Sample Enquirer E</span></span>
+<span style="font-size: 12.5px; color: #6B7493; white-space: nowrap">27 Sep, 9:55am</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45; color: #5A6488; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">Can I refer myself, or does it need to come from my LAC?</span>
+<span><span class="pill st-replied">Replied</span></span>
+</button>
+
+<button type="button" class="ad-item ">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="display: flex; align-items: center; gap: 8px; min-width: 0"><span style="width: 8px; height: 8px; border-radius: 50%; background: transparent; flex: 0 0 auto"></span><span style="font-weight: 500; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Sample Enquirer F</span></span>
+<span style="font-size: 12.5px; color: #6B7493; white-space: nowrap">24 Sep, 4:33pm</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45; color: #5A6488; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">Thanks for the call yesterday, all sorted.</span>
+<span><span class="pill st-closed">Closed</span></span>
+</button>
+
+<button type="button" class="ad-item ">
+<span style="display: flex; align-items: center; justify-content: space-between; gap: 10px">
+<span style="display: flex; align-items: center; gap: 8px; min-width: 0"><span style="width: 8px; height: 8px; border-radius: 50%; background: transparent; flex: 0 0 auto"></span><span style="font-weight: 500; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Sample Enquirer G</span></span>
+<span style="font-size: 12.5px; color: #6B7493; white-space: nowrap">20 Sep, 10:12am</span>
+</span>
+<span style="font-size: 13.5px; line-height: 1.45; color: #5A6488; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden">Do you offer services outside Queensland?</span>
+<span><span class="pill st-closed">Closed</span></span>
+</button>
+
+
+</div>
+</section>
+
+<section aria-label="Enquiry" style="background: #FFFFFF; border: 1px solid #E6E9F4; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column; min-height: 0">
+
+<div style="padding: 22px 26px 18px; border-bottom: 1px solid #EEF0F6; display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<h2 style="margin: 0; font-weight: 600; font-size: 24px; letter-spacing: -0.02em">Sample Enquirer A</h2>
+<span style="display: flex; gap: 14px; flex-wrap: wrap; font-size: 14px; color: #5A6488"><a href="mailto:enquirer.a@example.com" style="color: #1A2470">enquirer.a@example.com</a><span>0400 000 301</span><span>2 Oct, 8:41am</span></span>
+</div>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<button type="button" class="ad-seg is-on" aria-pressed="true">New</button><button type="button" class="ad-seg " aria-pressed="false">Replied</button><button type="button" class="ad-seg " aria-pressed="false">Closed</button>
+</div>
+</div>
+<div style="flex: 1 1 auto; overflow-y: auto; padding: 24px 26px; display: flex; flex-direction: column; gap: 14px; background: #FBFBFD">
+
+<div style="display: flex; flex-direction: column; gap: 6px; align-items: flex-start">
+<span style="font-size: 12.5px; color: #6B7493">Sample Enquirer A · 2 Oct, 8:41am</span>
+<div class="ad-bubble" style="max-width: 640px; background: #FFFFFF; color: #12141F; border: 1px solid #E6E9F4">Hi, my son has just received his first NDIS plan and we are not sure where to start. Is support coordination something that could help us?</div>
+</div>
+
+</div>
+<div style="padding: 16px 20px 20px; border-top: 1px solid #EEF0F6; display: flex; flex-direction: column; gap: 12px">
+<label style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 500; color: #3A4262">Reply to Sample Enquirer</span>
+<textarea class="ad-note" placeholder="Write a reply. It will be sent from the Ensign email address." data-v="" style="min-height: 88px"></textarea>
+</label>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<a class="ad-btn" href="adminreferrals.html"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2.5" stroke="currentColor" stroke-width="1.6"></rect><path d="M9 9h6M9 12.5h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>Go to referrals</a>
+<button type="button" class="ad-btn primary" disabled style="opacity: .5">Send reply<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+</div>
+</div>
+
+
+</section>
+
+</div>
+</main>
+</div>
+</body></html>

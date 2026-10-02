@@ -1,0 +1,22 @@
+{
+  "/_blob/60da00b4c9b4a82b0b1fb6746f5e007a": {
+    "file": "images/hero-participant.jpg",
+    "used_for": "Home hero, left (participant on the call)"
+  },
+  "/_blob/329031015bae0b43298d792ca80d1df8": {
+    "file": "images/hero-coordinator.jpg",
+    "used_for": "Home hero, right (coordinator on the call)"
+  },
+  "/_blob/8c818b3dbe2e860bf5829bc92fdade09": {
+    "file": "images/service-support-coordination.jpg",
+    "used_for": "Support coordination card (Home and Services)"
+  },
+  "/_blob/60b7d47eeec5134e092e7f40a3d70545": {
+    "file": "images/service-recovery-coaching.jpg",
+    "used_for": "Recovery coaching card, Home floating card thumbnail, Services"
+  },
+  "/_blob/3d1cfd310f643eb0497ec068254a0785": {
+    "file": "images/about-journey.jpg",
+    "used_for": "About us, wide image"
+  }
+}

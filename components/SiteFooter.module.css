@@ -1,0 +1,343 @@
+.footer {
+  padding: 60px 0 0;
+}
+
+/* Footer content lines up with the referral band's inner padding. */
+.grid,
+.partnerWrap,
+.bottom {
+  box-sizing: border-box;
+  max-width: var(--container);
+  margin: 0 auto;
+  padding-left: calc(32px + clamp(32px, 4.4vw, 56px));
+  padding-right: calc(32px + clamp(32px, 4.4vw, 56px));
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 29fr) minmax(0, 20fr) minmax(0, 27fr) minmax(0, 24fr);
+  row-gap: 40px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-right: 24px;
+}
+
+.brandLink {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--ink);
+  line-height: 1;
+}
+
+.brandLink:hover {
+  color: var(--ink);
+}
+
+.brandTop {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.16em;
+}
+
+.brandBottom {
+  font-weight: 500;
+  font-size: 9.5px;
+  letter-spacing: 0.22em;
+  color: var(--ink-2);
+  margin-top: 4px;
+}
+
+.blurb {
+  margin: 34px 0 0;
+  max-width: 220px;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ink-footer);
+}
+
+.social {
+  margin-top: 38px;
+  margin-left: -12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.socialItem {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 15px;
+  line-height: 21px;
+  color: var(--ink-footer);
+}
+
+.colHead {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 11px;
+}
+
+.colLink {
+  color: var(--ink-footer);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  color: var(--ink);
+}
+
+.spaced {
+  margin-top: 27px;
+}
+
+.referLink {
+  margin-top: 27px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+
+.partnerWrap {
+  margin-top: 48px;
+}
+
+.partner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  flex-wrap: wrap;
+  background: var(--partner-bg);
+  border-radius: 18px;
+  padding: 18px 18px 18px 26px;
+}
+
+.partnerText {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  flex: 1 1 0;
+  min-width: min(100%, 420px);
+}
+
+.partnerLabel {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--ink);
+}
+
+.partnerCopy {
+  font-size: 14px;
+  color: var(--ink-2);
+}
+
+.partnerCopy strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.partnerLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 0 18px;
+  height: 44px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  flex: 0 0 auto;
+}
+
+.partnerLink:hover {
+  background: var(--hover-light);
+}
+
+.partnerLink svg {
+  margin-left: 3px;
+}
+
+.rule {
+  margin-top: 32px;
+  border-top: 1px solid var(--divider-footer);
+}
+
+.bottom {
+  padding-top: 24px;
+  padding-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px 24px;
+  flex-wrap: wrap;
+  font-size: 15px;
+  color: var(--text-4-aa);
+}
+
+.bottomRight {
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+}
+
+.bottomLink {
+  color: var(--text-4-aa);
+  text-decoration: none;
+}
+
+@media (max-width: 960px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .footer {
+    padding-top: 44px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 0 24px;
+    gap: 28px 20px;
+  }
+
+  .brand {
+    grid-column: 1 / -1;
+    order: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-right: 0;
+  }
+
+  .brandLink {
+    order: 1;
+  }
+
+  .social {
+    order: 2;
+    margin: 0 -10px 0 auto;
+  }
+
+  .blurb {
+    order: 3;
+    flex-basis: 100%;
+    max-width: none;
+    margin-top: 16px;
+    font-size: 14.5px;
+    line-height: 1.5;
+  }
+
+  .contact {
+    grid-column: 1 / -1;
+    order: 2;
+    background: var(--indigo-50);
+    border-radius: 20px;
+    padding: 20px;
+    gap: 6px;
+  }
+
+  .contact .colHead {
+    margin-bottom: 6px;
+  }
+
+  /* On phones the referral link becomes a full width dark button. */
+  .referLink {
+    margin-top: 12px;
+    align-self: stretch;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 48px;
+    border-radius: var(--radius-pill);
+    background: var(--indigo-900);
+    color: var(--white);
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .footer a.referLink:hover {
+    color: var(--white);
+    background: var(--indigo-700);
+  }
+
+  .pages {
+    order: 3;
+    gap: 12px;
+  }
+
+  .services {
+    order: 4;
+    gap: 12px;
+  }
+
+  .pages .colHead,
+  .services .colHead {
+    margin-bottom: 2px;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--label-muted-aa);
+  }
+
+  .servicesExtra {
+    display: none;
+  }
+
+  .partnerWrap {
+    margin-top: 32px;
+    padding: 0 24px;
+  }
+
+  .partner {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 18px 20px;
+    gap: 14px;
+  }
+
+  .partnerText {
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .partnerLink {
+    justify-content: center;
+  }
+
+  .bottom {
+    padding: 20px 24px 28px;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 13px;
+  }
+
+  .bottomRight {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

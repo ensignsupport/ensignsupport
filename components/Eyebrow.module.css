@@ -1,0 +1,23 @@
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-3);
+  font-size: var(--eyebrow);
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--ink);
+  flex: 0 0 auto;
+}
+
+.onDark {
+  color: var(--indigo-200);
+}
+
+.onDark .dot {
+  background: var(--indigo-200);
+}

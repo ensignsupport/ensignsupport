@@ -1,0 +1,160 @@
+/* The round-ended buttons with a circle on the right, as in the design.
+   Accent (#2236B5) is for Make a Referral actions only. */
+
+.pill {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+}
+
+.dot {
+  flex: 0 0 auto;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Tones */
+.accent {
+  background: var(--indigo-700);
+  color: var(--white);
+}
+
+.accent:hover {
+  background: var(--indigo-900);
+  color: var(--white);
+  transform: translateY(-1px);
+}
+
+.accent .dot {
+  background: var(--white);
+}
+
+.light {
+  background: var(--white);
+  color: var(--ink);
+}
+
+.light:hover {
+  background: var(--hover-light);
+  color: var(--ink);
+}
+
+.light .dot {
+  background: var(--indigo-700);
+}
+
+.dark {
+  background: var(--indigo-900);
+  color: var(--white);
+}
+
+.dark:hover {
+  background: var(--indigo-700);
+  color: var(--white);
+}
+
+.dark .dot {
+  background: var(--white);
+}
+
+.pill:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+  transform: none;
+}
+
+.accent:disabled:hover {
+  background: var(--indigo-700);
+}
+
+/* Sizes, each matched to one use in the design source */
+.header {
+  height: 50px;
+  padding: 5px 5px 5px 22px;
+  gap: 14px;
+  font-size: 14.5px;
+  box-shadow: 0 10px 24px -10px rgba(34, 54, 181, 0.7);
+}
+
+.header .dot {
+  width: 40px;
+  height: 40px;
+}
+
+.menu {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  height: 54px;
+  padding: 5px 5px 5px 22px;
+  font-size: 15px;
+}
+
+.menu .dot {
+  width: 44px;
+  height: 44px;
+}
+
+.hero {
+  height: 60px;
+  padding: 6px 6px 6px 28px;
+  gap: 24px;
+  font-size: 16px;
+  box-shadow: var(--shadow-accent);
+}
+
+.hero .dot {
+  width: 48px;
+  height: 48px;
+}
+
+.step {
+  height: 58px;
+  padding: 6px 6px 6px 26px;
+  gap: 22px;
+  font-size: 16px;
+  box-shadow: var(--shadow-accent);
+}
+
+.step .dot {
+  width: 46px;
+  height: 46px;
+}
+
+.band {
+  height: 56px;
+  padding: 6px 6px 6px 24px;
+  gap: 20px;
+  font-size: 15px;
+}
+
+.band .dot {
+  width: 44px;
+  height: 44px;
+}
+
+.raised {
+  box-shadow: 0 14px 30px -14px rgba(0, 0, 0, 0.5);
+}
+
+.enquiry {
+  height: 56px;
+  padding: 6px 6px 6px 26px;
+  gap: 20px;
+  font-size: 15px;
+}
+
+.enquiry .dot {
+  width: 44px;
+  height: 44px;
+}

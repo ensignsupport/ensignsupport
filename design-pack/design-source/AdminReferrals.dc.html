@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin · Referrals</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#F6F7FB}
+a{color:#1A2470}
+.ad-nav{display:flex;align-items:center;gap:12px;height:44px;padding:0 14px;border-radius:12px;color:#C9D1F6;text-decoration:none;font-size:14.5px;transition:background-color .15s ease}
+.ad-nav:hover{background:rgba(255,255,255,.06);color:#FFFFFF}
+.ad-nav.is-on{background:rgba(255,255,255,.1);color:#FFFFFF;font-weight:500}
+.ad-tab{display:inline-flex;align-items:center;gap:8px;height:38px;padding:0 14px;border-radius:999px;border:0;background:transparent;font:inherit;font-size:14px;color:#4A5373;cursor:pointer;transition:background-color .15s ease}
+.ad-tab:hover{background:#EEF0F8;color:#12141F}
+.ad-tab.is-on{background:#12141F;color:#FFFFFF}
+.ad-tab .ad-count{font-size:12px;min-width:22px;height:20px;padding:0 6px;border-radius:999px;background:#E6E9F4;color:#4A5373;display:inline-flex;align-items:center;justify-content:center}
+.ad-tab.is-on .ad-count{background:rgba(255,255,255,.18);color:#FFFFFF}
+.ad-sel,.ad-search{height:42px;border:1px solid #E1E4F0;border-radius:12px;background:#FFFFFF;font:inherit;font-size:14px;color:#12141F;padding:0 12px}
+.ad-sel:focus,.ad-search:focus,.ad-note:focus{outline:2px solid #2236B5;outline-offset:1px;border-color:transparent}
+.ad-row{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1.3fr) minmax(0,.9fr) minmax(0,1.4fr) minmax(0,.9fr) minmax(0,.9fr);gap:16px;align-items:center;width:100%;text-align:left;padding:16px 20px;border:0;border-top:1px solid #EEF0F6;background:#FFFFFF;font:inherit;color:#12141F;cursor:pointer;transition:background-color .12s ease}
+.ad-row:hover{background:#F8F9FD}
+.ad-row.is-sel{background:#F1F3FC;box-shadow:inset 3px 0 0 #2236B5}
+.ad-head{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1.3fr) minmax(0,.9fr) minmax(0,1.4fr) minmax(0,.9fr) minmax(0,.9fr);gap:16px;padding:12px 20px;font-size:12.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:#6B7493}
+.pill{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:999px;font-size:12.5px;font-weight:500;white-space:nowrap}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.st-new{background:#2236B5;color:#FFFFFF}
+.st-contacted{background:#E6EAFB;color:#1A2470}
+.st-progress{background:#FDF1DC;color:#7A4E00}
+.st-accepted{background:#E2F3E8;color:#1D6B3F}
+.st-closed{background:#EEF0F4;color:#4A5373}
+.svc{display:inline-block;line-height:26px;height:26px;padding:0 10px;border-radius:8px;background:#F1F2F8;font-size:12.5px;color:#3A4262;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.ad-seg{display:inline-flex;align-items:center;height:36px;padding:0 12px;border-radius:10px;border:1px solid #E1E4F0;background:#FFFFFF;font:inherit;font-size:13.5px;color:#3A4262;cursor:pointer}
+.ad-seg:hover{border-color:#B9C2EE}
+.ad-seg.is-on{border-color:#2236B5;background:#F1F3FC;color:#1A2470;font-weight:500}
+.ad-icon-btn{width:40px;height:40px;border-radius:10px;border:1px solid #E1E4F0;background:#FFFFFF;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#12141F}
+.ad-icon-btn:hover{background:#F3F4FA}
+.ad-btn{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:12px;border:1px solid #E1E4F0;background:#FFFFFF;font:inherit;font-size:14px;font-weight:500;color:#12141F;cursor:pointer;text-decoration:none}
+.ad-btn:hover{background:#F3F4FA}
+.ad-btn.primary{background:#2236B5;border-color:#2236B5;color:#FFFFFF}
+.ad-btn.primary:hover{background:#1A2470}
+.ad-note{width:100%;box-sizing:border-box;min-height:96px;border:1px solid #E1E4F0;border-radius:12px;padding:12px 14px;font:inherit;font-size:14px;line-height:1.5;resize:vertical}
+.ad-drawer{animation:adIn .22s ease}
+@keyframes adIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){.ad-drawer{animation:none}}
+.ad-dl{display:grid;grid-template-columns:130px minmax(0,1fr);gap:10px 16px;margin:0;font-size:14px}
+.ad-dl dt{color:#6B7493}
+.ad-dl dd{margin:0;color:#12141F;overflow-wrap:anywhere}
+@media (max-width: 760px){
+.es-shell{grid-template-columns:minmax(0,1fr) !important;grid-template-rows:auto minmax(0,1fr)}
+.es-side{flex-direction:row !important;align-items:center;padding:10px 14px !important;gap:10px !important}
+.es-side-nav{flex-direction:row !important;gap:2px !important;margin-left:auto}
+.es-side-nav .ad-nav{height:38px;padding:0 10px;font-size:13.5px;gap:8px}
+.es-side-nav .ad-nav svg{display:none}
+.es-side-foot{display:none !important}
+.es-main{overflow-y:auto !important}
+.es-pad{padding-left:16px !important;padding-right:16px !important}
+.es-pad h1{font-size:26px !important}
+.es-sum{display:none !important}
+.es-tabs{flex-wrap:nowrap !important;overflow-x:auto;max-width:100%;box-sizing:border-box}
+.es-tabs .ad-tab{flex:0 0 auto}
+.es-hdr-tools{width:100%}
+.es-hdr-tools label{flex:1 1 auto}
+.es-hdr-tools .ad-btn{display:none}
+.es-srch{width:100% !important;box-sizing:border-box}
+.es-filters{width:100%}
+.es-filters .ad-sel{flex:1 1 calc(50% - 8px);min-width:0}
+.es-tablewrap{flex:0 0 auto !important;min-height:520px}
+.ad-head{display:none}
+.ad-row{grid-template-columns:minmax(0,1fr) auto !important;grid-template-areas:"a s" "v d";row-gap:8px !important;padding:14px 16px !important}
+.ad-row > :nth-child(1){grid-area:a}
+.ad-row > :nth-child(2){grid-area:v}
+.ad-row > :nth-child(3),.ad-row > :nth-child(4){display:none !important}
+.ad-row > :nth-child(5){grid-area:d;justify-self:end;font-size:13px !important}
+.ad-row > :nth-child(6){grid-area:s;justify-self:end}
+.es-inbox{grid-template-columns:minmax(0,1fr) !important;flex:0 0 auto !important}
+.es-inbox > section:first-child{max-height:360px}
+.es-inbox > section:last-child{min-height:600px}
+}
+</style>
+</helmet>
+
+<div class="es-shell" style="font-family: 'Geist', 'Helvetica Neue', system-ui, sans-serif; color: #12141F; background: #F6F7FB; height: 100vh; display: grid; grid-template-columns: 248px minmax(0, 1fr); overflow: hidden">
+
+<!-- SIDEBAR -->
+<aside class="es-side" style="background: #141B52; padding: 22px 16px; display: flex; flex-direction: column; gap: 28px">
+<a href="Main.dc.html" style="display: flex; align-items: center; gap: 10px; padding: 0 8px; text-decoration: none">
+<span style="width: 36px; height: 36px; border-radius: 10px; background: #FFFFFF; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 21V3" stroke="#1A2470" stroke-width="2.2" stroke-linecap="round"></path><path d="M6 4h12l-3 4 3 4H6" fill="#2236B5"></path></svg></span>
+<span style="display: flex; flex-direction: column; line-height: 1.1"><span style="font-weight: 600; font-size: 15px; color: #FFFFFF">Ensign</span><span style="font-size: 12px; color: #9AA8EE">Admin</span></span>
+</a>
+<nav class="es-side-nav" aria-label="Admin" style="display: flex; flex-direction: column; gap: 4px">
+<a class="ad-nav is-on" href="AdminReferrals.dc.html" aria-current="page"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="2.5" stroke="currentColor" stroke-width="1.6"></rect><path d="M9 9h6M9 12.5h6M9 16h3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg><span style="flex: 1 1 auto">Referrals</span><span style="font-size: 12px; min-width: 22px; height: 20px; padding: 0 6px; border-radius: 999px; background: #2236B5; color: #FFFFFF; display: inline-flex; align-items: center; justify-content: center">{{counts.New}}</span></a>
+<a class="ad-nav" href="AdminEnquiries.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.6"></rect><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"></path></svg><span style="flex: 1 1 auto">Enquiries</span></a>
+</nav>
+<div class="es-side-foot" style="margin-top: auto; display: flex; flex-direction: column; gap: 4px">
+<a class="ad-nav" href="Main.dc.html"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>View website</a>
+<div style="display: flex; align-items: center; gap: 10px; padding: 12px 10px 0; border-top: 1px solid rgba(255,255,255,.1); margin-top: 8px">
+<span style="width: 34px; height: 34px; border-radius: 50%; background: #2236B5; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 600">ES</span>
+<span style="display: flex; flex-direction: column; line-height: 1.25"><span style="font-size: 14px; color: #FFFFFF">Ensign admin</span><span style="font-size: 12px; color: #9AA8EE">Signed in</span></span>
+</div>
+</div>
+</aside>
+
+<!-- MAIN -->
+<main class="es-main" style="position: relative; display: flex; flex-direction: column; min-width: 0; overflow: hidden">
+
+<header class="es-pad" style="padding: 26px 32px 18px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; align-items: center; gap: 10px">
+<h1 style="margin: 0; font-weight: 600; font-size: 30px; letter-spacing: -0.03em">Referrals</h1>
+<span style="font-size: 12px; font-weight: 500; color: #7A4E00; background: #FDF1DC; padding: 4px 9px; border-radius: 999px">Sample data</span>
+</div>
+<span style="font-size: 14.5px; color: #5A6488">Referrals submitted through the website referral form.</span>
+</div>
+<div class="es-hdr-tools" style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<label style="position: relative; display: flex; align-items: center">
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Search referrals</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="position: absolute; left: 13px"><circle cx="11" cy="11" r="6.5" stroke="#6B7493" stroke-width="1.8"></circle><path d="M16 16l4 4" stroke="#6B7493" stroke-width="1.8" stroke-linecap="round"></path></svg>
+<input class="ad-search es-srch" type="search" placeholder="Search name, suburb, referrer" value="{{q}}" onChange="{{onQ}}" style="width: 300px; padding-left: 38px">
+</label>
+<button type="button" class="ad-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>Export CSV</button>
+</div>
+</header>
+
+<!-- STATUS SUMMARY -->
+<div class="es-sum" style="padding: 0 32px 18px; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{summary}}" as="k" hint-placeholder-count="5">
+<button type="button" onClick="{{k.pick}}" style="text-align: left; background: #FFFFFF; border: 1px solid {{k.border}}; border-radius: 16px; padding: 16px 18px; font: inherit; cursor: pointer; display: flex; flex-direction: column; gap: 10px">
+<span class="pill {{k.cls}}" style="align-self: flex-start">{{k.label}}</span>
+<span style="font-weight: 600; font-size: 28px; letter-spacing: -0.03em; color: #12141F">{{k.count}}</span>
+</button>
+</sc-for>
+</div>
+
+<!-- FILTERS -->
+<div class="es-pad" style="padding: 0 32px 14px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap">
+<div class="es-tabs" role="tablist" aria-label="Status" style="display: flex; gap: 4px; flex-wrap: wrap; background: #FFFFFF; border: 1px solid #E6E9F4; border-radius: 999px; padding: 4px">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="6">
+<button type="button" role="tab" aria-selected="{{t.sel}}" class="ad-tab {{t.cls}}" onClick="{{t.pick}}">{{t.label}}<span class="ad-count">{{t.count}}</span></button>
+</sc-for>
+</div>
+<div class="es-filters" style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+<select class="ad-sel" aria-label="Filter by service" value="{{f.service}}" onChange="{{onService}}">
+<option value="all">All services</option>
+<option value="Support coordination">Support coordination</option>
+<option value="Psychosocial recovery coaching">Recovery coaching</option>
+<option value="Both">Both</option>
+</select>
+<select class="ad-sel" aria-label="Filter by plan type" value="{{f.plan}}" onChange="{{onPlan}}">
+<option value="all">All plan types</option>
+<option value="Self-managed">Self-managed</option>
+<option value="Plan-managed">Plan-managed</option>
+</select>
+<select class="ad-sel" aria-label="Filter by referrer" value="{{f.ref}}" onChange="{{onRef}}">
+<option value="all">All referrers</option>
+<option value="Participant">Participant</option>
+<option value="Family or carer">Family or carer</option>
+<option value="Professional">Professional</option>
+</select>
+<select class="ad-sel" aria-label="Sort" value="{{f.sort}}" onChange="{{onSort}}">
+<option value="new">Sort: Newest first</option>
+<option value="old">Sort: Oldest first</option>
+<option value="az">Sort: Participant A to Z</option>
+<option value="status">Sort: Status</option>
+</select>
+<sc-if value="{{anyFilter}}" hint-placeholder-val="{{ false }}">
+<button type="button" class="ad-btn" onClick="{{clear}}" style="border-color: transparent; background: transparent; color: #2236B5">Clear filters</button>
+</sc-if>
+</div>
+</div>
+
+<!-- TABLE -->
+<div class="es-pad es-tablewrap" style="flex: 1 1 auto; min-height: 0; padding: 0 32px 28px; display: flex">
+<div style="flex: 1 1 auto; min-width: 0; background: #FFFFFF; border: 1px solid #E6E9F4; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column">
+<div class="ad-head"><span>Participant</span><span>Service</span><span>Plan</span><span>Referred by</span><span>Received</span><span>Status</span></div>
+<div style="flex: 1 1 auto; overflow-y: auto">
+<sc-for list="{{rows}}" as="r" hint-placeholder-count="8">
+<button type="button" class="ad-row {{r.cls}}" onClick="{{r.pick}}" aria-label="Open referral for {{r.participant}}">
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-weight: 600; font-size: 14.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.participant}}</span><span style="font-size: 13px; color: #6B7493">{{r.suburb}}</span></span>
+<span style="min-width: 0; overflow: hidden"><span class="svc">{{r.serviceShort}}</span></span>
+<span style="font-size: 14px; color: #3A4262">{{r.plan}}</span>
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0"><span style="font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.refName}}</span><span style="font-size: 13px; color: #6B7493">{{r.refType}}</span></span>
+<span style="font-size: 14px; color: #3A4262">{{r.date}}</span>
+<span><span class="pill {{r.stCls}}">{{r.status}}</span></span>
+</button>
+</sc-for>
+<sc-if value="{{empty}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 64px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center; border-top: 1px solid #EEF0F6">
+<span style="font-weight: 600; font-size: 17px">No referrals match these filters</span>
+<span style="font-size: 14px; color: #5A6488">Try a different status or clear the filters.</span>
+<button type="button" class="ad-btn" onClick="{{clear}}" style="margin-top: 6px">Clear filters</button>
+</div>
+</sc-if>
+</div>
+<div style="padding: 12px 20px; border-top: 1px solid #EEF0F6; font-size: 13px; color: #6B7493">Showing {{shown}} of {{total}} referrals</div>
+</div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{ false }}">
+<div onClick="{{close}}" style="position: absolute; inset: 0; background: rgba(18,20,31,.18)"></div>
+<aside class="ad-drawer" aria-label="Referral details" style="position: absolute; top: 0; right: 0; bottom: 0; width: min(480px, 100%); background: #FFFFFF; box-shadow: -24px 0 48px -24px rgba(18,20,31,.35); display: flex; flex-direction: column">
+<div style="padding: 22px 24px 18px; border-bottom: 1px solid #EEF0F6; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 8px; min-width: 0">
+<span style="font-size: 13px; color: #6B7493">Referral · received {{sel.date}}</span>
+<h2 style="margin: 0; font-weight: 600; font-size: 24px; letter-spacing: -0.02em">{{sel.participant}}</h2>
+<span><span class="pill {{sel.stCls}}">{{sel.status}}</span></span>
+</div>
+<button type="button" class="ad-icon-btn" aria-label="Close" onClick="{{close}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg></button>
+</div>
+<div style="flex: 1 1 auto; overflow-y: auto; padding: 22px 24px; display: flex; flex-direction: column; gap: 26px">
+
+<div style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #6B7493">Status</span>
+<div style="display: flex; gap: 6px; flex-wrap: wrap">
+<sc-for list="{{statusOpts}}" as="s" hint-placeholder-count="5"><button type="button" class="ad-seg {{s.cls}}" aria-pressed="{{s.pressed}}" onClick="{{s.pick}}">{{s.label}}</button></sc-for>
+</div>
+</div>
+
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<a class="ad-btn primary" href="tel:{{sel.contactPhone}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path></svg>Call {{sel.contactLabel}}</a>
+<a class="ad-btn" href="mailto:{{sel.contactEmail}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5" stroke="currentColor" stroke-width="1.7"></rect><path d="M4 7l8 6 8-6" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"></path></svg>Email</a>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #6B7493">Support requested</span>
+<dl class="ad-dl">
+<dt>Service</dt><dd>{{sel.service}}</dd>
+<dt>Plan type</dt><dd>{{sel.plan}}</dd>
+<dt>Reason</dt><dd style="line-height: 1.55">{{sel.reason}}</dd>
+</dl>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #6B7493">Participant</span>
+<dl class="ad-dl">
+<dt>Name</dt><dd>{{sel.participant}}</dd>
+<dt>Phone</dt><dd>{{sel.pPhone}}</dd>
+<dt>Email</dt><dd>{{sel.pEmail}}</dd>
+<dt>Preferred contact</dt><dd>{{sel.prefContact}}</dd>
+<dt>Suburb</dt><dd>{{sel.suburb}}</dd>
+</dl>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #6B7493">Referred by</span>
+<dl class="ad-dl">
+<dt>Name</dt><dd>{{sel.refName}}</dd>
+<dt>Relationship</dt><dd>{{sel.refType}}</dd>
+<dt>Organisation</dt><dd>{{sel.refOrg}}</dd>
+<dt>Phone</dt><dd>{{sel.refPhone}}</dd>
+<dt>Email</dt><dd>{{sel.refEmail}}</dd>
+<dt>Consent</dt><dd>Given</dd>
+<dt>Heard via</dt><dd>{{sel.heard}}</dd>
+</dl>
+</div>
+
+<label style="display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 13px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: #6B7493">Internal notes</span>
+<textarea class="ad-note" placeholder="Add a note for the team. Notes are not shared with the referrer." value="{{selNote}}" onChange="{{onNote}}"></textarea>
+</label>
+
+</div>
+</aside>
+</sc-if>
+
+</main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":960}}'>
+class Component extends DCLogic {
+constructor(props) {
+super(props);
+this.state = { status: 'all', service: 'all', plan: 'all', ref: 'all', sort: 'new', q: '', selId: null, overrides: {}, notes: {} };
+this.data = [
+{ id: 'R-1012', received: '2026-10-02T09:12', participant: 'Sample Participant A', suburb: 'Springfield 4300', pPhone: '0400 000 101', pEmail: 'participant.a@example.com', prefContact: 'Not provided', service: 'Support coordination', plan: 'Plan-managed', refType: 'Family or carer', refName: 'Sample Referrer A', refOrg: 'Not provided', refPhone: '0400 000 201', refEmail: 'referrer.a@example.com', reason: 'New NDIS plan approved. Family would like help understanding the plan and finding local providers.', heard: 'Word of mouth', status: 'New' },
+{ id: 'R-1011', received: '2026-10-01T15:40', participant: 'Sample Participant B', suburb: 'Ipswich 4305', pPhone: '0400 000 102', pEmail: 'participant.b@example.com', prefContact: 'Not provided', service: 'Psychosocial recovery coaching', plan: 'Self-managed', refType: 'Participant', refName: 'Sample Participant B', refOrg: 'Not provided', refPhone: '0400 000 102', refEmail: 'participant.b@example.com', reason: 'Looking for help building a weekly routine and getting back into community activities.', heard: 'Search engine', status: 'New' },
+{ id: 'R-1010', received: '2026-10-01T10:05', participant: 'Sample Participant C', suburb: 'Logan Central 4114', pPhone: '0400 000 103', pEmail: 'participant.c@example.com', prefContact: 'Sample Contact C (mother), 0400 000 303', service: 'Both', plan: 'Plan-managed', refType: 'Professional', refName: 'Sample Referrer C', refOrg: 'Sample Plan Management, plan manager', refPhone: '0400 000 203', refEmail: 'referrer.c@example.com', reason: 'Participant needs coordination across several providers and would benefit from recovery coaching.', heard: 'Plan manager', status: 'New' },
+{ id: 'R-1009', received: '2026-09-30T13:22', participant: 'Sample Participant D', suburb: 'Redbank Plains 4301', pPhone: '0400 000 104', pEmail: 'participant.d@example.com', prefContact: 'Not provided', service: 'Support coordination', plan: 'Self-managed', refType: 'Professional', refName: 'Sample Referrer D', refOrg: 'Sample Health Clinic, occupational therapist', refPhone: '0400 000 204', refEmail: 'referrer.d@example.com', reason: 'Plan review coming up. Needs help organising reports and connecting with therapy supports.', heard: 'Health professional', status: 'Contacted' },
+{ id: 'R-1008', received: '2026-09-29T11:48', participant: 'Sample Participant E', suburb: 'Sunnybank 4109', pPhone: '0400 000 105', pEmail: 'participant.e@example.com', prefContact: 'Not provided', service: 'Psychosocial recovery coaching', plan: 'Plan-managed', refType: 'Family or carer', refName: 'Sample Referrer E', refOrg: 'Not provided', refPhone: '0400 000 205', refEmail: 'referrer.e@example.com', reason: 'Would like practical support to build confidence using public transport.', heard: 'Social media', status: 'Contacted' },
+{ id: 'R-1007', received: '2026-09-27T09:30', participant: 'Sample Participant F', suburb: 'Goodna 4300', pPhone: '0400 000 106', pEmail: 'participant.f@example.com', prefContact: 'Not provided', service: 'Support coordination', plan: 'Plan-managed', refType: 'Professional', refName: 'Sample Referrer F', refOrg: 'Sample LAC Partner, Local Area Coordinator', refPhone: '0400 000 206', refEmail: 'referrer.f@example.com', reason: 'First plan. Participant would like help to start using the plan.', heard: 'Support coordinator or LAC', status: 'In progress' },
+{ id: 'R-1006', received: '2026-09-25T16:10', participant: 'Sample Participant G', suburb: 'Brisbane City 4000', pPhone: '0400 000 107', pEmail: 'participant.g@example.com', prefContact: 'Not provided', service: 'Both', plan: 'Self-managed', refType: 'Participant', refName: 'Sample Participant G', refOrg: 'Not provided', refPhone: '0400 000 107', refEmail: 'participant.g@example.com', reason: 'Wants one person to help keep supports organised and build daily routines.', heard: 'Search engine', status: 'In progress' },
+{ id: 'R-1005', received: '2026-09-22T12:00', participant: 'Sample Participant H', suburb: 'Forest Lake 4078', pPhone: '0400 000 108', pEmail: 'participant.h@example.com', prefContact: 'Not provided', service: 'Support coordination', plan: 'Plan-managed', refType: 'Family or carer', refName: 'Sample Referrer H', refOrg: 'Not provided', refPhone: '0400 000 208', refEmail: 'referrer.h@example.com', reason: 'Current coordinator is leaving. Family is looking for a new support coordinator.', heard: 'Word of mouth', status: 'Accepted' },
+{ id: 'R-1004', received: '2026-09-18T10:15', participant: 'Sample Participant I', suburb: 'Browns Plains 4118', pPhone: '0400 000 109', pEmail: 'participant.i@example.com', prefContact: 'Not provided', service: 'Psychosocial recovery coaching', plan: 'Self-managed', refType: 'Professional', refName: 'Sample Referrer I', refOrg: 'Sample Community Service, support worker', refPhone: '0400 000 209', refEmail: 'referrer.i@example.com', reason: 'Participant is keen to rebuild social connections and find a volunteering role.', heard: 'Other', status: 'Accepted' },
+{ id: 'R-1003', received: '2026-09-12T14:35', participant: 'Sample Participant J', suburb: 'Toowoomba 4350', pPhone: '0400 000 110', pEmail: 'participant.j@example.com', prefContact: 'Not provided', service: 'Support coordination', plan: 'Plan-managed', refType: 'Participant', refName: 'Sample Participant J', refOrg: 'Not provided', refPhone: '0400 000 110', refEmail: 'participant.j@example.com', reason: 'Enquiring about support coordination.', heard: 'Search engine', status: 'Closed' }
+];
+}
+renderVals() {
+const s = this.state;
+const STAT = ['New', 'Contacted', 'In progress', 'Accepted', 'Closed'];
+const CLS = { 'New': 'st-new', 'Contacted': 'st-contacted', 'In progress': 'st-progress', 'Accepted': 'st-accepted', 'Closed': 'st-closed' };
+const fmt = (iso) => { const d = new Date(iso); const m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; return d.getDate() + ' ' + m[d.getMonth()] + ' ' + d.getFullYear(); };
+const all = this.data.map((r) => ({ ...r, status: s.overrides[r.id] || r.status }));
+const counts = {}; STAT.forEach((k) => { counts[k] = all.filter((r) => r.status === k).length; });
+const q = s.q.trim().toLowerCase();
+let rows = all.filter((r) => (s.status === 'all' || r.status === s.status) && (s.service === 'all' || r.service === s.service) && (s.plan === 'all' || r.plan === s.plan) && (s.ref === 'all' || r.refType === s.ref) && (!q || (r.participant + ' ' + r.suburb + ' ' + r.refName + ' ' + r.refOrg).toLowerCase().includes(q)));
+const sorters = { new: (a, b) => b.received.localeCompare(a.received), old: (a, b) => a.received.localeCompare(b.received), az: (a, b) => a.participant.localeCompare(b.participant), status: (a, b) => STAT.indexOf(a.status) - STAT.indexOf(b.status) || b.received.localeCompare(a.received) };
+rows = rows.slice().sort(sorters[s.sort]);
+const selRaw = all.find((r) => r.id === s.selId);
+const sel = selRaw ? { ...selRaw, date: fmt(selRaw.received), stCls: CLS[selRaw.status], contactPhone: selRaw.pPhone.replace(/\s/g, ''), contactEmail: selRaw.pEmail, contactLabel: 'participant' } : {};
+const val = (e) => (e && e.target ? e.target.value : e);
+const setStatus = (st) => () => this.setState({ overrides: { ...s.overrides, [s.selId]: st } });
+return {
+counts: counts,
+q: s.q,
+f: { service: s.service, plan: s.plan, ref: s.ref, sort: s.sort },
+onQ: (e) => this.setState({ q: val(e) }),
+onService: (e) => this.setState({ service: val(e) }),
+onPlan: (e) => this.setState({ plan: val(e) }),
+onRef: (e) => this.setState({ ref: val(e) }),
+onSort: (e) => this.setState({ sort: val(e) }),
+anyFilter: s.status !== 'all' || s.service !== 'all' || s.plan !== 'all' || s.ref !== 'all' || !!q,
+clear: () => this.setState({ status: 'all', service: 'all', plan: 'all', ref: 'all', q: '' }),
+summary: STAT.map((k) => ({ label: k, count: counts[k], cls: CLS[k], border: s.status === k ? '#2236B5' : '#E6E9F4', pick: () => this.setState({ status: s.status === k ? 'all' : k }) })),
+tabs: [{ k: 'all', label: 'All', count: all.length }].concat(STAT.map((k) => ({ k: k, label: k, count: counts[k] }))).map((t) => ({ ...t, cls: s.status === t.k ? 'is-on' : '', sel: s.status === t.k ? 'true' : 'false', pick: () => this.setState({ status: t.k }) })),
+rows: rows.map((r) => ({ ...r, serviceShort: r.service === 'Psychosocial recovery coaching' ? 'Recovery coaching' : r.service, date: fmt(r.received), stCls: CLS[r.status], cls: r.id === s.selId ? 'is-sel' : '', pick: () => this.setState({ selId: r.id }) })),
+empty: rows.length === 0,
+shown: rows.length,
+total: all.length,
+hasSel: !!selRaw,
+sel: sel,
+close: () => this.setState({ selId: null }),
+statusOpts: STAT.map((k) => ({ label: k, cls: sel.status === k ? 'is-on' : '', pressed: sel.status === k ? 'true' : 'false', pick: setStatus(k) })),
+selNote: s.notes[s.selId] || '',
+onNote: (e) => this.setState({ notes: { ...s.notes, [s.selId]: val(e) } })
+};
+}
+}
+</script>
+</body>
+</html>
