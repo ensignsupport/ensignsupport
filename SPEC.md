@@ -95,7 +95,7 @@ Built in milestone 4: everything above except `admin_sessions`, `login_attempts`
 | Name | What it is | Needed for |
 | --- | --- | --- |
 | `SITE_URL` | The site address, for links in alerts | Alerts |
-| `ALERT_TO` | Who gets alerts, comma separated | Alerts |
+| `ALERT_TO` | Who gets alerts, comma separated. Andrew only (Allen, 2 Oct 2026) | Alerts |
 | `RESEND_API_KEY` | Resend key | Alerts and replies |
 | `EMAIL_FROM` | Sender, on Ensign's domain | Alerts and replies |
 | `HASH_SALT` | Long random text. Optional: without it each server makes its own | Rate limits |
@@ -104,7 +104,7 @@ Built in milestone 4: everything above except `admin_sessions`, `login_attempts`
 
 ## Not losing a referral (agreed 2 October 2026)
 
-1. Thank-you only after the database confirms the save. One automatic retry. If it still fails the visitor sees an error with a way to reach Ensign, and Allen and Andrew get a "save failed" alert with no details.
+1. Thank-you only after the database confirms the save. One automatic retry. If it still fails the visitor sees an error with a way to reach Ensign, and Andrew gets a "save failed" alert with no details (alerts go to Andrew only, Allen 2 Oct 2026).
 2. Every new referral emails Andrew a reference number and a link, nothing else.
 3. A daily reminder email lists how many referrals are still New after 24 hours (count and link only).
 4. No delete in the admin. Every status change is recorded.

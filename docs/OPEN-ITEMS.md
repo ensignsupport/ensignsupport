@@ -38,7 +38,7 @@ Owner in brackets. Nothing here is fixed silently: each one waits for the owner'
 - Privacy policy text and the collection notice legal wording
 - Instagram and Facebook links, or remove the icons
 - How long to keep referrals and enquiries (the earlier privacy draft says 7 years after services end)
-- Which email address replies and alerts come from, and who receives alerts
+- Which email address replies and alerts come from. Who receives alerts: Andrew only (Allen, 2 Oct 2026)
 
 ## Setup with Allen
 
