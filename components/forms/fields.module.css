@@ -1,0 +1,74 @@
+/* Form controls shared by the referral and enquiry forms,
+   from the .es-in / .es-lbl / .es-check rules in the design source. */
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--text-3);
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 52px;
+  border: 1px solid var(--input-line);
+  border-radius: var(--radius-input);
+  background: var(--white);
+  padding: 0 16px;
+  font: inherit;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink);
+  accent-color: var(--indigo-700);
+}
+
+.input::placeholder {
+  color: var(--text-4-aa);
+}
+
+.input:focus {
+  outline: 2px solid var(--indigo-700);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+
+textarea.input {
+  height: auto;
+  min-height: 132px;
+  padding: 14px 16px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+/* Errors are not in the design. Plain red text with a red border, high contrast. */
+.input[aria-invalid="true"] {
+  border-color: var(--error);
+}
+
+.error {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--error);
+}
+
+.two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+@media (max-width: 600px) {
+  .two {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

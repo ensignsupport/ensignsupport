@@ -63,9 +63,17 @@ h1 span[style*="#7D8DE3"], div span[style*="#7D8DE3"] { color: #7687E2 !importan
  * Approved changes made after the design was locked, applied to the design
  * previews so comparisons stay like for like.
  * - 2 Oct 2026: the "You" and "Your coordinator" tags on the Home hero photos are removed (Allen).
+ * - 2 Oct 2026: a privacy policy line is added under the Contact enquiry form (Allen).
  */
 export async function applyApprovedChanges(page: Page) {
   await page.evaluate(() => {
+    const enquiry = document.querySelector('form[aria-label="General enquiry"]');
+    if (enquiry) {
+      const line = document.createElement("p");
+      line.setAttribute("style", "margin: 0; font-size: 14px; line-height: 1.5; color: #5A6488");
+      line.innerHTML = 'See our <a href="#" style="color: #12141F; text-underline-offset: 3px">privacy policy</a> for how we handle your details.';
+      enquiry.appendChild(line);
+    }
     for (const span of Array.from(document.querySelectorAll("span"))) {
       const text = span.textContent?.trim();
       if ((text === "You" || text === "Your coordinator") && span.style.position === "absolute") span.remove();

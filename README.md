@@ -20,6 +20,10 @@ npx playwright install chromium   # once, downloads the test browser
 npm run check                     # lint, types, em dash check, build, every test
 ```
 
+The tests start their own throwaway database, so nothing needs setting up.
+
+Settings the live site needs are listed in `SPEC.md` under "Settings".
+
 ## Where things are
 
 | Path | What it is |

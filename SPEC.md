@@ -68,7 +68,7 @@ Name, email, phone (optional), message. Stored, then an alert email to Andrew.
 ## Data model (Netlify Database, Postgres)
 
 ```
-referrals                 id, ref (R-1001...), created_at, status,
+referrals                 id, ref (R-1001...), submission_id, created_at, status,
                           referrer_type, referrer_name, referrer_org_role,
                           referrer_phone, referrer_email,
                           participant_name, participant_preferred_contact,
@@ -77,14 +77,30 @@ referrals                 id, ref (R-1001...), created_at, status,
                           consent (must be true), consent_at, heard_via, updated_at
 referral_notes            id, referral_id, body, created_at
 referral_status_history   id, referral_id, from_status, to_status, changed_at
-enquiries                 id, ref (E-201...), created_at, status, read_at,
+enquiries                 id, ref (E-1001...), submission_id, created_at, status, read_at,
                           name, email, phone, message, updated_at
 enquiry_messages          id, enquiry_id, body, sent_at, email_id, delivery_status
 enquiry_status_history    id, enquiry_id, from_status, to_status, changed_at
 admin_sessions            id (hash of the cookie token), created_at, last_seen_at, expires_at
 login_attempts            ip_hash, attempted_at, succeeded
 access_log                id, at, session_id, action, target_ref  (never record contents)
+email_outbox              id, kind, ref, status, attempts, last_error, sent_at  (no details)
+rate_limits               key (salted hash), window_start, count
 ```
+
+Built in milestone 4: everything above except `admin_sessions`, `login_attempts` and `access_log` (milestone 5). Schema: `netlify/database/migrations/`. How saving, alerts and abuse protection work: `docs/decisions/0004-forms-and-alerts.md`.
+
+## Settings (Netlify environment variables, never in the repo)
+
+| Name | What it is | Needed for |
+| --- | --- | --- |
+| `SITE_URL` | The site address, for links in alerts | Alerts |
+| `ALERT_TO` | Who gets alerts, comma separated | Alerts |
+| `RESEND_API_KEY` | Resend key | Alerts and replies |
+| `EMAIL_FROM` | Sender, on Ensign's domain | Alerts and replies |
+| `HASH_SALT` | Long random text. Optional: without it each server makes its own | Rate limits |
+| `SITE_INDEXING` | `true` on the live site only | Search engines |
+| `NETLIFY_DB_URL` | Set by Netlify automatically | Database |
 
 ## Not losing a referral (agreed 2 October 2026)
 

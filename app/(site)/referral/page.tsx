@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { BuildNote } from "@/components/BuildNote";
+import { ReferralForm } from "@/components/forms/ReferralForm";
 import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = {
@@ -23,7 +23,7 @@ export default function ReferralPage() {
         }
         intro="Participants, families and professionals can refer to Ensign Support Services. We work with self-managed and plan-managed NDIS participants."
       />
-      <BuildNote>The step by step referral form and the collection notice arrive in milestone 4.</BuildNote>
+      <ReferralForm />
       <div style={{ height: 40 }} aria-hidden="true" />
     </>
   );

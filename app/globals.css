@@ -17,6 +17,9 @@
   --hover-border: #B9C2EE;   /* option and chip hover border */
   --input-line: #DDE1F0;     /* input border on forms */
   --dot-line: #C5CBE6;       /* unselected radio dot */
+  --chip-line: #E1E4F0;      /* choice and chip borders */
+  --error: #B42318;          /* form errors. Not in the design (it has no error state). 6.5:1 on white */
+  --error-bg: #FDECEA;       /* background of the "could not send" message */
 
   /* Accessibility adjustments. Three design colours fall just short of
      WCAG 2.2 AA on the page background. Each is darkened by the smallest

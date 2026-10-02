@@ -16,6 +16,8 @@ const PAGES = [
   { site: "/", design: "home" },
   { site: "/services", design: "services" },
   { site: "/about", design: "about" },
+  { site: "/contact", design: "contact" },
+  { site: "/referral", design: "referral" },
 ];
 
 for (const pg of PAGES) {

@@ -21,14 +21,18 @@
 - [x] Contact (cards only, the form arrives in M4)
 - [x] Responsive, optimised images (AVIF and WebP, sized to each box)
 - [x] Whole-page pixel comparison with the design, word for word copy checks
-- [ ] Allen reviews on his Mac and says go
+- [x] Allen reviewed and said go (2 Oct)
 
-## M4. Forms and email
+## M4. Forms and email (2 Oct 2026)
 
-- [ ] Netlify Database set up with Allen
-- [ ] Referral form
-- [ ] Enquiry form
-- [ ] Resend alerts and daily reminder
+- [x] Database schema (Netlify Database migration)
+- [x] Referral form: every step, the brief's fields, validation, consent, save then thank-you, retry and failure alert
+- [x] Enquiry form with privacy line
+- [x] Alerts (reference and link only), outbox, hourly retry, 8am reminder
+- [x] Abuse protection: origin, size, honeypot, rate limit, no duplicate saves
+- [x] Independent security review, all findings fixed and tested
+- [ ] Allen pushes, checks Netlify created the database, adds SITE_URL and ALERT_TO
+- [ ] Resend account and domain (alerts wait in the outbox until then)
 
 ## M5. Admin
 

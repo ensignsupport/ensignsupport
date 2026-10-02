@@ -23,6 +23,8 @@ export function watchErrors(page: Page) {
 
 /** WCAG 2.2 AA, which includes 2.1 AA and 2.0 AA. */
 export async function expectNoAxeViolations(page: Page) {
+  // Let entrance animations finish, so text is measured at full strength.
+  await page.evaluate(() => Promise.all(document.getAnimations().map((a) => a.finished.catch(() => undefined))));
   const results = await new AxeBuilder({ page })
     .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa"])
     .analyze();

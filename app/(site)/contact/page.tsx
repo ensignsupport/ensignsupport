@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import type { ReactNode } from "react";
 import { BandFlag } from "@/components/BandFlag";
+import { EnquiryForm } from "@/components/forms/EnquiryForm";
 import { Eyebrow } from "@/components/Eyebrow";
 import { ClockIcon, DocumentIcon, MailIcon, PhoneIcon, PinIcon } from "@/components/icons";
 import { PageHero } from "@/components/PageHero";
 import { PillLink } from "@/components/PillButton";
 import { isPlaceholder, site } from "@/lib/site";
-import { EnquirySlot } from "./EnquirySlot";
 import styles from "./contact.module.css";
 
 export const metadata: Metadata = {
@@ -81,7 +81,7 @@ export default function ContactPage() {
 
       <section className={styles.mainSection}>
         <div className={styles.main}>
-          <EnquirySlot />
+          <EnquiryForm />
 
           <div className={styles.side}>
             <div className={`${styles.referCard} on-dark`}>
