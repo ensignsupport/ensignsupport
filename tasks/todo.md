@@ -38,6 +38,8 @@
 
 - [x] Hero follows screen height above 760px, photo fills the rest of the first screen
 - [x] Fold test at 1280x800 to 2560x1300, design still matched on a tall screen
+- [x] 32px space under the photo (Allen)
+- [x] Other pages: headline and top space follow screen height (Allen)
 - [ ] Allen checks on his 13 inch Mac and 27 inch monitor
 
 ## M5. Admin

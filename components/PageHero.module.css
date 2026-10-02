@@ -46,3 +46,17 @@
   line-height: 1.55;
   color: var(--text-3);
 }
+
+/* Short screens (raised by Allen, 2 Oct 2026, docs/decisions/0005-hero-fits-the-screen.md).
+   Above 760px the page headline and the space above it also follow screen height,
+   so a 13 inch laptop shows more of the page under the headline. From 900px tall
+   upwards they are exactly the design. Page content below scrolls as designed. */
+@media (min-width: 761px) {
+  .section {
+    padding-top: clamp(28px, calc(48px - (900px - 100svh) / 5), 48px);
+  }
+
+  .title {
+    font-size: clamp(52px, min(7.6vw, calc(15svh - 25px)), 112px);
+  }
+}

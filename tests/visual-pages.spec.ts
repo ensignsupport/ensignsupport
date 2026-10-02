@@ -12,8 +12,9 @@ import { applyApprovedChanges, compare, openDesignPreview } from "./design-refer
  *
  * Home above 760px: the hero fills the first screen (change raised by Allen, see
  * docs/decisions/0005-hero-fits-the-screen.md), so the site is opened on a
- * screen exactly as tall as the designed hero. There it must match the design.
- * tests/hero-fold.spec.ts checks the shorter and taller screens.
+ * screen exactly as tall as the designed hero, with the design's 20px gap under
+ * the photo (the site uses 32px). There it must match the design.
+ * tests/hero-fold.spec.ts checks the real gap and shorter and taller screens.
  */
 const HIDE_PHOTOS = "img { opacity: 0 !important; }";
 
@@ -39,9 +40,12 @@ for (const pg of PAGES) {
       const sitePage = await context.newPage();
       if (pg.design === "home" && width > 760) {
         const fold = await designPage.evaluate(() => Math.round(document.querySelector(".es-hero-img")!.getBoundingClientRect().bottom + window.scrollY));
-        await sitePage.setViewportSize({ width, height: fold });
+        await sitePage.setViewportSize({ width, height: fold + 20 });
       }
       await sitePage.goto(pg.site);
+      if (pg.design === "home" && width > 760) {
+        await sitePage.addStyleTag({ content: '[class*="heroFold"], [class*="teaserSection"] { --hero-gap: 20px !important; }' });
+      }
       await sitePage.evaluate(() => document.fonts.ready);
       const siteHeight = await sitePage.evaluate(() => document.documentElement.scrollHeight);
       await sitePage.addStyleTag({ content: HIDE_PHOTOS });

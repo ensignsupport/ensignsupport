@@ -13,24 +13,36 @@ The design sizes the Home hero by screen width only (headline up to 150px, photo
 
 Above 760px wide, the hero also follows the screen height (`app/(site)/home.module.css`, "Hero fits the first screen"):
 
-- The headline is the smaller of the design size and 12% of the screen height, never under 60px or over 150px.
+- The headline is the smaller of the design size and a height-based size (15% of the screen height less 40px), never under 60px or over 150px.
 - The gaps above the headline, above the buttons and above the photo tighten on screens under 960px tall.
-- The photo fills whatever height is left, between 360px and 860px, so the next section starts right at the fold.
+- The photo fills whatever height is left, between 360px and 860px.
+- The photo stops 32px above the bottom of the screen so its rounded corners show (Allen, 2 Oct 2026: the photo touching the screen edge looked cut off). The service row starts right at the fold, so nothing peeks in.
+- Because of that, the gap between the photo and the service row is 32px on screens wider than 760px. The design had 20px.
 
 Phones (760px and under) are unchanged: they scroll by nature and the design already fits them.
 
 ## What stays the same
 
-On a screen tall enough for the whole designed hero (for example 1440 by 1257), the hero is exactly the design. The visual test opens Home at that height and pixel-compares it with the design. `tests/hero-fold.spec.ts` checks real laptop and monitor sizes (1280x800 up to 2560x1300).
+On a screen tall enough for the whole designed hero, the hero is exactly the design apart from the 32px gap. The visual test opens Home at that height with the gap set back to 20px and pixel-compares it with the design. `tests/hero-fold.spec.ts` checks real laptop and monitor sizes (1280x800 up to 2560x1300) and the headline on the other pages.
 
 ## Measured (visible browser area)
 
-| Screen | Headline | Photo height | Next section |
+| Screen | Headline | Photo height | Under the photo |
 | --- | --- | --- | --- |
-| 1280 x 800 | 96px | 374px | at the fold |
-| 1512 x 850 | 102px | 397px | at the fold |
-| 1440 x 900 | 108px | 421px | at the fold |
-| 1920 x 1080 | 130px | 542px | at the fold |
-| 2560 x 1300 | 150px | 723px | at the fold |
-| 1280 x 720 | 86px | 360px | 50px below (photo at its minimum) |
-| 1024 x 768 | 92px | 360px | 7px below (photo at its minimum) |
+| 1280 x 800 | 80px | 360px | 32px gap, service row at the fold |
+| 1512 x 850 | 88px | 388px | 32px gap, service row at the fold |
+| 1440 x 900 | 95px | 414px | 32px gap, service row at the fold |
+| 1920 x 1080 | 122px | 524px | 32px gap, service row at the fold |
+| 2560 x 1300 | 150px | 691px | 32px gap, service row at the fold |
+| 1280 x 720, 1024 x 768 | smaller | 360px (its minimum) | runs a little past the fold |
+
+## Other pages
+
+Allen asked for the same scaling on every page (2 Oct 2026). The other pages do not have a one-screen hero: they are a headline followed by content that scrolls. So only the part that applies carries over (`components/PageHero.module.css`):
+
+- The page headline is the smaller of the design size and a height-based size, never under 52px or over 112px.
+- The space above it tightens on screens under 900px tall.
+- From 900px tall upwards the page is exactly the design.
+- Cards, photos and text below are not squeezed to fit the screen. Shrinking them would make text smaller and harder to read.
+
+Measured: on 1280 x 800 the headline is 95px (was 97px) and content starts at 341px (was 365px). On 1512 x 850 it is 103px (was 112px) and content starts at 365px (was 393px).
