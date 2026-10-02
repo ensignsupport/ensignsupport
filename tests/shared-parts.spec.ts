@@ -160,3 +160,45 @@ test("keyboard: every header control shows a visible focus ring", async ({ page 
     expect(parseFloat(outline.width)).toBeGreaterThanOrEqual(2);
   }
 });
+
+// C69: the header's scroll behaviour is checked, not assumed.
+for (const width of [390, 1440]) {
+  test(`header stays at the top after scrolling, with nothing drawn over it, at ${width}px`, async ({ page }) => {
+    await page.setViewportSize({ width, height: 800 });
+    for (const path of ["/", "/services", "/about"]) {
+      await page.goto(path);
+      await page.evaluate(() => document.fonts.ready);
+      await page.mouse.wheel(0, 1600);
+      await page.waitForFunction(() => window.scrollY > 1000);
+      const header = page.getByRole("banner");
+      const box = await header.boundingBox();
+      expect(Math.round(box!.y), `${path}: header moved`).toBe(0);
+      expect(Math.round(box!.height)).toBe(92);
+      // Sample across the full width: the top element at each point must be part of the header.
+      const covered = await page.evaluate((h) => {
+        const header = document.querySelector("header")!;
+        const misses: number[] = [];
+        for (let x = 4; x < window.innerWidth; x += 24) {
+          for (const y of [4, h / 2, h - 4]) {
+            const el = document.elementFromPoint(x, y);
+            if (!el || !header.contains(el)) misses.push(x);
+          }
+        }
+        return misses;
+      }, box!.height);
+      expect(covered, `${path}: something is drawn over the header at x=${covered.join(",")}`).toEqual([]);
+    }
+  });
+}
+
+test("the open phone menu still works after scrolling", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/about");
+  await page.mouse.wheel(0, 1200);
+  await page.waitForFunction(() => window.scrollY > 800);
+  await page.getByRole("button", { name: "Menu" }).click();
+  const link = page.getByRole("navigation", { name: "Mobile" }).getByRole("link", { name: "Contact" });
+  await expect(link).toBeInViewport();
+  await link.click();
+  await expect(page).toHaveURL(/\/contact$/);
+});

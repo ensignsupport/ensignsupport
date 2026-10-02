@@ -59,6 +59,20 @@ const AA_ADJUSTMENTS = `
 h1 span[style*="#7D8DE3"], div span[style*="#7D8DE3"] { color: #7687E2 !important; }
 `;
 
+/**
+ * Approved changes made after the design was locked, applied to the design
+ * previews so comparisons stay like for like.
+ * - 2 Oct 2026: the "You" and "Your coordinator" tags on the Home hero photos are removed (Allen).
+ */
+export async function applyApprovedChanges(page: Page) {
+  await page.evaluate(() => {
+    for (const span of Array.from(document.querySelectorAll("span"))) {
+      const text = span.textContent?.trim();
+      if ((text === "You" || text === "Your coordinator") && span.style.position === "absolute") span.remove();
+    }
+  });
+}
+
 export type Diff = { ratio: number; diffPng: Buffer; width: number; height: number };
 
 /** Pixel difference between two screenshots of the same size. */

@@ -19,7 +19,6 @@ for (const path of PUBLIC_PAGES) {
   }
 
   test(`${path}: one h1, a title and a meta description`, async ({ page }) => {
-    test.fixme(path === "/", "The Home hero and its h1 arrive in milestone 3");
     await page.goto(path);
     await expect(page.locator("h1")).toHaveCount(1);
     const title = await page.title();
@@ -65,4 +64,11 @@ test("fonts are self-hosted and Geist is the font in use", async ({ page }) => {
   );
   expect(loaded.some((family) => family.includes("geist"))).toBe(true);
   expect(external, `requests left the site: ${external.join(", ")}`).toEqual([]);
+});
+
+test("the dev site is never indexed by search engines", async ({ page, request }) => {
+  const robots = await (await request.get("/robots.txt")).text();
+  expect(robots).toMatch(/Disallow: \/\s*$/m);
+  await page.goto("/");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
 });

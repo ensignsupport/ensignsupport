@@ -7,7 +7,7 @@ Rules every change must keep. If a change breaks one, it is not done.
 1. Never invent a client fact. Unknowns stay visible placeholders such as `[PHONE]`. All client facts live in `lib/site.ts`.
 2. No em dashes anywhere: copy, code, comments, alt text, commit messages.
 3. Australian English, Brisbane time, AUD.
-4. Nothing is deployed, pushed or made public until Allen says "lock". Allen commits and pushes with GitHub Desktop. Do not push `main`: Netlify publishes `main` to a public address.
+4. Nothing goes to the live site, ensignsupport.com.au, until Allen says "lock". Allen commits and pushes with GitHub Desktop. Pushing `main` updates the dev site (ensignweb.netlify.app), which is allowed and never indexed.
 5. Never say something works until it has been run and checked.
 6. Corrections are logged in `archway-rebuild/SKILL-CORRECTIONS.md` (Wrong / Rule / Where / Date).
 

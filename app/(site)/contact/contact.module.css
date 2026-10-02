@@ -1,0 +1,183 @@
+/* Contact page, from design-pack/design-source/Contact.dc.html */
+
+.infoSection {
+  padding: 48px var(--gutter) 0;
+}
+
+.info {
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+  gap: 20px;
+  padding: 0;
+  list-style: none;
+}
+
+.infoCard {
+  background: var(--indigo-50);
+  border-radius: var(--radius-card);
+  padding: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.infoIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.infoText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.infoLabel {
+  font-size: 14px;
+  color: var(--text-3);
+}
+
+.infoValue {
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+a.infoValue:hover {
+  color: var(--indigo-700);
+}
+
+.mainSection {
+  padding: 20px var(--gutter) 0;
+}
+
+.main {
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(420px, 100%), 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+.side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.referCard {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-hero);
+  background: var(--indigo-950);
+  padding: clamp(28px, 3.4vw, 44px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  flex: 1 1 auto;
+}
+
+.referFlag {
+  position: absolute;
+  right: -120px;
+  bottom: -70px;
+}
+
+.referInner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+}
+
+.referTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: clamp(32px, 3.2vw, 44px);
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+  color: var(--white);
+}
+
+.referCopy {
+  margin: 0;
+  max-width: 360px;
+  font-size: var(--body);
+  line-height: 1.6;
+  color: var(--indigo-100);
+}
+
+.referButton {
+  margin-top: 8px;
+}
+
+.area {
+  background: var(--indigo-50);
+  border-radius: var(--radius-hero);
+  padding: 28px clamp(28px, 3.4vw, 44px);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.areaIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.areaText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.areaTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.areaCopy {
+  margin: 0;
+  font-size: 14.5px;
+  color: var(--text-3);
+}
+
+.spacer {
+  height: 40px;
+}
+
+/* The design's phone layout: info cards two across, tighter. */
+@media (max-width: 760px) {
+  .info {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .infoCard {
+    padding: 20px;
+    gap: 20px;
+  }
+
+  .infoValue {
+    font-size: 16px;
+  }
+}

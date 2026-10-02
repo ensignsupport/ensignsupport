@@ -1,0 +1,29 @@
+.row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px 48px;
+  flex-wrap: wrap;
+}
+
+.lead {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.title {
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+
+/* Home uses a slightly larger heading than the inner pages. */
+.home {
+  font-size: clamp(36px, 4.2vw, 56px);
+}
+
+.page {
+  font-size: var(--h2);
+}

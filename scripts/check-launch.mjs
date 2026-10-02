@@ -7,7 +7,7 @@ const ROOT = path.resolve(import.meta.dirname, "..");
 const DIRS = ["app", "components", "lib"];
 const CHECKS = [
   { name: "client fact placeholder", re: /"\[[A-Z0-9 ,.:'-]+\]"|\[[A-Z][A-Z ]+:[^\]]*\]/ },
-  { name: "milestone stand-in (BuildNote)", re: /<BuildNote/ },
+  { name: "milestone stand-in", re: /<BuildNote|<EnquirySlot|data-build-note/ },
   { name: "sample data", re: /Sample (data|Participant|Referrer|Enquirer)/ },
   { name: "draft label", re: />\s*Draft\s*</ },
 ];

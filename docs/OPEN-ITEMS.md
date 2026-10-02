@@ -5,7 +5,7 @@ Owner in brackets. Nothing here is fixed silently: each one waits for the owner'
 ## Copy and compliance clashes found in the design (Allen decides)
 
 1. **Participant data and Archway's own boundary.** The claims rules say Archway builds "no participant data collection beyond a contact form". The referral form and admin store participant details and a reason that can reveal health information. Earlier phases planned this, so it may already be accepted. Needs Allen's explicit yes.
-2. **AI photos shown as real people.** All five photos are AI generated. The hero labels them "You" and "Your coordinator", and the alt text says "Your support coordinator on the same call". That reads as Ensign's own coordinator. Options: real photos of Andrew and consenting participants, or keep the AI photos and remove the "Your coordinator" implication.
+2. **AI photos.** All five photos are AI generated. The "You" and "Your coordinator" tags are now removed (Allen, 2 Oct) and the alt text is neutral ("A support coordinator on the same call"). Still open: real photos of Andrew and consenting participants later, or keep the AI photos.
 3. **Partner strip.** The claims rules allow only "Built by Archway Automation" in the footer. The design has the longer partner strip. Keep or shorten?
 4. **Groups of three.** Locked by the brief: the three values, the three experience points on About us, the three service choices and the three referrer types. Allen's design choices: the three items in the referral band and the three icon circles beside "7+ Years' experience" in the Home hero.
 5. **"All ages supported" stat** on Home comes from the questionnaire, not the brief. Keep or remove?
@@ -15,7 +15,7 @@ Owner in brackets. Nothing here is fixed silently: each one waits for the owner'
 
 ## Design questions (Allen decides)
 
-9. **Sticky header.** The design header scrolls away with the page. The earlier build made it stay at the top (C69). Which one for design v2?
+9. ~~Sticky header~~ Decided 2 Oct: the header stays at the top. Built and tested.
 10. **Three screens the design does not show:** admin sign in, the status history in the referral panel, and the privacy policy page. Plan: build them in the existing admin and page styles.
 11. **Enquiry replies.** When a person replies to Andrew's email, should the reply come back into the admin, or go to Andrew's normal inbox? Recommended: normal inbox first (simpler), admin later if needed.
 12. **Export CSV** button is in the design. Build it or hide it?

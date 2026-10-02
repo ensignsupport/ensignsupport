@@ -31,6 +31,8 @@
    component does the same to match the approved sizes exactly. */
 
 html {
+  /* In-page jumps land below the sticky header. */
+  scroll-padding-top: 100px;
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }

@@ -1,0 +1,146 @@
+/* Services page, from design-pack/design-source/Services.dc.html */
+
+.cardsSection {
+  padding: 48px var(--gutter) 0;
+}
+
+.cards {
+  max-width: var(--container);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(460px, 100%), 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--indigo-50);
+  border-radius: var(--radius-hero);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+}
+
+.photo {
+  position: relative;
+  height: 340px;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--indigo-100);
+}
+
+.img {
+  object-fit: cover;
+}
+
+.body {
+  padding: 26px 18px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  flex: 1 1 auto;
+}
+
+.number {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--indigo-150);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.title {
+  margin: 0;
+  font-weight: 600;
+  font-size: clamp(26px, 2.4vw, 32px);
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+}
+
+.copy {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--text-2);
+}
+
+.linkWrap {
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 15px;
+  min-height: 44px;
+}
+
+.link:hover {
+  color: var(--indigo-700);
+}
+
+.alongsideSection {
+  padding: 20px var(--gutter) 0;
+}
+
+.alongside {
+  max-width: var(--container);
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: var(--indigo-50);
+  border-radius: var(--radius-hero);
+  padding: 32px clamp(24px, 3vw, 40px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px 40px;
+  flex-wrap: wrap;
+}
+
+.alongsideText {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.alongsideTitle {
+  margin: 0;
+  font-weight: 600;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+}
+
+.alongsideCopy {
+  margin: 0;
+  font-size: 15px;
+  color: var(--text-3);
+}
+
+.chips {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  height: 44px;
+  padding: 0 20px;
+  border-radius: var(--radius-pill);
+  background: var(--white);
+  border: 1px solid var(--line);
+  font-size: 15px;
+  color: var(--ink);
+}

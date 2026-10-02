@@ -1,4 +1,10 @@
 .header {
+  /* Stays at the top while the page scrolls (Allen, 2 Oct 2026). The page
+     background stops content showing through behind it. */
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--page);
   padding: 0 var(--gutter);
 }
 

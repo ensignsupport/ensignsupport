@@ -40,5 +40,5 @@ npm run check                     # lint, types, em dash check, build, every tes
 
 ## Important
 
-- Do not push `main` until the build is locked. Netlify publishes `main` to a public address.
+- Pushing `main` updates the dev site, ensignweb.netlify.app. The live site is ensignsupport.com.au and only changes at launch.
 - Keys and passwords go in Netlify's environment settings, never in this repo.

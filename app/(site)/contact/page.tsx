@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
-import { BuildNote } from "@/components/BuildNote";
+import type { ReactNode } from "react";
+import { BandFlag } from "@/components/BandFlag";
+import { Eyebrow } from "@/components/Eyebrow";
+import { ClockIcon, DocumentIcon, MailIcon, PhoneIcon, PinIcon } from "@/components/icons";
 import { PageHero } from "@/components/PageHero";
+import { PillLink } from "@/components/PillButton";
+import { isPlaceholder, site } from "@/lib/site";
+import { EnquirySlot } from "./EnquirySlot";
+import styles from "./contact.module.css";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -8,6 +15,38 @@ export const metadata: Metadata = {
     "Contact Ensign Support Services. We currently provide services across South East Queensland, with the potential to deliver services across Australia in the future.",
   alternates: { canonical: "/contact" },
 };
+
+function InfoValue({ value, href }: { value: string; href?: string }) {
+  if (!href || isPlaceholder(value)) return <span className={styles.infoValue}>{value}</span>;
+  return (
+    <a className={styles.infoValue} href={href}>
+      {value}
+    </a>
+  );
+}
+
+const INFO: { label: string; icon: ReactNode; value: ReactNode }[] = [
+  {
+    label: "Phone",
+    icon: <PhoneIcon size={22} color="var(--indigo-900)" strokeWidth={1.6} />,
+    value: <InfoValue value={site.phone} href={`tel:${site.phone.replace(/\s/g, "")}`} />,
+  },
+  {
+    label: "Email",
+    icon: <MailIcon size={22} color="var(--indigo-900)" strokeWidth={1.6} />,
+    value: <InfoValue value={site.email} href={`mailto:${site.email}`} />,
+  },
+  {
+    label: "Hours",
+    icon: <ClockIcon size={22} color="var(--indigo-900)" />,
+    value: <InfoValue value={site.hours} />,
+  },
+  {
+    label: "ABN",
+    icon: <DocumentIcon size={22} color="var(--indigo-900)" />,
+    value: <InfoValue value={site.abn} />,
+  },
+];
 
 export default function ContactPage() {
   return (
@@ -23,8 +62,59 @@ export default function ContactPage() {
         }
         intro="We currently provide services across South East Queensland, with the potential to deliver services across Australia in the future."
       />
-      <BuildNote>The contact cards arrive in milestone 3. The enquiry form arrives in milestone 4.</BuildNote>
-      <div style={{ height: 40 }} aria-hidden="true" />
+
+      <section className={styles.infoSection} aria-label="Contact details">
+        <ul className={styles.info}>
+          {INFO.map((item) => (
+            <li key={item.label} className={styles.infoCard}>
+              <span className={styles.infoIcon} aria-hidden="true">
+                {item.icon}
+              </span>
+              <span className={styles.infoText}>
+                <span className={styles.infoLabel}>{item.label}</span>
+                {item.value}
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section className={styles.mainSection}>
+        <div className={styles.main}>
+          <EnquirySlot />
+
+          <div className={styles.side}>
+            <div className={`${styles.referCard} on-dark`}>
+              <BandFlag className={styles.referFlag} width={520} height={312} />
+              <div className={styles.referInner}>
+                <Eyebrow onDark>Make a Referral</Eyebrow>
+                <h2 className={styles.referTitle}>
+                  Making a
+                  <br />
+                  Referral?
+                </h2>
+                <p className={styles.referCopy}>
+                  Participants, families and professionals can use our online referral form.
+                </p>
+                <PillLink href="/referral" tone="light" size="band" className={styles.referButton}>
+                  Make a Referral
+                </PillLink>
+              </div>
+            </div>
+            <div className={styles.area}>
+              <span className={styles.areaIcon} aria-hidden="true">
+                <PinIcon size={22} color="var(--indigo-900)" strokeWidth={1.6} />
+              </span>
+              <span className={styles.areaText}>
+                <span className={styles.areaTitle}>{site.serviceArea}</span>
+                <span className={styles.areaCopy}>Self-managed and plan-managed NDIS participants</span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className={styles.spacer} aria-hidden="true" />
     </>
   );
 }

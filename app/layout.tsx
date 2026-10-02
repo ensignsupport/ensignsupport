@@ -28,6 +28,8 @@ export const metadata: Metadata = {
     "Ensign Support Services provides NDIS support coordination and psychosocial recovery coaching for self-managed and plan-managed participants in South East Queensland.",
   applicationName: site.name,
   formatDetection: { telephone: false, email: false, address: false },
+  // Not indexed until launch (see app/robots.ts).
+  robots: process.env.SITE_INDEXING === "true" ? undefined : { index: false, follow: false },
 };
 
 export const viewport: Viewport = {

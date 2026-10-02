@@ -10,15 +10,18 @@
 - [x] Tests: pages at six widths, axe WCAG 2.2 AA, header and menu behaviour, footer, compliance text, pixel comparison with the design
 - [x] Scripts: em dash check, launch check
 - [x] SPEC, CONSTRAINTS, plan, build status, decision records
+- [x] Allen reviewed and said go (2 Oct): header sticky, hero photo tags removed
+
+## M3. Public pages (2 Oct 2026)
+
+- [x] Sticky header, tested after scrolling at 390 and 1440px
+- [x] Home
+- [x] Services
+- [x] About us
+- [x] Contact (cards only, the form arrives in M4)
+- [x] Responsive, optimised images (AVIF and WebP, sized to each box)
+- [x] Whole-page pixel comparison with the design, word for word copy checks
 - [ ] Allen reviews on his Mac and says go
-
-## M3. Public pages
-
-- [ ] Home
-- [ ] Services
-- [ ] About us
-- [ ] Contact (cards only)
-- [ ] Responsive images
 
 ## M4. Forms and email
 

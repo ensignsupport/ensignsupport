@@ -447,3 +447,9 @@ Status: all entries are PROPOSED until Step E (skill-creator pass). Nothing here
 - **Rule:** A component used on more than one page is verified on every page that uses it, at every breakpoint, before it is called done. Write the check as a loop over pages, not as a one off on the page in front of you. The same applies to a rule the operator states: it is a rule for the component, not for the screen where they said it.
 - **Where in skill:** Phase 3 components step and verification step.
 - **Date:** 21 Sep 2026
+
+## C74. Calling the dev site "live" without asking which address is live
+- **Wrong:** The Netlify project publishes `main` to ensignweb.netlify.app. That address was treated as the client's public live site, so the build plan said "never push main" and a push was reported as the half-built site going public. Allen: the live site is ensignsupport.com.au, the Netlify link is the dev site and can show anything.
+- **Rule:** Before calling any deploy "live" or restricting pushes, ask which domain is the live site and check the hosting project's custom domains. A platform subdomain is a dev or staging address unless the operator says otherwise. Keep dev sites out of search engines by default (noindex and a robots.txt that disallows everything) instead of blocking pushes.
+- **Where in skill:** aa-build-phase-4 milestone end (pushing and previews), aa-kickoff-phase-0 (record the live and dev addresses in BUILD-STATUS.md).
+- **Date:** 2 Oct 2026
