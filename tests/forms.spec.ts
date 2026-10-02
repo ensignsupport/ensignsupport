@@ -58,7 +58,9 @@ async function chooseAndContinue(page: Page, label: string) {
 test("professional referral: every step, saved exactly, alert has no details", async ({ page }) => {
   await freshVisitor(page);
   await page.goto("/referral");
-  const before = (await sql<{ n: number }>(`SELECT count(*)::int AS n FROM referrals`))[0].n;
+  const countMine = async () =>
+    (await sql<{ n: number }>(`SELECT count(*)::int AS n FROM referrals WHERE reason = $1`, [PRO.reason]))[0].n;
+  const before = await countMine();
 
   // Step: who. Continue waits for a choice.
   await expect(page.getByRole("button", { name: "Continue" })).toBeDisabled();
@@ -124,7 +126,7 @@ test("professional referral: every step, saved exactly, alert has no details", a
     heard_via: "Plan manager",
   });
   expect(r.consent_at).toBeTruthy();
-  expect((await sql<{ n: number }>(`SELECT count(*)::int AS n FROM referrals`))[0].n).toBe(before + 1);
+  expect(await countMine()).toBe(before + 1);
   const history = await sql(`SELECT from_status, to_status FROM referral_status_history WHERE referral_id = $1`, [r.id]);
   expect(history).toEqual([{ from_status: null, to_status: "new" }]);
 
@@ -267,13 +269,15 @@ test("the server refuses what the brief rules out, even when the browser is bypa
 });
 
 test("a bot that fills the hidden field is thanked and nothing is saved", async ({ request }) => {
-  const before = (await sql<{ n: number }>(`SELECT count(*)::int AS n FROM enquiries`))[0].n;
+  const countBots = async () =>
+    (await sql<{ n: number }>(`SELECT count(*)::int AS n FROM enquiries WHERE email = 'bot@example.test'`))[0].n;
+  const before = await countBots();
   const res = await request.post("/api/enquiry", {
     data: { name: "Bot", email: "bot@example.test", message: "spam", submissionId: randomUUID(), ens_hp_7x: "http://spam.example" },
     headers: api("198.51.100.2"),
   });
   expect(res.status()).toBe(200);
-  expect((await sql<{ n: number }>(`SELECT count(*)::int AS n FROM enquiries`))[0].n).toBe(before);
+  expect(await countBots()).toBe(before);
 });
 
 test("more than 5 referrals an hour from one address are slowed down", async ({ request }) => {

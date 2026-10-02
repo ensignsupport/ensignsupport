@@ -62,7 +62,8 @@ Name, email, phone (optional), message. Stored, then an alert email to Andrew.
 
 - Referrals: statuses New, Contacted, In progress, Accepted, Closed. Summary cards, status tabs, filters (service, plan type, referrer type), search, clear filters, sorting (newest, oldest, participant A to Z, status). Slide-in detail panel with status change, call and email buttons, internal notes and a status history.
 - Enquiries: statuses New, Replied, Closed. Tabs, search, sorting (newest, oldest, unread first). Reading pane with reply box and status change. Replies go out by email from Ensign's address and the thread is stored.
-- Export CSV: in the design only. Not built until Allen confirms.
+- Export CSV: left out for now (Allen, 2 Oct 2026). A downloaded spreadsheet of health and contact details can end up anywhere. Easy to add later.
+- Sign in: one long passphrase, no phone code for now (Allen, 2 Oct 2026). A second step can be added later.
 - No delete button. Closed is the furthest a record can go.
 
 ## Data model (Netlify Database, Postgres)
@@ -88,7 +89,7 @@ email_outbox              id, kind, ref, status, attempts, last_error, sent_at  
 rate_limits               key (salted hash), window_start, count
 ```
 
-Built in milestone 4: everything above except `admin_sessions`, `login_attempts` and `access_log` (milestone 5). Schema: `netlify/database/migrations/`. How saving, alerts and abuse protection work: `docs/decisions/0004-forms-and-alerts.md`.
+Built in milestone 4, plus `admin_sessions`, `login_attempts` and `access_log` in milestone 5 (`docs/decisions/0007-admin-sign-in-and-data.md`). Schema: `netlify/database/migrations/`. How saving, alerts and abuse protection work: `docs/decisions/0004-forms-and-alerts.md`.
 
 ## Settings (Netlify environment variables, never in the repo)
 
@@ -98,6 +99,8 @@ Built in milestone 4: everything above except `admin_sessions`, `login_attempts`
 | `ALERT_TO` | Who gets alerts, comma separated. Andrew only (Allen, 2 Oct 2026) | Alerts |
 | `RESEND_API_KEY` | Resend key | Alerts and replies |
 | `EMAIL_FROM` | Sender, on Ensign's domain | Alerts and replies |
+| `ADMIN_PASSWORD` | The admin passphrase, at least 16 characters (a long sentence is best). Mark it secret | Admin sign in |
+| `REPLY_TO` | Optional. Where enquirers' answers to Andrew's replies go. Without it, the first `ALERT_TO` address | Enquiry replies |
 | `HASH_SALT` | Long random text. Optional: without it each server makes its own | Rate limits |
 | `SITE_INDEXING` | `true` on the live site only | Search engines |
 | `NETLIFY_DB_URL` | Set by Netlify automatically | Database |

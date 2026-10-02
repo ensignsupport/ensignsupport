@@ -19,7 +19,7 @@ export function logError(event: string, error: unknown, fields: Fields = {}) {
       event,
       error: error instanceof Error ? error.name : "Error",
       code: code ?? null,
-      hint: message.slice(0, 80).replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, "[email]").replace(/\d{6,}/g, "[number]"),
+      hint: message.slice(0, 80).replace(/[\w.+-]+@[\w-]+\.[\w.]+/g, "[email]").replace(/\+?\d[\d\s-]{6,}\d/g, "[number]"),
       ...fields,
     }),
   );

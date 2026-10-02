@@ -54,6 +54,8 @@ npm test              # unit tests (alerts), then browser tests:
                       # loads clean, no sideways scroll, WCAG 2.2 AA (axe),
                       # shared parts pixel-compared with the design,
                       # Home hero fills the first screen from 1280x800 to 2560x1300,
-                      # every page on 14 real screens, phone to 4K, nothing looks broken
+                      # every page on 14 real screens, phone to 4K, nothing looks broken,
+                      # admin: nothing opens without signing in, lockout, sessions end,
+                      # changes saved and logged without contents, replies emailed
 npm run check:launch  # must pass before launch: no placeholders, stand-ins or sample data
 ```

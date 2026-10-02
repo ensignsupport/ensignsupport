@@ -24,7 +24,7 @@ Owner in brackets. Nothing here is fixed silently: each one waits for the owner'
     - The collection notice beside the referral form now stops below the sticky header (the design's 24px gap became 116px).
     - Still to come in M5: admin sign in, and the status history in the referral panel.
 11. ~~Enquiry replies~~ Decided 2 Oct: replies from the person go to Andrew's normal inbox. The admin stores the replies Andrew sends (Allen).
-12. **Export CSV** button is in the design. Build it or hide it?
+12. **Export CSV** button is in the design. Decided 2 Oct 2026: left out for now (Allen).
 13. **Accessibility colour changes.** Three design colours were darkened slightly to pass WCAG 2.2 AA (docs/decisions/0002). Keep?
 
 ## Headlines Andrew should approve (Andrew)

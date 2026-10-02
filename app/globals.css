@@ -29,6 +29,26 @@
   --error: #B42318;          /* form errors. Not in the design (it has no error state). 6.5:1 on white */
   --error-bg: #FDECEA;       /* background of the "could not send" message */
 
+  /* Admin area (AdminReferrals.dc.html, AdminEnquiries.dc.html). */
+  --admin-bg: #F6F7FB;        /* admin page background */
+  --admin-side: #141B52;      /* admin sidebar */
+  --admin-side-link: #C9D1F6; /* sidebar links */
+  --admin-side-sub: #9AA8EE;  /* sidebar small text */
+  --admin-line: #E1E4F0;      /* inputs, buttons, segmented choices */
+  --admin-card-line: #E6E9F4; /* cards, table frame, tab group */
+  --admin-row-line: #EEF0F6;  /* rows and section rules */
+  --admin-row-hover: #F8F9FD; /* row hover */
+  --admin-row-sel: #F1F3FC;   /* selected row, chosen status */
+  --admin-tab-hover: #EEF0F8; /* status tab hover */
+  --admin-count: #E6E9F4;     /* count bubble on tabs */
+  --admin-btn-hover: #F3F4FA; /* plain button hover */
+  --admin-chip: #F1F2F8;      /* service chip */
+  --admin-chip-ink: #3A4262;  /* service chip, plan, dates */
+  --admin-sub: #5A6488;       /* page subtitles, message previews */
+  --admin-thread: #FBFBFD;    /* reply thread background */
+  --admin-shade: rgba(18, 20, 31, 0.18); /* behind the detail panel */
+  --st-replied-bg: #E2F3E8;   --st-replied-fg: #1D6B3F;
+
   /* Accessibility adjustments. Three design colours fall just short of
      WCAG 2.2 AA on the page background. Each is darkened by the smallest
      step that passes, keeping its hue. See docs/decisions/0002. */

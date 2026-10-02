@@ -16,9 +16,9 @@ import { log, logError } from "./log";
  * Until they are set, alerts wait in the outbox and go out once they are.
  */
 
-export type OutboxKind = "new_referral" | "new_enquiry" | "daily_reminder";
+export type OutboxKind = "new_referral" | "new_enquiry" | "daily_reminder" | "enquiry_reply" | "login_lockout";
 
-type Message = { to: string[]; subject: string; text: string };
+type Message = { to: string[]; subject: string; text: string; replyTo?: string };
 
 const BRISBANE = new Intl.DateTimeFormat("en-AU", {
   timeZone: "Australia/Brisbane",
@@ -42,7 +42,7 @@ export function emailReady(): boolean {
   return Boolean(process.env.EMAIL_SINK_FILE || (process.env.RESEND_API_KEY && process.env.EMAIL_FROM));
 }
 
-function compose(kind: OutboxKind, ref: string | null, count?: number): Message {
+function compose(kind: Exclude<OutboxKind, "enquiry_reply">, ref: string | null, count?: number): Message {
   const footer = "\n\nThis email has no personal details in it, to keep them private. Sign in to the admin area to read them.";
   if (kind === "new_referral") {
     return {
@@ -56,6 +56,15 @@ function compose(kind: OutboxKind, ref: string | null, count?: number): Message 
       to: recipients(),
       subject: `New enquiry ${ref}`,
       text: `A new enquiry (${ref}) has come in through the Contact page.\n\nOpen it: ${siteUrl()}/admin/enquiries?ref=${ref}${footer}`,
+    };
+  }
+  if (kind === "login_lockout") {
+    return {
+      to: recipients(),
+      subject: "Admin sign in locked after failed attempts",
+      text:
+        `At ${BRISBANE.format(new Date())} (Brisbane time) the admin sign in was locked for 15 minutes after several wrong passphrases.\n\n` +
+        `If this was you, wait 15 minutes and try again. If it was not, someone may be guessing: tell Archway Automation so the passphrase can be changed.`,
     };
   }
   const n = count ?? 0;
@@ -74,11 +83,38 @@ async function deliver(message: Message, idempotencyKey: string): Promise<string
   }
   const resend = new Resend(process.env.RESEND_API_KEY);
   const { data, error } = await resend.emails.send(
-    { from: process.env.EMAIL_FROM!, to: message.to, subject: message.subject, text: message.text },
+    {
+      from: process.env.EMAIL_FROM!,
+      to: message.to,
+      subject: message.subject,
+      text: message.text,
+      ...(message.replyTo ? { replyTo: message.replyTo } : {}),
+    },
     { idempotencyKey },
   );
   if (error || !data) throw new Error(`Resend: ${error?.name ?? "no response"}`);
   return data.id;
+}
+
+/**
+ * Andrew's reply to an enquiry, sent from Ensign's address to the person who
+ * asked. Their own answer goes back to Andrew's inbox (REPLY_TO, or the first
+ * ALERT_TO address). The text is exactly what Andrew wrote in the admin.
+ */
+async function composeReply(messageId: number): Promise<Message | null> {
+  const rows = await query<{ body: string; email: string; name: string }>(
+    `SELECT m.body, e.email, e.name FROM enquiry_messages m JOIN enquiries e ON e.id = m.enquiry_id WHERE m.id = $1`,
+    [messageId],
+  );
+  const row = rows[0];
+  if (!row) return null;
+  const replyTo = (process.env.REPLY_TO ?? "").trim() || recipients()[0];
+  return {
+    to: [row.email],
+    subject: "Re: your enquiry to Ensign Support Services",
+    text: `${row.body}\n\nEnsign Support Services`,
+    replyTo,
+  };
 }
 
 /** Queue an alert. Called inside the same transaction that saves the record. */
@@ -100,8 +136,8 @@ export async function processOutbox(limit = 20): Promise<{ sent: number; failed:
     log("email.not_configured", { waiting: count });
     return { sent: 0, failed: 0, waiting: count };
   }
-  const rows = await query<{ id: number; kind: OutboxKind; ref: string | null; attempts: number }>(
-    `SELECT id, kind, ref, attempts FROM email_outbox
+  const rows = await query<{ id: number; kind: OutboxKind; ref: string | null; attempts: number; message_id: number | null }>(
+    `SELECT id, kind, ref, attempts, message_id FROM email_outbox
       WHERE status = 'pending' AND attempts < 8
       ORDER BY created_at LIMIT $1`,
     [limit],
@@ -116,7 +152,17 @@ export async function processOutbox(limit = 20): Promise<{ sent: number; failed:
               `SELECT count(*)::int AS count FROM referrals WHERE status = 'new' AND created_at < now() - interval '24 hours'`,
             ))[0].count
           : undefined;
-      const providerId = await deliver(compose(row.kind, row.ref, count), `outbox-${row.id}`);
+      let message: Message | null;
+      if (row.kind === "enquiry_reply") {
+        message = row.message_id ? await composeReply(row.message_id) : null;
+        if (!message) throw new Error("reply not found");
+      } else {
+        message = compose(row.kind, row.ref, count);
+      }
+      const providerId = await deliver(message, `outbox-${row.id}`);
+      if (row.message_id) {
+        await query(`UPDATE enquiry_messages SET delivery_status = 'sent', email_id = $2 WHERE id = $1`, [row.message_id, providerId]);
+      }
       await query(`UPDATE email_outbox SET status = 'sent', sent_at = now(), attempts = attempts + 1, provider_id = $2 WHERE id = $1`, [
         row.id,
         providerId,
@@ -131,6 +177,9 @@ export async function processOutbox(limit = 20): Promise<{ sent: number; failed:
         error instanceof Error ? error.message.slice(0, 200) : "error",
         attempts >= 8 ? "failed" : "pending",
       ]);
+      if (attempts >= 8 && row.message_id) {
+        await query(`UPDATE enquiry_messages SET delivery_status = 'failed' WHERE id = $1`, [row.message_id]);
+      }
       logError("email.failed", error, { kind: row.kind, ref: row.ref, attempts });
       failed++;
     }

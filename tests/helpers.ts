@@ -14,7 +14,11 @@ export function watchErrors(page: Page) {
     if (msg.type() === "error") errors.push(`console: ${msg.text()}`);
   });
   page.on("pageerror", (err) => errors.push(`page: ${err.message}`));
-  page.on("requestfailed", (req) => errors.push(`request failed: ${req.url()}`));
+  // A request the browser itself cancels (for example when a page navigates
+  // away while it loads) is not a failure.
+  page.on("requestfailed", (req) => {
+    if (!req.failure()?.errorText.includes("ERR_ABORTED")) errors.push(`request failed: ${req.url()}`);
+  });
   page.on("response", (res) => {
     if (res.status() >= 400) errors.push(`HTTP ${res.status()}: ${res.url()}`);
   });

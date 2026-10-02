@@ -46,10 +46,11 @@
 
 ## M5. Admin
 
-- [ ] Sign in and sessions
-- [ ] Admin referrals
-- [ ] Admin enquiries
+- [x] Sign in and sessions (passphrase only, Allen)
+- [x] Admin referrals (no Export CSV, Allen)
+- [x] Admin enquiries, replies by email
 - [ ] Security review by a fresh reviewer
+- [ ] Allen sets ADMIN_PASSWORD in Netlify, signs in and tries it
 
 ## M6. Full check
 

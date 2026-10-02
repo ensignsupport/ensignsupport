@@ -32,6 +32,8 @@ const child = spawn("npx", ["next", "start", "-p", port], {
     ALERT_TO: "alerts@example.test",
     SITE_URL: `http://localhost:${port}`,
     TRUST_FORWARDED_FOR: "1",
+    // A test passphrase for the admin. The real one lives only in Netlify's settings.
+    ADMIN_PASSWORD: "correct horse battery staple test",
   },
 });
 

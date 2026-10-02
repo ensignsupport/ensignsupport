@@ -28,7 +28,9 @@ afterAll(async () => {
 });
 
 beforeEach(async () => {
-  await client.query("DELETE FROM email_outbox; DELETE FROM referral_status_history; DELETE FROM referrals;");
+  await client.query(
+    "DELETE FROM email_outbox; DELETE FROM enquiry_messages; DELETE FROM enquiries; DELETE FROM referral_status_history; DELETE FROM referrals;",
+  );
 });
 
 async function addReferral(hoursAgo: number, status = "new") {
@@ -79,5 +81,38 @@ describe("alerts", () => {
     expect(reminder.text).toContain("/admin/referrals?status=new");
     expect(JSON.stringify(reminder)).not.toContain("Secret");
     expect(JSON.stringify(reminder)).not.toContain("secret");
+  });
+
+  test("replies to enquiries wait until email is set up, then go to the enquirer from Ensign, once", async () => {
+    delete process.env.EMAIL_SINK_FILE;
+    delete process.env.RESEND_API_KEY;
+    const { processOutbox } = await import("@/lib/server/email");
+    const { rows: e } = await client.query(
+      `INSERT INTO enquiries (submission_id, name, email, message) VALUES (gen_random_uuid(), 'Wendy', 'wendy@example.test', 'Question') RETURNING id, ref`,
+    );
+    const { rows: m } = await client.query(`INSERT INTO enquiry_messages (enquiry_id, body) VALUES ($1, 'Yes we can help. Reply 77a.') RETURNING id`, [e[0].id]);
+    await client.query(`INSERT INTO email_outbox (kind, ref, message_id) VALUES ('enquiry_reply', $1, $2)`, [e[0].ref, m[0].id]);
+
+    expect(await processOutbox()).toMatchObject({ sent: 0, waiting: 1 });
+    expect((await client.query(`SELECT delivery_status FROM enquiry_messages WHERE id = $1`, [m[0].id])).rows[0].delivery_status).toBe("pending");
+
+    process.env.EMAIL_SINK_FILE = sink;
+    expect(await processOutbox()).toMatchObject({ sent: 1 });
+    expect(await processOutbox()).toMatchObject({ sent: 0 });
+    const sent = lines().filter((l) => l.text.includes("Reply 77a"));
+    expect(sent).toHaveLength(1);
+    expect(sent[0].to).toEqual(["wendy@example.test"]);
+    expect(sent[0].replyTo).toBe("andrew@example.test");
+    expect((await client.query(`SELECT delivery_status FROM enquiry_messages WHERE id = $1`, [m[0].id])).rows[0].delivery_status).toBe("sent");
+  });
+
+  test("the sign in lockout alert holds the time only", async () => {
+    process.env.EMAIL_SINK_FILE = sink;
+    const { processOutbox } = await import("@/lib/server/email");
+    await client.query(`INSERT INTO email_outbox (kind) VALUES ('login_lockout')`);
+    await processOutbox();
+    const alert = lines().find((l) => l.subject === "Admin sign in locked after failed attempts");
+    expect(alert.to).toEqual(["andrew@example.test"]);
+    expect(alert.text).toMatch(/Brisbane time/);
   });
 });
