@@ -11,7 +11,7 @@ const svg = (size: number) => ({
   fill: "none",
   "aria-hidden": true as const,
   focusable: false as const,
-  style: { width: `calc(${size} * var(--px, 1px))`, height: `calc(${size} * var(--px, 1px))` },
+  style: { width: `calc(${size} * var(--px-ui, 1px))`, height: `calc(${size} * var(--px-ui, 1px))` },
 });
 
 export function ReferralsIcon({ size = 18, className }: Props) {

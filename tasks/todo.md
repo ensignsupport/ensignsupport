@@ -40,7 +40,8 @@
 - [x] Fold test at 1280x800 to 2560x1300, design still matched on a tall screen
 - [x] 32px space under the photo (Allen)
 - [x] Other pages: headline and top space follow screen height (Allen)
-- [x] Whole site scales on big screens, one scale value (Allen)
+- [x] ~~Whole site scales on big screens, one scale value~~ replaced: it zoomed everything (Allen, C77)
+- [x] Big screens grow gently: space and width grow, text and buttons stay near design size (Allen, C77)
 - [x] Every page tested on 14 screens, phone to 4K
 - [ ] Allen checks on his 13 inch Mac and 27 inch monitor
 

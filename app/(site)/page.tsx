@@ -153,7 +153,7 @@ export default function HomePage() {
                 src={recoveryCoaching}
                 alt=""
                 fill
-                sizes="(min-width: 1441px) 19vw, 270px"
+                sizes="(min-width: 1441px) min(19vw, 340px), 270px"
                 className={styles.photo}
                 style={{ objectPosition: "50% 62%" }}
               />
@@ -192,7 +192,7 @@ export default function HomePage() {
               src={supportCoordination}
               alt="A coordinator on a video call with a participant and therapist, cross-checking the support plan"
               fill
-              sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, (min-width: 1441px) 22vw, 310px"
+              sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, (min-width: 1441px) min(22vw, 390px), 310px"
               className={styles.photo}
               style={{ objectPosition: "center 40%" }}
             />
@@ -219,7 +219,7 @@ export default function HomePage() {
               src={recoveryCoaching}
               alt="A participant writing her goals in a notebook during a coaching session"
               fill
-              sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, (min-width: 1441px) 22vw, 310px"
+              sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, (min-width: 1441px) min(22vw, 390px), 310px"
               className={styles.photo}
               style={{ objectPosition: "60% 30%" }}
             />

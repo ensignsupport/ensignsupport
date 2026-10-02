@@ -21,7 +21,7 @@ export default function PrivacyPage() {
         }
         intro="[PRIVACY POLICY: legal text to be supplied before launch.]"
       />
-      <div style={{ height: "calc(40 * var(--px))" }} aria-hidden="true" />
+      <div style={{ height: "calc(40 * var(--px-space))" }} aria-hidden="true" />
     </>
   );
 }

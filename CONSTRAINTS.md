@@ -30,7 +30,7 @@ Rules every change must keep. If a change breaks one, it is not done.
 - Accent `#2236B5` is for Make a Referral actions only (plus focus rings and selected states).
 - Three colours are darkened slightly to pass WCAG 2.2 AA. See `docs/decisions/0002-accessibility-colours.md`.
 - One CSS Module per component, so class names never collide (C55).
-- Every size is written as `N * var(--px)`, never a fixed px (C76). The whole site then scales evenly on screens bigger than the design's 1440 by 900, and is the design pixel for pixel at that size and below. See `docs/decisions/0006-the-site-scales-to-every-screen.md`.
+- A big screen is not a zoom (C77). Every size is written as `N * var(--px-<kind>)`, never a fixed px, and the kind says how fast it grows above 1440 by 900: `ui` (buttons, menu, fields, icons, small labels) and `text` (body copy) barely grow, `head` a little, `gap`, `space`, `media` and `wide` (spacing, photo heights, content width) take the extra room. At 1440 by 900 and below the site is the design pixel for pixel. Paragraphs that sit in a column that widens get a `max-width` in `em` so lines stay readable. See `docs/decisions/0006-the-site-scales-to-every-screen.md`.
 
 ## Security and privacy
 
@@ -46,7 +46,7 @@ Rules every change must keep. If a change breaks one, it is not done.
 npm run lint          # code style
 npm run typecheck     # types
 npm run check:emdash  # no em dashes in anything we wrote
-npm run check:scale   # every size follows the site scale, no fixed px
+npm run check:scale   # every size uses one of the growth units, no fixed px
 npm run build         # production build
 npm test              # unit tests (alerts), then browser tests:
                       # forms really save, alerts carry no details, a database outage is never "sent",

@@ -1,5 +1,5 @@
 .section {
-  padding: calc(120 * var(--px)) var(--gutter) 0;
+  padding: calc(120 * var(--px-space)) var(--gutter) 0;
 }
 
 .band {
@@ -16,8 +16,8 @@
   position: absolute;
   right: -90px;
   top: -40px;
-  width: calc(700 * var(--px));
-  height: calc(420 * var(--px));
+  width: calc(700 * var(--px-wide));
+  height: calc(420 * var(--px-wide));
 }
 
 .grid {
@@ -25,16 +25,16 @@
   box-sizing: border-box;
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr);
-  padding: clamp(calc(36 * var(--px)), 4.4vw, calc(56 * var(--px)));
+  padding: clamp(calc(36 * var(--px-gap)), 4.4vw, calc(56 * var(--px-space)));
   align-items: center;
-  gap: calc(40 * var(--px)) calc(48 * var(--px));
+  gap: calc(40 * var(--px-space)) calc(48 * var(--px-space));
 }
 
 .lead {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: calc(16 * var(--px));
+  gap: calc(16 * var(--px-ui));
 }
 
 .heading {
@@ -47,13 +47,13 @@
 }
 
 .button {
-  margin-top: calc(14 * var(--px));
+  margin-top: calc(14 * var(--px-ui));
 }
 
 .feats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: calc(28 * var(--px)) calc(24 * var(--px));
+  gap: calc(28 * var(--px-gap)) calc(24 * var(--px-gap));
   align-items: start;
   margin: 0;
   padding: 0;
@@ -68,15 +68,15 @@
 }
 
 .featRule {
-  margin-top: calc(16 * var(--px));
-  width: calc(32 * var(--px));
+  margin-top: calc(16 * var(--px-ui));
+  width: calc(32 * var(--px-ui));
   height: 1px;
   background: rgba(255, 255, 255, 0.4);
 }
 
 .featText {
-  margin-top: calc(16 * var(--px));
-  font-size: calc(15 * var(--px));
+  margin-top: calc(16 * var(--px-ui));
+  font-size: calc(15 * var(--px-text));
   line-height: 1.75;
   color: var(--indigo-100);
 }

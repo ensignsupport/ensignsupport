@@ -12,7 +12,7 @@ type IconProps = {
 };
 
 // Sizes follow the site-wide scale (--px), like every other size on the site.
-const scaled = (n: number) => `calc(${n} * var(--px, 1px))`;
+const scaled = (n: number) => `calc(${n} * var(--px-ui, 1px))`;
 
 const base = (size: number) => ({
   width: size,

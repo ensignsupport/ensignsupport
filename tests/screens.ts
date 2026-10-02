@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
 /**
- * Real screens, short and tall (C75, C76). Sizes are the visible browser area.
+ * Real screens, short and tall (C75, C76, C77). Sizes are the visible browser area.
  * Widths alone are not screens: the same width comes in very different heights.
  */
 export const SCREENS: { w: number; h: number; name: string }[] = [
@@ -23,14 +23,17 @@ export const SCREENS: { w: number; h: number; name: string }[] = [
 
 export const PAGES = ["/", "/services", "/about", "/contact", "/referral", "/privacy"];
 
-/** The site-wide scale (--px) in effect on this screen: 1 at the design's size. */
-export async function siteScale(page: Page): Promise<number> {
-  return page.evaluate(() => {
+/** How the site grows (C77, app/globals.css). Each kind of size has its own rate. */
+export type GrowKind = "ui" | "text" | "head" | "gap" | "space" | "media" | "wide";
+
+/** How much one kind of size has grown on this screen: 1 at the design's size. */
+export async function siteScale(page: Page, kind: GrowKind = "ui"): Promise<number> {
+  return page.evaluate((kind) => {
     const probe = document.createElement("div");
-    probe.style.cssText = "position:absolute;visibility:hidden;width:calc(1000 * var(--px))";
+    probe.style.cssText = `position:absolute;visibility:hidden;width:calc(1000 * var(--px-${kind}))`;
     document.body.appendChild(probe);
     const px = probe.getBoundingClientRect().width / 1000;
     probe.remove();
     return px;
-  });
+  }, kind);
 }

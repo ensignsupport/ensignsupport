@@ -2,7 +2,8 @@ import { expect, test } from "@playwright/test";
 import { PAGES, SCREENS, siteScale } from "./screens";
 
 /**
- * Every page on every screen (C76). Hero or no hero, nothing may look broken
+ * Every page on every screen (C76). How things grow on big screens is checked
+ * separately in tests/grows-gently.spec.ts (C77). Hero or no hero, nothing may look broken
  * on any screen from a phone to a 4K monitor. Each check is something a person
  * would call weird, measured instead of eyeballed:
  *   - the page scrolls sideways
@@ -13,7 +14,6 @@ import { PAGES, SCREENS, siteScale } from "./screens";
  *   - a big empty band with nothing in it
  *   - the page headline is not on the first screen
  *   - a sticky panel is taller than the screen, so its bottom can never be reached
- *   - on a big screen the content sits in a small strip (under half the width)
  */
 for (const path of PAGES) {
   for (const s of SCREENS) {
@@ -31,7 +31,7 @@ for (const path of PAGES) {
         window.scrollTo(0, 0);
       });
       await page.waitForLoadState("networkidle");
-      const scale = await siteScale(page);
+      const scale = await siteScale(page, "space");
 
       // Photos: compare the real pixels of the file the browser chose with the size it is drawn at.
       // (naturalWidth on a responsive image is divided by its density, so load the file on its own.)
@@ -131,10 +131,6 @@ for (const path of PAGES) {
           if (e.getBoundingClientRect().height > room + 1) out.push(`sticky panel taller than the screen: ${label(e)}`);
         }
 
-        if (vw > 1440) {
-          const inner = document.querySelector("header > *")!.getBoundingClientRect();
-          if (inner.width < vw * 0.5) out.push(`content only ${Math.round((inner.width / vw) * 100)}% of the screen width`);
-        }
         return out;
       }, scale);
 

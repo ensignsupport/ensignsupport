@@ -120,7 +120,7 @@ Alerts contain a reference number and a link to the admin only. Never health det
 ## Quality bar
 
 - Matches the design at desktop and phone widths. Breakpoints 960, 760 and 600px. No sideways scroll at 390px.
-- Every page scales to every screen, phone to 4K (docs/decisions/0006-the-site-scales-to-every-screen.md).
+- Every page looks right on every screen, phone to 4K. On big screens the extra room goes into space and width, not bigger text or buttons (docs/decisions/0006-the-site-scales-to-every-screen.md).
 - WCAG 2.2 AA. Real buttons, links and labels. Visible focus ring. Motion stops under prefers-reduced-motion. Phone menu is a disclosure button with aria-expanded.
 - Fonts self-hosted (Geist, plus Caveat for the one hand-written note). Optimised responsive images.
 - A title and meta description per page.

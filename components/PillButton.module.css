@@ -79,82 +79,82 @@
 
 /* Sizes, each matched to one use in the design source */
 .header {
-  height: calc(50 * var(--px));
-  padding: calc(5 * var(--px)) calc(5 * var(--px)) calc(5 * var(--px)) calc(22 * var(--px));
-  gap: calc(14 * var(--px));
-  font-size: calc(14.5 * var(--px));
-  box-shadow: 0 calc(10 * var(--px)) calc(24 * var(--px)) -10px rgba(34, 54, 181, 0.7);
+  height: calc(50 * var(--px-ui));
+  padding: calc(5 * var(--px-ui)) calc(5 * var(--px-ui)) calc(5 * var(--px-ui)) calc(22 * var(--px-ui));
+  gap: calc(14 * var(--px-ui));
+  font-size: calc(14.5 * var(--px-ui));
+  box-shadow: 0 calc(10 * var(--px-ui)) calc(24 * var(--px-ui)) -10px rgba(34, 54, 181, 0.7);
 }
 
 .header .dot {
-  width: calc(40 * var(--px));
-  height: calc(40 * var(--px));
+  width: calc(40 * var(--px-ui));
+  height: calc(40 * var(--px-ui));
 }
 
 .menu {
   display: flex;
   width: 100%;
   justify-content: space-between;
-  height: calc(54 * var(--px));
-  padding: calc(5 * var(--px)) calc(5 * var(--px)) calc(5 * var(--px)) calc(22 * var(--px));
-  font-size: calc(15 * var(--px));
+  height: calc(54 * var(--px-ui));
+  padding: calc(5 * var(--px-ui)) calc(5 * var(--px-ui)) calc(5 * var(--px-ui)) calc(22 * var(--px-ui));
+  font-size: calc(15 * var(--px-ui));
 }
 
 .menu .dot {
-  width: calc(44 * var(--px));
-  height: calc(44 * var(--px));
+  width: calc(44 * var(--px-ui));
+  height: calc(44 * var(--px-ui));
 }
 
 .hero {
-  height: calc(60 * var(--px));
-  padding: calc(6 * var(--px)) calc(6 * var(--px)) calc(6 * var(--px)) calc(28 * var(--px));
-  gap: calc(24 * var(--px));
-  font-size: calc(16 * var(--px));
+  height: calc(60 * var(--px-ui));
+  padding: calc(6 * var(--px-ui)) calc(6 * var(--px-ui)) calc(6 * var(--px-ui)) calc(28 * var(--px-ui));
+  gap: calc(24 * var(--px-ui));
+  font-size: calc(16 * var(--px-ui));
   box-shadow: var(--shadow-accent);
 }
 
 .hero .dot {
-  width: calc(48 * var(--px));
-  height: calc(48 * var(--px));
+  width: calc(48 * var(--px-ui));
+  height: calc(48 * var(--px-ui));
 }
 
 .step {
-  height: calc(58 * var(--px));
-  padding: calc(6 * var(--px)) calc(6 * var(--px)) calc(6 * var(--px)) calc(26 * var(--px));
-  gap: calc(22 * var(--px));
-  font-size: calc(16 * var(--px));
+  height: calc(58 * var(--px-ui));
+  padding: calc(6 * var(--px-ui)) calc(6 * var(--px-ui)) calc(6 * var(--px-ui)) calc(26 * var(--px-ui));
+  gap: calc(22 * var(--px-ui));
+  font-size: calc(16 * var(--px-ui));
   box-shadow: var(--shadow-accent);
 }
 
 .step .dot {
-  width: calc(46 * var(--px));
-  height: calc(46 * var(--px));
+  width: calc(46 * var(--px-ui));
+  height: calc(46 * var(--px-ui));
 }
 
 .band {
-  height: calc(56 * var(--px));
-  padding: calc(6 * var(--px)) calc(6 * var(--px)) calc(6 * var(--px)) calc(24 * var(--px));
-  gap: calc(20 * var(--px));
-  font-size: calc(15 * var(--px));
+  height: calc(56 * var(--px-ui));
+  padding: calc(6 * var(--px-ui)) calc(6 * var(--px-ui)) calc(6 * var(--px-ui)) calc(24 * var(--px-ui));
+  gap: calc(20 * var(--px-ui));
+  font-size: calc(15 * var(--px-ui));
 }
 
 .band .dot {
-  width: calc(44 * var(--px));
-  height: calc(44 * var(--px));
+  width: calc(44 * var(--px-ui));
+  height: calc(44 * var(--px-ui));
 }
 
 .raised {
-  box-shadow: 0 calc(14 * var(--px)) calc(30 * var(--px)) -14px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 calc(14 * var(--px-ui)) calc(30 * var(--px-ui)) -14px rgba(0, 0, 0, 0.5);
 }
 
 .enquiry {
-  height: calc(56 * var(--px));
-  padding: calc(6 * var(--px)) calc(6 * var(--px)) calc(6 * var(--px)) calc(26 * var(--px));
-  gap: calc(20 * var(--px));
-  font-size: calc(15 * var(--px));
+  height: calc(56 * var(--px-ui));
+  padding: calc(6 * var(--px-ui)) calc(6 * var(--px-ui)) calc(6 * var(--px-ui)) calc(26 * var(--px-ui));
+  gap: calc(20 * var(--px-ui));
+  font-size: calc(15 * var(--px-ui));
 }
 
 .enquiry .dot {
-  width: calc(44 * var(--px));
-  height: calc(44 * var(--px));
+  width: calc(44 * var(--px-ui));
+  height: calc(44 * var(--px-ui));
 }

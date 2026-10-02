@@ -2,14 +2,14 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: calc(24 * var(--px)) calc(48 * var(--px));
+  gap: calc(24 * var(--px-gap)) calc(48 * var(--px-space));
   flex-wrap: wrap;
 }
 
 .lead {
   display: flex;
   flex-direction: column;
-  gap: calc(16 * var(--px));
+  gap: calc(16 * var(--px-ui));
 }
 
 .title {
@@ -21,7 +21,7 @@
 
 /* Home uses a slightly larger heading than the inner pages. */
 .home {
-  font-size: clamp(calc(36 * var(--px)), 4.2vw, calc(56 * var(--px)));
+  font-size: clamp(calc(36 * var(--px-head)), 4.2vw, calc(56 * var(--px-head)));
 }
 
 .page {

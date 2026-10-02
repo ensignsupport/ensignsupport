@@ -1,6 +1,6 @@
 # 0005. The Home hero fits the first screen
 
-Since decision 0006, every px figure below is at the design's size. On bigger screens the whole site, the hero included, grows by the site scale.
+Since decision 0006, every px figure below is at the design's size. On bigger screens each one grows at the rate for its kind (headline, gap, photo), not by one zoom.
 
 Date: 2 October 2026. Raised by Allen (screenshots from a 13 inch MacBook and a 27 inch monitor).
 

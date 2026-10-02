@@ -4,8 +4,8 @@
 .label {
   display: flex;
   flex-direction: column;
-  gap: calc(8 * var(--px));
-  font-size: calc(14 * var(--px));
+  gap: calc(8 * var(--px-ui));
+  font-size: calc(14 * var(--px-ui));
   font-weight: 500;
   color: var(--ink);
 }
@@ -18,13 +18,13 @@
 .input {
   width: 100%;
   box-sizing: border-box;
-  height: calc(52 * var(--px));
+  height: calc(52 * var(--px-ui));
   border: 1px solid var(--input-line);
   border-radius: var(--radius-input);
   background: var(--white);
-  padding: 0 calc(16 * var(--px));
+  padding: 0 calc(16 * var(--px-ui));
   font: inherit;
-  font-size: calc(15 * var(--px));
+  font-size: calc(15 * var(--px-ui));
   font-weight: 400;
   color: var(--ink);
   accent-color: var(--indigo-700);
@@ -42,8 +42,8 @@
 
 textarea.input {
   height: auto;
-  min-height: calc(132 * var(--px));
-  padding: calc(14 * var(--px)) calc(16 * var(--px));
+  min-height: calc(132 * var(--px-ui));
+  padding: calc(14 * var(--px-ui)) calc(16 * var(--px-ui));
   line-height: 1.5;
   resize: vertical;
 }
@@ -55,7 +55,7 @@ textarea.input {
 
 .error {
   margin: 0;
-  font-size: calc(14 * var(--px));
+  font-size: calc(14 * var(--px-ui));
   font-weight: 500;
   line-height: 1.45;
   color: var(--error);
@@ -64,7 +64,7 @@ textarea.input {
 .two {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: calc(18 * var(--px));
+  gap: calc(18 * var(--px-ui));
 }
 
 @media (max-width: 600px) {
