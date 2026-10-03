@@ -3,7 +3,7 @@ import { PageHero } from "@/components/PageHero";
 
 export const metadata: Metadata = {
   title: "Privacy policy",
-  description: "How Ensign Support Services collects, uses and protects personal information.",
+  description: "How Ensign Support Services handles personal information.",
   alternates: { canonical: "/privacy" },
 };
 

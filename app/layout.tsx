@@ -20,6 +20,10 @@ const caveat = localFont({
 });
 
 export const metadata: Metadata = {
+  // Full addresses for canonical links. SITE_URL (Netlify settings) is the dev
+  // address now and the live address at launch. URL is Netlify's own name for
+  // the site's main address, used if SITE_URL is missing. Locally: localhost.
+  metadataBase: new URL(process.env.SITE_URL ?? process.env.URL ?? "http://localhost:3000"),
   title: {
     default: `${site.name} · NDIS support coordination and psychosocial recovery coaching`,
     template: `%s · ${site.name}`,

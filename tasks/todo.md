@@ -51,10 +51,12 @@
 - [x] Admin referrals (no Export CSV, Allen)
 - [x] Admin enquiries, replies by email
 - [ ] Security review by a fresh reviewer
-- [ ] Allen sets ADMIN_PASSWORD in Netlify, signs in and tries it
+- [x] Allen sets ADMIN_PASSWORD in Netlify, signs in and tries it
 
 ## M6. Full check
 
-- [ ] Every page, state and breakpoint
-- [ ] Speed
-- [ ] Copy and compliance sweep
+- [x] Every page, state and breakpoint: keyboard only, screen reader landmarks and names, reduced motion, page not found (tests/full-check.spec.ts)
+- [x] Dev site checked live: admin locked, never cached or indexed, robots blocks everything
+- [x] Speed: Lighthouse on every public page, phone and desktop (results in BUILD-STATUS.md)
+- [x] Copy and compliance sweep: blind review, our fixes made, the rest in docs/OPEN-ITEMS.md items 14 to 16
+- [ ] Allen runs PageSpeed Insights on the dev site Home page (phone)

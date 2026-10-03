@@ -208,9 +208,9 @@ test("validation: clear messages, focus on the first problem, on the step the vi
   // Both participant phone and email are required (Allen, 2 Oct 2026).
   await page.getByLabel("Suburb and postcode").fill("Springfield");
   await page.getByRole("button", { name: "Continue" }).click();
-  await expect(page.getByText("Enter the participant's full name")).toBeVisible();
-  await expect(page.getByText("Enter the participant's phone number")).toBeVisible();
-  await expect(page.getByText("Enter the participant's email address")).toBeVisible();
+  await expect(page.getByText("Enter the participant’s full name")).toBeVisible();
+  await expect(page.getByText("Enter the participant’s phone number")).toBeVisible();
+  await expect(page.getByText("Enter the participant’s email address")).toBeVisible();
   await expect(page.getByText(/4 digit postcode/)).toBeVisible();
 
   // Back keeps what was typed.

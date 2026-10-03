@@ -24,7 +24,7 @@ const LOCKED: Record<string, string[]> = {
     "Ensign Support Services helps NDIS participants understand their plan, connect with the right service providers, manage their supports, and build their capacity to work towards greater independence.",
     "Genuine care for participants and families, not just service delivery.",
     "Honest hours, honest invoicing to plan managers, honest reporting to the NDIA.",
-    "Actively representing participants' interests within the NDIS system, especially those it tends to overlook.",
+    "Actively representing participants’ interests within the NDIS system, especially those it tends to overlook.",
   ],
   "/contact": [
     "We currently provide services across South East Queensland, with the potential to deliver services across Australia in the future.",

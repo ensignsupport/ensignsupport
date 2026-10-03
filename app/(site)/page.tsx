@@ -46,7 +46,7 @@ const VALUES = [
 ];
 
 const STATS = [
-  { number: "7+", label: "Years' experience" },
+  { number: "7+", label: "Years’ experience" },
   { number: "2", label: "Services, equal focus" },
   { number: "SEQ", label: "Where we work today" },
   { number: "All", label: "Ages supported" },
@@ -120,7 +120,7 @@ export default function HomePage() {
             <div className={styles.half}>
               <Image
                 src={heroParticipant}
-                alt="A participant at home, smiling on a phone call with his coordinator"
+                alt="A man at home, smiling on a phone call"
                 fill
                 priority
                 // object-fit: cover crops this photo to the box height, so it is requested wider than its box.

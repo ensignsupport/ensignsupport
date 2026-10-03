@@ -25,6 +25,10 @@ for (const path of PUBLIC_PAGES) {
     expect(title).toContain("Ensign Support Services");
     const description = await page.locator('meta[name="description"]').getAttribute("content");
     expect(description?.length ?? 0).toBeGreaterThan(40);
+    // Search engines need the full address, not just the path.
+    const canonical = await page.locator('link[rel="canonical"]').getAttribute("href");
+    expect(canonical).toMatch(/^https?:\/\/[^/]+/);
+    expect(new URL(canonical!).pathname).toBe(path);
   });
 }
 

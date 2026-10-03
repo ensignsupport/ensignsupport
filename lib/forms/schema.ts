@@ -111,9 +111,9 @@ export const referrerSchema = z.object({
 
 /** Step 2: the participant, when someone else is referring. */
 export const participantSchema = z.object({
-  participantName: text("the participant's full name", 120),
-  participantPhone: phone("the participant's phone number"),
-  participantEmail: email("the participant's email address"),
+  participantName: text("the participant’s full name", 120),
+  participantPhone: phone("the participant’s phone number"),
+  participantEmail: email("the participant’s email address"),
   participantPreferredContact: optionalText("the preferred contact", 200),
 });
 
@@ -132,7 +132,7 @@ export const confirmSchema = z.object({
   heardVia: z.enum(HEARD_VIA).optional(),
 });
 
-/** Everything except the participant's own contact details. */
+/** Everything except the participant’s own contact details. */
 const referralBaseSchema = z
   .object({
     referrerType: z.enum(ids(REFERRER_TYPES), { error: "Choose who is making this referral" }),
@@ -150,7 +150,7 @@ type ParseResult<T> = { success: true; data: T } | { success: false; errors: Rec
 
 /**
  * Checks a whole referral. When the participant refers themselves, their own
- * details are the participant's details, so the participant fields are skipped.
+ * details are the participant’s details, so the participant fields are skipped.
  */
 export function parseReferral(input: unknown): ParseResult<Referral> {
   const base = referralBaseSchema.safeParse(input);

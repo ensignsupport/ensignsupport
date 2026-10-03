@@ -12,7 +12,7 @@ import styles from "./about.module.css";
 export const metadata: Metadata = {
   title: "About us",
   description:
-    "Ensign Support Services provides NDIS support coordination and psychosocial recovery coaching, with more than seven years' experience in mental health and disability services.",
+    "Ensign Support Services provides NDIS support coordination and psychosocial recovery coaching, with more than seven years’ experience in mental health and disability services.",
   alternates: { canonical: "/about" },
 };
 
@@ -39,7 +39,7 @@ const VALUES = [
   {
     icon: FlagOutline,
     name: "Advocacy",
-    copy: "Actively representing participants' interests within the NDIS system, especially those it tends to overlook.",
+    copy: "Actively representing participants’ interests within the NDIS system, especially those it tends to overlook.",
   },
 ];
 
@@ -62,7 +62,7 @@ export default function AboutPage() {
         <div className={`${styles.container} ${styles.photo}`}>
           <Image
             src={journey}
-            alt="A man using a wheelchair and his coordinator moving together along a Brisbane riverside path towards the city"
+            alt="A man using a wheelchair and a companion moving together along a Brisbane riverside path towards the city"
             fill
             priority
             // On narrow screens the box is taller than the photo's shape, so the photo is requested wider.

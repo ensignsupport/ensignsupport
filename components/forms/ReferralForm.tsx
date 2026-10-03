@@ -405,12 +405,16 @@ export function ReferralForm() {
               </div>
               {send === "failed" || send === "busy" ? (
                 <p className={styles.sendError} role="alert">
-                  {send === "busy"
-                    ? "Several referrals have been sent from this connection in the last hour. Please wait a little and try again."
-                    : `Sorry, your referral did not send. Please try again. If it keeps happening, ${
-                        phoneKnown ? `call us on ${site.phone}` : "please contact us"
-                      }.`}{" "}
-                  {!phoneKnown && send === "failed" ? <Link href="/contact">Contact details</Link> : null}
+                  {send === "busy" ? (
+                    "Several referrals have been sent from this connection in the last hour. Please wait a little and try again."
+                  ) : phoneKnown ? (
+                    `Sorry, your referral did not send. Please try again. If it keeps happening, call us on ${site.phone}.`
+                  ) : (
+                    <>
+                      Sorry, your referral did not send. Please try again. If it keeps happening, use our{" "}
+                      <Link href="/contact">contact details</Link>.
+                    </>
+                  )}
                 </p>
               ) : null}
               <div className={styles.actions}>
