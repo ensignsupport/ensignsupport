@@ -144,6 +144,9 @@ test("keyboard only: the contact enquiry can be sent without a mouse", async ({ 
     if (key) await page.keyboard.type(values[key]);
     await page.keyboard.press("Tab");
   }
+  // The collection notice and its privacy policy link come before the button (APP 5), so one more Tab.
+  await expect(page.locator(":focus")).toHaveText(/privacy policy/i);
+  await page.keyboard.press("Tab");
   // Tab has reached the send button; Enter sends.
   await expect(page.locator(":focus")).toHaveText(/send/i);
   await page.keyboard.press("Enter");

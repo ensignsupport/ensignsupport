@@ -99,7 +99,7 @@ test("professional referral: every step, saved exactly, alert has no details", a
   await expect(page.getByText("Step 4 of 4 · Confirm")).toBeVisible();
   await expect(page.getByRole("button", { name: "Send Referral" })).toBeDisabled();
   await page.getByRole("button", { name: "Plan manager" }).click();
-  await page.getByLabel(/agrees to this referral/).check();
+  await page.getByLabel(/agree to (this referral|send these details)/).check();
   await page.getByRole("button", { name: "Send Referral" }).click();
 
   await expect(page.getByRole("heading", { name: "Thank you, your referral is in" })).toBeVisible();
@@ -161,7 +161,7 @@ test("self referral: no participant contact fields, their own details are stored
   await page.getByRole("radio", { name: "Self-managed" }).check({ force: true });
   await page.getByLabel(/what would help most/).fill("Self referral test 91b2.");
   await page.getByRole("button", { name: "Continue" }).click();
-  await page.getByLabel(/agrees to this referral/).check();
+  await page.getByLabel(/agree to (this referral|send these details)/).check();
   await page.getByRole("button", { name: "Send Referral" }).click();
   await expect(page.getByRole("heading", { name: "Thank you, your referral is in" })).toBeVisible();
 
@@ -313,13 +313,13 @@ test("when the database cannot be reached the visitor is told, never thanked, an
   await page.getByRole("radio", { name: "Plan-managed" }).check({ force: true });
   await page.getByLabel(/what would help most/).fill("Broken database test.");
   await page.getByRole("button", { name: "Continue" }).click();
-  await page.getByLabel(/agrees to this referral/).check();
+  await page.getByLabel(/agree to (this referral|send these details)/).check();
   await page.getByRole("button", { name: "Send Referral" }).click();
 
   await expect(page.getByRole("form", { name: "Referral form" }).getByRole("alert")).toContainText("Sorry, your referral did not send");
   await expect(page.getByRole("heading", { name: "Thank you, your referral is in" })).toHaveCount(0);
   // Everything they typed is still there to try again.
-  await expect(page.getByLabel(/agrees to this referral/)).toBeChecked();
+  await expect(page.getByLabel(/agree to (this referral|send these details)/)).toBeChecked();
 
   const alert = emails("emails-broken.jsonl").find((m) => m.subject === "Website: a referral could not be saved");
   expect(alert, "save failed alert").toBeTruthy();

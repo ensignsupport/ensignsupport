@@ -15,7 +15,7 @@ import {
   suburbSchema,
   supportSchema,
 } from "@/lib/forms/schema";
-import { isPlaceholder, site } from "@/lib/site";
+import { site } from "@/lib/site";
 import { ArrowLeft, CheckIcon } from "../icons";
 import { PillButton } from "../PillButton";
 import { TextField } from "./TextField";
@@ -190,7 +190,6 @@ export function ReferralForm() {
     go(1);
   }
 
-  const phoneKnown = !isPlaceholder(site.phone);
   const yourTitle = isSelf ? "Great, tell us about you" : "Thanks, now a little about you";
   const partTitle = isSelf ? "Where are you based?" : "Who are you referring?";
   const partSub = isSelf
@@ -264,7 +263,11 @@ export function ReferralForm() {
                         id={o.id === REFERRER_TYPES[0].id ? "referrerType" : undefined}
                         value={o.id}
                         checked={values.referrerType === o.id}
-                        onChange={() => set("referrerType", o.id)}
+                        onChange={() => {
+                          set("referrerType", o.id);
+                          // The consent wording depends on who is referring, so a tick never carries over.
+                          set("consent", false);
+                        }}
                       />
                       <span className={styles.dot} aria-hidden="true" />
                       <span className={styles.choiceText}>
@@ -362,7 +365,7 @@ export function ReferralForm() {
                   ))}
                 </div>
               </fieldset>
-              <TextField id="reason" label="In a sentence or two, what would help most right now?" multiline rows={4} placeholder="A short reason for the referral is enough." value={values.reason} error={errors.reason} onChange={(v) => set("reason", v)} />
+              <TextField id="reason" label="In a sentence or two, what would help most right now?" multiline rows={4} placeholder="A short reason for the referral is enough." hint="Only write what we need to know to get started. You do not need to give a diagnosis." value={values.reason} error={errors.reason} onChange={(v) => set("reason", v)} />
               <div className={styles.actions}>
                 {backButton}
                 <PillButton type="submit" tone="accent" size="step" disabled={!(values.service && values.planType)}>
@@ -380,9 +383,13 @@ export function ReferralForm() {
               </div>
               <label className={styles.check} htmlFor="consent">
                 <input type="checkbox" id="consent" name="consent" checked={values.consent} aria-describedby={errors.consent ? "consent-error" : undefined} onChange={(e) => set("consent", e.target.checked)} />
+                {/* Two wordings, approved with Privacy Policy v2.0 (15 Oct 2026). When someone else refers,
+                    the tick is their confirmation, not the participant's own consent; Andrew asks the
+                    participant at first contact (policy clause 4.3). Never ticked by default. */}
                 <span>
-                  The participant, or their authorised representative, agrees to this referral and to Ensign Support Services
-                  contacting them about it.
+                  {isSelf
+                    ? "I agree to send these details to Ensign Support Services, including any health or disability information I write. I agree that Ensign can contact me about this referral."
+                    : "I asked the participant, or their nominee or guardian, and they agree to this referral. They know I am sending these details to Ensign Support Services, including any health or disability information I write, and that Ensign will contact them about it."}
                 </span>
               </label>
               <div className={styles.heard}>
@@ -407,12 +414,10 @@ export function ReferralForm() {
                 <p className={styles.sendError} role="alert">
                   {send === "busy" ? (
                     "Several referrals have been sent from this connection in the last hour. Please wait a little and try again."
-                  ) : phoneKnown ? (
-                    `Sorry, your referral did not send. Please try again. If it keeps happening, call us on ${site.phone}.`
                   ) : (
                     <>
-                      Sorry, your referral did not send. Please try again. If it keeps happening, use our{" "}
-                      <Link href="/contact">contact details</Link>.
+                      Sorry, your referral did not send. Please try again. If it keeps happening, email us at{" "}
+                      <a href={`mailto:${site.email}`}>{site.email}</a>.
                     </>
                   )}
                 </p>
@@ -452,19 +457,30 @@ export function ReferralForm() {
             <h2 id="notice-title" className={styles.noticeTitle}>
               Collection Notice
             </h2>
-            <span className={styles.draft}>Draft</span>
           </div>
+          {/* Collection Notice wording approved by Ensign's legal representative (Part 2 of the
+              Privacy Policy v2.0 document, 15 Oct 2026). Change it only with legal sign-off. */}
           <p className={styles.noticeCopy}>
-            Ensign Support Services collects the information in this form to respond to the referral and to contact the
-            participant about our services.
+            Andrew Manoba, trading as Ensign Support Services, collects this information. Email <a href={`mailto:${site.email}`}>{site.email}</a>.
           </p>
           <p className={styles.noticeCopy}>
-            We only ask for what we need. We do not ask for an NDIS number, diagnosis, Medicare details or documents in
-            this form.
+            We use it to reply and, if the referral goes ahead, provide our services. It may include health information.
+            If you refer someone else, we will tell them who referred them. The form cannot be sent without required
+            fields.
           </p>
-          <p className={styles.noticeCopy}>[COLLECTION NOTICE: final legal wording to be supplied before launch.]</p>
-          <Link href="/privacy" className={styles.privacyLink}>
+          <p className={styles.noticeCopy}>
+            With the participant’s agreement, we usually share it with their providers, plan manager or the NDIA. Our
+            website and email providers, Netlify and Resend, store it in the United States, and some of our website
+            support team work from India.
+          </p>
+          <p className={styles.noticeCopy}>
+            This form does not ask for an NDIS number, diagnosis, Medicare details or documents. Our privacy policy explains
+            how to see or correct it, or complain.
+          </p>
+          {/* Opens in a new tab so nobody loses what they have typed in the form. */}
+          <Link href="/privacy" className={styles.privacyLink} target="_blank" rel="noopener">
             Read our privacy policy
+            <span className="visually-hidden"> (opens in a new tab)</span>
           </Link>
           <div className={styles.who}>
             <p className={styles.whoTitle}>Who we work with</p>

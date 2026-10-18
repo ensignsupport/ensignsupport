@@ -241,7 +241,9 @@ export type AccessAction =
   | "view_enquiries"
   | "view_enquiry"
   | "change_enquiry_status"
-  | "send_enquiry_reply";
+  | "send_enquiry_reply"
+  | "remove_referral"
+  | "remove_enquiry";
 
 /** Who did what and when. A reference number only, never what anyone wrote. */
 export async function logAccess(session: string, action: AccessAction, ref?: string) {

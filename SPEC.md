@@ -64,7 +64,7 @@ Name, email, phone (optional), message. Stored, then an alert email to Andrew.
 - Enquiries: statuses New, Replied, Closed. Tabs, search, sorting (newest, oldest, unread first). Reading pane with reply box and status change. Replies go out by email from Ensign's address and the thread is stored.
 - Export CSV: left out for now (Allen, 2 Oct 2026). A downloaded spreadsheet of health and contact details can end up anywhere. Easy to add later.
 - Sign in: one long passphrase, no phone code for now (Allen, 2 Oct 2026). A second step can be added later.
-- No delete button. Closed is the furthest a record can go.
+- Remove personal details (Allen and Ensign's legal representative, 15 Oct 2026, Privacy Policy v2.0 clause 11.3): a Closed referral or enquiry can be removed for good from its panel, in two steps. Its personal details, notes, replies and status history are deleted. Only the reference number, the day it was received and when it was removed are kept (`removed_records`). Keeping periods: 12 months after closing for referrals and enquiries that do not go ahead, 7 years after services end for participants.
 
 ## Data model (Netlify Database, Postgres)
 
@@ -110,7 +110,7 @@ Built in milestone 4, plus `admin_sessions`, `login_attempts` and `access_log` i
 1. Thank-you only after the database confirms the save. One automatic retry. If it still fails the visitor sees an error with a way to reach Ensign, and Andrew gets a "save failed" alert with no details (alerts go to Andrew only, Allen 2 Oct 2026).
 2. Every new referral emails Andrew a reference number and a link, nothing else.
 3. A daily reminder email lists how many referrals are still New after 24 hours (count and link only).
-4. No delete in the admin. Every status change is recorded.
+4. Nothing is deleted by a status change, and every status change is recorded. Removing a Closed record (see Admin) deletes its personal details for good and keeps a non-identifying row. Backups still hold it until they expire (point 5).
 5. Netlify Database backups (3 days free, 7 days on the cheapest paid plan).
 
 ## Emails

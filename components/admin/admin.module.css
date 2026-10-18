@@ -692,7 +692,7 @@
   bottom: 0;
   width: min(calc(480 * var(--px-wide)), 100%);
   background: var(--white);
-  box-shadow: -24px 0 calc(48 * var(--px-ui)) -24px rgba(18, 20, 31, 0.35);
+  box-shadow: -24px 0 calc(48 * var(--px-ui)) -24px rgba(17, 24, 32, 0.35);
   display: flex;
   flex-direction: column;
   animation: adIn 0.22s ease;
@@ -1426,4 +1426,57 @@
   .dl {
     grid-template-columns: calc(110 * var(--px-wide)) minmax(0, 1fr);
   }
+}
+
+/* Remove personal details (components/admin/RemoveRecord.tsx). Red, and two steps,
+   because it deletes for good. */
+.removeGroup {
+  padding-top: calc(18 * var(--px-ui));
+  border-top: 1px solid var(--admin-row-line);
+}
+
+.removeText {
+  margin: 0;
+  font-size: calc(13.5 * var(--px-ui));
+  line-height: 1.5;
+  color: var(--admin-sub);
+}
+
+.removeQuestion {
+  margin: 0;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.removeConfirm {
+  display: flex;
+  flex-direction: column;
+  gap: calc(10 * var(--px-ui));
+  padding: calc(14 * var(--px-ui));
+  border: 1px solid var(--error);
+  border-radius: calc(12 * var(--px-ui));
+  background: var(--error-bg);
+}
+
+.removeActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(8 * var(--px-ui));
+}
+
+.btnDanger {
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.btnDanger:hover {
+  color: var(--error);
+  background: var(--error-bg);
+}
+
+.btnDangerSolid,
+.btnDangerSolid:hover {
+  color: var(--white);
+  background: var(--error);
+  border-color: var(--error);
 }

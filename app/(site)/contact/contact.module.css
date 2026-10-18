@@ -50,6 +50,8 @@
   letter-spacing: -0.01em;
   color: var(--ink);
   text-decoration: none;
+  /* The email address is one long word; let it break at the @ or a dot on narrow cards. */
+  overflow-wrap: anywhere;
 }
 
 a.infoValue:hover {
@@ -179,5 +181,12 @@ a.infoValue:hover {
 
   .infoValue {
     font-size: calc(16 * var(--px-text));
+  }
+
+  /* The email address is too long for a half-width card, so it and the ABN take full rows,
+     with hours and service area side by side between them. */
+  .infoCard:first-child,
+  .infoCard:last-child {
+    grid-column: 1 / -1;
   }
 }

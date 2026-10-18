@@ -23,7 +23,7 @@
 .photo {
   position: relative;
   height: calc(340 * var(--px-media));
-  border-radius: calc(20 * var(--px-ui));
+  border-radius: calc(12 * var(--px-ui));
   overflow: hidden;
   background: var(--indigo-100);
 }

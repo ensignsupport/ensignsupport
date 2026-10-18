@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { enquiryReplyAction, enquiryStatusAction, openEnquiryAction } from "@/app/admin/actions";
+import { enquiryReplyAction, enquiryStatusAction, openEnquiryAction, removeEnquiryAction } from "@/app/admin/actions";
 import type { EnquiryDetail, EnquiryRow, ThreadLine } from "@/lib/server/admin-data";
 import { ENQUIRY_STATUSES, formatWhen, statusLabel, type EnquiryStatus } from "@/lib/admin/labels";
 import { GoReferralsIcon, SearchIcon, SendIcon } from "./AdminIcons";
+import { RemoveRecord } from "./RemoveRecord";
 import styles from "./admin.module.css";
 
 type Filter = "all" | EnquiryStatus;
@@ -29,6 +30,7 @@ export function EnquiriesBoard({ rows: initialRows, initialRef }: { rows: Enquir
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [statusMsg, setStatusMsg] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
   const counts = useMemo(() => {
@@ -114,6 +116,13 @@ export function EnquiriesBoard({ rows: initialRows, initialRef }: { rows: Enquir
     setBusy(false);
   };
 
+  const removed = (ref: string) => {
+    setRows((list) => list.filter((e) => e.ref !== ref));
+    setSelRef(null);
+    setDetail(null);
+    setNotice(`${ref} removed. Only its reference number is kept.`);
+  };
+
   const tabs: { k: Filter; label: string; count: number }[] = [
     { k: "all", label: "All", count: rows.length },
     ...ENQUIRY_STATUSES.map((s) => ({ k: s.id as Filter, label: s.label, count: counts[s.id] })),
@@ -126,6 +135,11 @@ export function EnquiriesBoard({ rows: initialRows, initialRef }: { rows: Enquir
         <div className={styles.titleBlock}>
           <h1 className={styles.title}>Enquiries</h1>
           <p className={styles.subtitle}>General enquiries from the Contact page.</p>
+          {notice && (
+            <p role="status" className={styles.saved} style={{ margin: 0 }}>
+              {notice}
+            </p>
+          )}
         </div>
         <div className={styles.tabs} role="group" aria-label="Status">
           {tabs.map((t) => (
@@ -284,6 +298,18 @@ export function EnquiriesBoard({ rows: initialRows, initialRef }: { rows: Enquir
                   </button>
                 </div>
               </div>
+              {sel.status === "closed" && (
+              <div className={styles.compose}>
+                <RemoveRecord
+                  kind="enquiry"
+                  refId={sel.ref}
+                  status={sel.status}
+                  disabled={busy}
+                  onRemove={removeEnquiryAction}
+                  onRemoved={removed}
+                />
+              </div>
+              )}
             </>
           ) : (
             <div className={styles.noSel}>Select an enquiry to read it.</div>

@@ -41,6 +41,8 @@
 /* Added 2 Oct 2026 (Allen): one line linking to the privacy policy. */
 .privacy {
   margin: 0;
+  /* A comfortable line length on wide screens. */
+  max-width: 37em;
   font-size: calc(14 * var(--px-ui));
   line-height: 1.5;
   color: var(--text-3);

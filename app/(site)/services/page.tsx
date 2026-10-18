@@ -31,7 +31,7 @@ const SERVICES: Service[] = [
     title: "Support Coordination",
     copy: "We help participants and families understand their NDIS plan, connect with the right supports, and keep services working together. We work alongside plan managers, health professionals, and other providers so the plan is used in a practical, coordinated way.",
     image: supportCoordination,
-    alt: "A coordinator on a video call with a participant and therapist, cross-checking the support plan",
+    alt: "A coordinator on a video call with a participant and an allied health professional, working through the support plan",
     position: "center 40%",
   },
   {
@@ -39,12 +39,12 @@ const SERVICES: Service[] = [
     title: "Psychosocial Recovery Coaching",
     copy: "We support participants living with psychosocial disability to build skills, routines, and community connections that matter to them. Coaching is practical and participant-led. It is not clinical treatment.",
     image: recoveryCoaching,
-    alt: "A participant writing her goals in a notebook during a coaching session",
+    alt: "A participant writing his goals in a notebook while his recovery coach listens",
     position: "60% 30%",
   },
 ];
 
-const ALONGSIDE = ["Participants and families", "Plan managers", "Health professionals", "Other providers"];
+const ALONGSIDE = ["Participants and families", "Plan managers", "Allied health professionals", "Other providers"];
 
 export default function ServicesPage() {
   return (

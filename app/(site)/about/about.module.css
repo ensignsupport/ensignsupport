@@ -186,7 +186,7 @@
 .valueIcon {
   width: calc(56 * var(--px-ui));
   height: calc(56 * var(--px-ui));
-  border-radius: calc(16 * var(--px-ui));
+  border-radius: calc(12 * var(--px-ui));
   background: var(--white);
   display: flex;
   align-items: center;

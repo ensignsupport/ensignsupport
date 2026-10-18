@@ -8,10 +8,13 @@ import {
   openEnquiry,
   queueEnquiryReply,
   referralDetail,
+  removeEnquiry,
+  removeReferral,
   setEnquiryStatus,
   setReferralStatus,
   type EnquiryDetail,
   type ReferralDetail,
+  type RemoveResult,
 } from "@/lib/server/admin-data";
 import { processOutbox } from "@/lib/server/email";
 import { logError } from "@/lib/server/log";
@@ -130,4 +133,24 @@ export async function enquiryReplyAction(
   const detail = await openEnquiry(ref);
   if (!detail) return { ok: false, error: "That enquiry could not be found." };
   return { ok: true, detail };
+}
+
+/**
+ * Removes a Closed referral or enquiry for good, when its keeping period ends
+ * (Privacy Policy v2.0 clause 11.3). The data layer refuses anything not Closed.
+ */
+export async function removeReferralAction(ref: string): Promise<RemoveResult> {
+  const session = await requireSessionForAction();
+  if (!refSchema.safeParse(ref).success || !ref.startsWith("R-")) return "not_found";
+  const result = await removeReferral(ref);
+  if (result === "removed") await logAccess(session.id, "remove_referral", ref);
+  return result;
+}
+
+export async function removeEnquiryAction(ref: string): Promise<RemoveResult> {
+  const session = await requireSessionForAction();
+  if (!refSchema.safeParse(ref).success || !ref.startsWith("E-")) return "not_found";
+  const result = await removeEnquiry(ref);
+  if (result === "removed") await logAccess(session.id, "remove_enquiry", ref);
+  return result;
 }

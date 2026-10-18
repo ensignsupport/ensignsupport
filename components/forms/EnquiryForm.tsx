@@ -86,7 +86,7 @@ export function EnquiryForm() {
   }
 
   return (
-    <form className={styles.form} aria-label="General enquiry" noValidate onSubmit={submit}>
+    <form id="enquiry" className={styles.form} aria-label="General enquiry" noValidate onSubmit={submit}>
       <div className={styles.head}>
         <h2 className={styles.title}>Send an Enquiry</h2>
         <p className={styles.sub}>For general questions. To refer someone, please use the referral form.</p>
@@ -108,12 +108,21 @@ export function EnquiryForm() {
             : "Sorry, your enquiry did not send. Please try again, or use the contact details above."}
         </p>
       ) : null}
+      {/* Collection notice for this form (Privacy Policy v2.0 review, item B10). Before the button,
+          so it is read before anything is sent. */}
+      <p className={styles.privacy}>
+        Andrew Manoba, trading as Ensign Support Services, uses these details to reply to you. Our website and email
+        providers, Netlify and Resend, store them in the United States, and some of our website support team work from
+        India. Please do not put health details in your message. See our{" "}
+        <Link href="/privacy" target="_blank" rel="noopener">
+          privacy policy
+          <span className="visually-hidden"> (opens in a new tab)</span>
+        </Link>{" "}
+        for how we handle your details.
+      </p>
       <PillButton type="submit" tone="dark" size="enquiry" className={styles.button} disabled={state === "sending"}>
         {state === "sending" ? "Sending" : "Send Enquiry"}
       </PillButton>
-      <p className={styles.privacy}>
-        See our <Link href="/privacy">privacy policy</Link> for how we handle your details.
-      </p>
     </form>
   );
 }

@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
-import { isPlaceholder, nav, site } from "@/lib/site";
-import { ChevronRight, CloseIcon, FlagMark, MenuIcon, PhoneIcon } from "./icons";
+import { nav, site } from "@/lib/site";
+import { ChevronRight, CloseIcon, FlagMark, MailIcon, MenuIcon } from "./icons";
 import { PillLink } from "./PillButton";
 import styles from "./SiteHeader.module.css";
 
@@ -49,9 +49,6 @@ export function SiteHeader() {
     };
   }, [open]);
 
-  const phoneKnown = !isPlaceholder(site.phone);
-  const phoneHref = phoneKnown ? `tel:${site.phone.replace(/\s/g, "")}` : "/contact";
-
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
@@ -82,9 +79,9 @@ export function SiteHeader() {
         </nav>
 
         <div className={styles.right}>
-          <a className={styles.circle} href={phoneHref} aria-label={phoneKnown ? "Call us" : "Contact us"}>
-            <PhoneIcon size={18} />
-          </a>
+          <Link className={styles.circle} href="/contact#enquiry" aria-label="Send us a message">
+            <MailIcon size={18} />
+          </Link>
           <PillLink href="/referral" tone="accent" size="header">
             Make a Referral
           </PillLink>

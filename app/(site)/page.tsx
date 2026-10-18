@@ -4,7 +4,6 @@ import Link from "next/link";
 import { CircleArrow } from "@/components/CircleArrow";
 import {
   ArrowRight,
-  CallingIcon,
   ConnectIcon,
   CycleIcon,
   DocumentIcon,
@@ -19,8 +18,7 @@ import { PillLink } from "@/components/PillButton";
 import { ReferralBand } from "@/components/ReferralBand";
 import { SectionHeader } from "@/components/SectionHeader";
 import { site } from "@/lib/site";
-import heroCoordinator from "@/assets/images/hero-coordinator.jpg";
-import heroParticipant from "@/assets/images/hero-participant.jpg";
+import heroMeeting from "@/assets/images/hero-meeting.jpg";
 import recoveryCoaching from "@/assets/images/service-recovery-coaching.jpg";
 import supportCoordination from "@/assets/images/service-support-coordination.jpg";
 import styles from "./home.module.css";
@@ -113,38 +111,18 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Hero image: participant and coordinator on the same call */}
+      {/* Hero image: participant and coordinator meeting in person */}
       <section className={styles.heroImageSection}>
         <div className={styles.heroImage}>
-          <div className={styles.split}>
-            <div className={styles.half}>
-              <Image
-                src={heroParticipant}
-                alt="A man at home, smiling on a phone call"
-                fill
-                priority
-                // object-fit: cover crops this photo to the box height, so it is requested wider than its box.
-                sizes="(max-width: 760px) 100vw, (orientation: portrait) 1600px, min(65vw, 1860px)"
-                className={styles.photo}
-                style={{ objectPosition: "22% center" }}
-              />
-            </div>
-            <div className={styles.half}>
-              <Image
-                src={heroCoordinator}
-                alt="A support coordinator on the same call, working through the plan"
-                fill
-                priority
-                // A wide photo in a tall box: requested at box height times its 2.33 aspect ratio.
-                sizes="(max-width: 760px) 660px, (orientation: portrait) 2400px, min(112vw, 3200px)"
-                className={styles.photo}
-                style={{ objectPosition: "96% center" }}
-              />
-            </div>
-          </div>
-          <div className={styles.callBadge} aria-hidden="true">
-            <CallingIcon size={26} color="var(--indigo-700)" />
-          </div>
+          <Image
+            src={heroMeeting}
+            alt="A support coordinator meeting a participant at his kitchen table, talking through his plan"
+            fill
+            priority
+            // A 2.36:1 photo cropped by object-fit: cover. On phones the box is 5:4, so it is requested about 1.9 times the box width.
+            sizes="(max-width: 760px) 190vw, min(115vw, 3200px)"
+            className={`${styles.photo} ${styles.heroPhoto}`}
+          />
           <div className={styles.shade} aria-hidden="true" />
 
           <div className={styles.whoCard}>
@@ -190,7 +168,7 @@ export default function HomePage() {
           <div className={styles.teaserPhoto}>
             <Image
               src={supportCoordination}
-              alt="A coordinator on a video call with a participant and therapist, cross-checking the support plan"
+              alt="A coordinator on a video call with a participant and an allied health professional, working through the support plan"
               fill
               sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, (min-width: 1441px) min(22vw, 390px), 310px"
               className={styles.photo}
@@ -217,7 +195,7 @@ export default function HomePage() {
           <div className={styles.teaserPhoto}>
             <Image
               src={recoveryCoaching}
-              alt="A participant writing her goals in a notebook during a coaching session"
+              alt="A participant writing his goals in a notebook while his recovery coach listens"
               fill
               sizes="(max-width: 600px) 100vw, (max-width: 1100px) 50vw, (min-width: 1441px) min(22vw, 390px), 310px"
               className={styles.photo}
@@ -299,7 +277,7 @@ export default function HomePage() {
             title="Why Choose Ensign?"
             aside={
               <p className={styles.asideCopy}>
-                Practical, participant-led support from a team with more than seven years in mental health and
+                Practical, patient-centred support from a team with more than seven years in mental health and
                 disability services.
               </p>
             }

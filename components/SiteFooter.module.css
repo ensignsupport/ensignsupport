@@ -125,7 +125,7 @@
   gap: calc(16 * var(--px-ui)) calc(32 * var(--px-gap));
   flex-wrap: wrap;
   background: var(--partner-bg);
-  border-radius: calc(18 * var(--px-ui));
+  border-radius: calc(12 * var(--px-ui));
   padding: calc(18 * var(--px-ui)) calc(18 * var(--px-ui)) calc(18 * var(--px-ui)) calc(26 * var(--px-gap));
 }
 
@@ -254,7 +254,7 @@
     grid-column: 1 / -1;
     order: 2;
     background: var(--indigo-50);
-    border-radius: calc(20 * var(--px-ui));
+    border-radius: calc(12 * var(--px-ui));
     padding: calc(20 * var(--px-gap));
     gap: calc(6 * var(--px-ui));
   }

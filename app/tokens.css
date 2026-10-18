@@ -1,37 +1,40 @@
 /* Ensign Support Services: design tokens (design v2, October 2026)
-   Copied from design-pack/design-tokens.css. Use these values exactly.
-   One change: the two font tokens point at the self-hosted fonts that
-   next/font loads in app/layout.tsx (--font-geist and --font-caveat). */
+   Based on design-pack/design-tokens.css, with the client's 15 Oct 2026 changes:
+   the light and soft colours are now navy, steel blue and cool grey, and corners
+   are tighter. The Make a Referral accent is a deep, saturated version of the
+   steel blue headline colour, and the hand-written script note stays.
+   The token names still say "indigo" so no component had to change.
+   The font tokens point at the self-hosted fonts next/font loads in app/layout.tsx. */
 
 :root {
-  /* Indigo family (the only brand colour) */
-  --indigo-950: #141B52;   /* dark bands: referral section, Why Ensign card, admin sidebar */
-  --indigo-900: #1A2470;   /* dark buttons, icon strokes, primary text accents */
-  --indigo-700: #2236B5;   /* ACCENT: Make a Referral buttons only (plus focus rings, selected states) */
-  --indigo-600: #3A52D6;   /* hover on light-background accent elements */
-  --indigo-400: #7D8DE3;   /* light word in big headlines ("Made", "Works", "Navigate") */
-  --indigo-200: #C9D1F6;   /* text and eyebrows on dark bands */
-  --indigo-150: #D5DAF3;   /* outline circles (01, 02, arrows) */
-  --indigo-100: #E6EAFB;   /* icon tiles, image placeholders */
-  --indigo-50:  #F3F4FA;   /* soft cards (services, values, stats, contact cards, forms) */
-  --indigo-25:  #F1F3FC;   /* selected option background */
+  /* Navy and steel blue family (the only brand colour). Named indigo for history. */
+  --indigo-950: #0F1E33;   /* dark bands: referral section, Why Ensign card, admin sidebar */
+  --indigo-900: #15294A;   /* dark buttons, icon strokes, primary text accents */
+  --indigo-700: #0D3B70;   /* ACCENT: Make a Referral buttons only (plus focus rings, selected states) */
+  --indigo-600: #1A5AA2;   /* hover on light-background accent elements */
+  --indigo-400: #557BA6;   /* light word in big headlines ("Made", "Works", "Navigate") */
+  --indigo-200: #C7D3E3;   /* text and eyebrows on dark bands */
+  --indigo-150: #D0D9E4;   /* outline circles (01, 02, arrows) */
+  --indigo-100: #E3E9F0;   /* icon tiles, image placeholders */
+  --indigo-50:  #F2F4F7;   /* soft cards (services, values, stats, contact cards, forms) */
+  --indigo-25:  #EEF2F7;   /* selected option background */
 
   /* Neutrals */
-  --ink:        #12141F;   /* headings and body text */
-  --text-2:     #3A4262;   /* long body copy */
-  --text-3:     #5A6488;   /* supporting copy, labels */
-  --text-4:     #7A8098;   /* footer bottom row */
-  --line:       #E1E4F0;   /* input borders */
-  --line-soft:  #E6E9F4;   /* card borders, dividers */
-  --page:       #FBFBFD;   /* page background, near white */
+  --ink:        #111820;   /* headings and body text */
+  --text-2:     #34404F;   /* long body copy */
+  --text-3:     #556274;   /* supporting copy, labels */
+  --text-4:     #7A8390;   /* footer bottom row */
+  --line:       #DEE3E9;   /* input borders */
+  --line-soft:  #E4E8ED;   /* card borders, dividers */
+  --page:       #FAFBFC;   /* page background, near white */
   --white:      #FFFFFF;
 
   /* Admin status colours (admin only, never on the public site) */
-  --st-new-bg: #2236B5;      --st-new-fg: #FFFFFF;
-  --st-contacted-bg: #E6EAFB; --st-contacted-fg: #1A2470;
+  --st-new-bg: #0D3B70;      --st-new-fg: #FFFFFF;
+  --st-contacted-bg: #E3E9F0; --st-contacted-fg: #15294A;
   --st-progress-bg: #FDF1DC;  --st-progress-fg: #7A4E00;
   --st-accepted-bg: #E2F3E8;  --st-accepted-fg: #1D6B3F;
-  --st-closed-bg: #EEF0F4;    --st-closed-fg: #4A5373;
+  --st-closed-bg: #ECEFF2;    --st-closed-fg: #475466;
 
   /* Type */
   --font-sans: var(--font-geist), 'Helvetica Neue', system-ui, sans-serif;  /* everything */
@@ -43,9 +46,9 @@
   --body-lg: calc(18 * var(--px-text));  --body: calc(15.5 * var(--px-text));  --small: calc(14 * var(--px-ui));  --eyebrow: calc(14 * var(--px-ui));
 
   /* Shape */
-  --radius-hero: calc(28 * var(--px-ui));   /* hero image, dark bands, big cards */
-  --radius-card: calc(22 * var(--px-ui));   /* soft cards */
-  --radius-input: calc(14 * var(--px-ui));
+  --radius-hero: calc(18 * var(--px-ui));   /* hero image, dark bands, big cards */
+  --radius-card: calc(14 * var(--px-ui));   /* soft cards */
+  --radius-input: calc(10 * var(--px-ui));
   --radius-pill: calc(999 * var(--px-ui));  /* all buttons */
 
   /* Layout */
@@ -54,12 +57,12 @@
   --section-gap: calc(110 * var(--px-space));  /* 120px between major sections on Home */
 
   /* Shadows */
-  --shadow-accent: 0 calc(16 * var(--px-ui)) calc(32 * var(--px-ui)) -14px rgba(34, 54, 181, .75);  /* referral buttons */
-  --shadow-band: 0 calc(26 * var(--px-ui)) calc(40 * var(--px-ui)) -28px rgba(20, 27, 82, .55);     /* dark referral band */
+  --shadow-accent: 0 calc(18 * var(--px-ui)) calc(36 * var(--px-ui)) -12px rgba(13, 59, 112, .85);  /* referral buttons */
+  --shadow-band: 0 calc(26 * var(--px-ui)) calc(40 * var(--px-ui)) -28px rgba(15, 30, 51, .55);     /* dark referral band */
 }
 
 /* Breakpoints used in the design
    960px  referral band and footer stack
-   760px  phone header (menu button), stacked hero split, admin top bar
+   760px  phone header (menu button), admin top bar
    600px  phone footer layout, single-column form fields
 */

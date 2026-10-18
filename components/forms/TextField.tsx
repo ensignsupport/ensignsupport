@@ -11,6 +11,8 @@ type Props = {
   multiline?: boolean;
   rows?: number;
   placeholder?: string;
+  /** Short guidance shown under the label and read out with the field. */
+  hint?: string;
   autoComplete?: string;
   inputMode?: "text" | "email" | "tel";
   value: string;
@@ -20,10 +22,12 @@ type Props = {
 
 /** A labelled text input. Errors are tied to the input for screen readers. */
 export const TextField = forwardRef<HTMLInputElement & HTMLTextAreaElement, Props>(function TextField(
-  { id, label, optional, type = "text", multiline, rows = 4, placeholder, autoComplete, inputMode, value, error, onChange },
+  { id, label, optional, type = "text", multiline, rows = 4, placeholder, hint, autoComplete, inputMode, value, error, onChange },
   ref,
 ) {
   const errorId = `${id}-error`;
+  const hintId = `${id}-hint`;
+  const describedBy = [hint ? hintId : null, error ? errorId : null].filter(Boolean).join(" ") || undefined;
   const common = {
     id,
     name: id,
@@ -32,7 +36,7 @@ export const TextField = forwardRef<HTMLInputElement & HTMLTextAreaElement, Prop
     autoComplete,
     value,
     "aria-invalid": error ? (true as const) : undefined,
-    "aria-describedby": error ? errorId : undefined,
+    "aria-describedby": describedBy,
     "aria-required": optional ? undefined : (true as const),
   };
   return (
@@ -41,6 +45,11 @@ export const TextField = forwardRef<HTMLInputElement & HTMLTextAreaElement, Prop
         {label}
         {optional ? <span className={styles.optional}> (optional)</span> : null}
       </span>
+      {hint ? (
+        <span id={hintId} className={styles.hint}>
+          {hint}
+        </span>
+      ) : null}
       {multiline ? (
         <textarea {...common} ref={ref} rows={rows} onChange={(e) => onChange(e.target.value)} />
       ) : (

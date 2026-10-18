@@ -6,7 +6,10 @@ import { type EnquiryStatus, type ReferralStatus, ENQUIRY_STATUS_IDS, REFERRAL_S
 /**
  * Reading and changing referrals and enquiries for the admin.
  * Callers must have checked the session first (app/admin/actions.ts).
- * Nothing here is ever deleted: Closed is the furthest a record can go.
+ * Records are never deleted by a status change. A Closed record can be removed
+ * for good with removeReferral or removeEnquiry, when its keeping period ends
+ * (Privacy Policy v2.0 clause 11). Only a non-identifying row in
+ * removed_records is kept.
  */
 
 /**
@@ -254,5 +257,67 @@ export async function queueEnquiryReply(ref: string, body: string): Promise<bool
     await changeEnquiryStatus(client, rows[0].id, rows[0].status, "replied");
     log("admin.enquiry_reply_queued", { ref });
     return true;
+  });
+}
+
+export type RemoveResult = "removed" | "not_found" | "not_closed";
+
+/**
+ * Deletes a Closed referral for good: its personal details, the reason, notes
+ * and status history. Keeps only the reference number, the day it was received
+ * and when it was removed (removed_records). Refuses anything not Closed, so a
+ * live referral can never be removed by mistake.
+ */
+export async function removeReferral(ref: string): Promise<RemoveResult> {
+  return transaction(async (client) => {
+    const { rows } = await client.query<{ id: number; status: string; created_at: Date }>(
+      `SELECT id, status, created_at FROM referrals WHERE ref = $1 FOR UPDATE`,
+      [ref],
+    );
+    const row = rows[0];
+    if (!row) return "not_found";
+    if (row.status !== "closed") return "not_closed";
+    await client.query(`DELETE FROM referral_notes WHERE referral_id = $1`, [row.id]);
+    await client.query(`DELETE FROM referral_status_history WHERE referral_id = $1`, [row.id]);
+    await client.query(`DELETE FROM referrals WHERE id = $1`, [row.id]);
+    await client.query(
+      `INSERT INTO removed_records (ref, kind, received_on)
+       VALUES ($1, 'referral', ($2::timestamptz AT TIME ZONE 'Australia/Brisbane')::date)`,
+      [ref, row.created_at],
+    );
+    log("admin.referral_removed", { ref });
+    return "removed";
+  });
+}
+
+/**
+ * Deletes a Closed enquiry for good: the message, contact details, replies and
+ * status history. Sent-email records keep only the reference number. Keeps a
+ * non-identifying row in removed_records.
+ */
+export async function removeEnquiry(ref: string): Promise<RemoveResult> {
+  return transaction(async (client) => {
+    const { rows } = await client.query<{ id: number; status: string; created_at: Date }>(
+      `SELECT id, status, created_at FROM enquiries WHERE ref = $1 FOR UPDATE`,
+      [ref],
+    );
+    const row = rows[0];
+    if (!row) return "not_found";
+    if (row.status !== "closed") return "not_closed";
+    await client.query(
+      `UPDATE email_outbox SET message_id = NULL
+        WHERE message_id IN (SELECT id FROM enquiry_messages WHERE enquiry_id = $1)`,
+      [row.id],
+    );
+    await client.query(`DELETE FROM enquiry_messages WHERE enquiry_id = $1`, [row.id]);
+    await client.query(`DELETE FROM enquiry_status_history WHERE enquiry_id = $1`, [row.id]);
+    await client.query(`DELETE FROM enquiries WHERE id = $1`, [row.id]);
+    await client.query(
+      `INSERT INTO removed_records (ref, kind, received_on)
+       VALUES ($1, 'enquiry', ($2::timestamptz AT TIME ZONE 'Australia/Brisbane')::date)`,
+      [ref, row.created_at],
+    );
+    log("admin.enquiry_removed", { ref });
+    return "removed";
   });
 }

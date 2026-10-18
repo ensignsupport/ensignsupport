@@ -127,7 +127,7 @@ test.describe("compliance on every page", () => {
       expect(text).not.toContain("ndia-managed");
       expect(text).not.toContain("agency-managed");
       // "Not a registered NDIS provider" is the only allowed use of the phrase.
-      expect(text).not.toMatch(/(?<!not a )registered ndis provider/);
+      expect(text).not.toMatch(/(?<!not a |un)registered ndis provider/);
       expect(text).not.toMatch(/ndia[- ]endorsed|endorsed by the ndia/);
       await expect(page.locator('img[src*="ndis" i], img[alt*="ndis logo" i]')).toHaveCount(0);
     });

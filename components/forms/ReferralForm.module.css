@@ -21,7 +21,7 @@
   display: flex;
   flex-direction: column;
   gap: calc(34 * var(--px-gap));
-  box-shadow: 0 calc(30 * var(--px-ui)) calc(60 * var(--px-ui)) -48px rgba(20, 27, 82, 0.45);
+  box-shadow: 0 calc(30 * var(--px-ui)) calc(60 * var(--px-ui)) -48px rgba(15, 30, 51, 0.45);
 }
 
 /* Progress */
@@ -166,7 +166,7 @@
   text-align: left;
   background: var(--white);
   border: 1.5px solid var(--chip-line);
-  border-radius: calc(18 * var(--px-ui));
+  border-radius: calc(12 * var(--px-ui));
   padding: calc(18 * var(--px-ui)) calc(20 * var(--px-gap));
   color: var(--ink);
   cursor: pointer;
@@ -240,7 +240,7 @@
   color: var(--text-2);
   cursor: pointer;
   background: var(--indigo-50);
-  border-radius: calc(18 * var(--px-ui));
+  border-radius: calc(12 * var(--px-ui));
   padding: calc(18 * var(--px-ui)) calc(20 * var(--px-ui));
 }
 
@@ -384,6 +384,12 @@
   /* The design used 24px. The header is now sticky (92px), so the notice
      stops below it instead of sliding under it. */
   top: calc(calc(92 * var(--px-ui)) + calc(24 * var(--px-ui)));
+  /* The approved collection notice is longer than the draft. On short laptop screens
+     it scrolls inside itself, so its bottom (the privacy link) can always be reached. */
+  max-height: calc(100svh - calc(92 * var(--px-ui)) - calc(24 * var(--px-ui)) - calc(16 * var(--px-ui)));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-sizing: border-box;
   background: var(--indigo-50);
   border-radius: var(--radius-hero);
   padding: clamp(calc(26 * var(--px-ui)), 3vw, calc(36 * var(--px-ui)));
@@ -407,16 +413,6 @@
   letter-spacing: -0.02em;
 }
 
-.draft {
-  font-size: calc(12 * var(--px-ui));
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--indigo-900);
-  background: var(--tile-icon);
-  padding: calc(6 * var(--px-ui)) calc(10 * var(--px-ui));
-  border-radius: calc(999 * var(--px-ui));
-}
 
 .noticeCopy {
   margin: 0;

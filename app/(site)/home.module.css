@@ -179,45 +179,19 @@
   height: clamp(calc(420 * var(--px-media)), 48vw, calc(680 * var(--px-media)));
 }
 
-.split {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: calc(6 * var(--px-ui));
-  background: var(--page);
-}
-
-.half {
-  position: relative;
-  overflow: hidden;
-  background: var(--indigo-100);
-}
-
 .photo {
   object-fit: cover;
 }
 
-.callBadge {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(64 * var(--px-ui));
-  height: calc(64 * var(--px-ui));
-  border-radius: 50%;
-  background: var(--white);
-  box-shadow: 0 0 0 calc(8 * var(--px-ui)) rgba(255, 255, 255, 0.35), 0 calc(14 * var(--px-ui)) calc(30 * var(--px-ui)) -12px rgba(18, 20, 31, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1;
+/* Keeps both faces in frame. Left edge first so the Who We Work With card sits beside him, not over his face. */
+.heroPhoto {
+  object-position: 0% 30%;
 }
 
 .shade {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(18, 20, 31, 0) 55%, rgba(18, 20, 31, 0.45) 100%);
+  background: linear-gradient(180deg, rgba(17, 24, 32, 0) 55%, rgba(17, 24, 32, 0.45) 100%);
 }
 
 .whoCard {
@@ -226,7 +200,7 @@
   top: calc(24 * var(--px-gap));
   width: calc(290 * var(--px-text));
   background: var(--white);
-  border-radius: calc(18 * var(--px-ui));
+  border-radius: calc(12 * var(--px-ui));
   padding: calc(10 * var(--px-ui)) calc(10 * var(--px-ui)) calc(16 * var(--px-ui));
   box-sizing: border-box;
   display: flex;
@@ -330,8 +304,43 @@
   max-width: var(--container);
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(calc(260 * var(--px-wide)), 100%), 1fr));
+  /* Fixed column counts (4, then 2, then 1) so a photo never ends a row away from its text. */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: calc(20 * var(--px-gap));
+}
+
+@media (max-width: 1100px) {
+  .teaserGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* One column on phones. "Explore Our Services" moves to the top as the section's heading row,
+   so the hero photo is not followed straight by another photo. Each service is then its photo
+   with its text right under it, and a bigger gap before the next service. */
+@media (max-width: 600px) {
+  .teaserGrid {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: calc(14 * var(--px-gap));
+  }
+
+  /* Prefixed with .teaserGrid so these win over the base rules further down the file. */
+  .teaserGrid .teaserLast {
+    display: contents;
+  }
+
+  .teaserGrid .explore {
+    order: -1;
+    padding: calc(8 * var(--px-ui)) calc(4 * var(--px-ui)) calc(6 * var(--px-ui));
+  }
+
+  .teaserGrid .teaserLinkBottom {
+    padding: 0 calc(4 * var(--px-ui));
+  }
+
+  .teaserPhoto + .teaserLink + .teaserPhoto {
+    margin-top: calc(26 * var(--px-gap));
+  }
 }
 
 .teaserPhoto {
@@ -549,7 +558,7 @@
 .valueIcon {
   width: calc(56 * var(--px-ui));
   height: calc(56 * var(--px-ui));
-  border-radius: calc(16 * var(--px-ui));
+  border-radius: calc(12 * var(--px-ui));
   background: var(--white);
   display: flex;
   align-items: center;
@@ -648,6 +657,7 @@
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
+    container-type: inline-size;
     padding-top: clamp(calc(16 * var(--px-ui)), calc(calc(32 * var(--px-gap)) - (960px - 100svh) / 10), calc(32 * var(--px-gap)));
   }
 
@@ -657,6 +667,21 @@
     box-sizing: border-box;
     height: auto;
     min-height: calc(360 * var(--px-media));
+    /* Never taller than about 1.9:1, or a tall window crops the coordinator out of the photo. */
+    max-height: 52cqw;
+  }
+}
+
+/* Tall windows (portrait tablets, tall browser panes): size the photo from its width
+   instead of filling the screen, so there is no empty band under it. */
+@media (min-width: 761px) and (orientation: portrait) {
+  .heroFold {
+    min-height: 0;
+  }
+
+  .heroImage {
+    flex: none;
+    height: 52cqw;
   }
 }
 
@@ -673,13 +698,14 @@
     display: none;
   }
 
-  .split {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: repeat(2, minmax(0, 1fr));
+  /* A wide box on phones so both faces fit. A tall box would only show the wall. */
+  .heroImage {
+    height: auto;
+    aspect-ratio: 5 / 4;
   }
 
-  .heroImage {
-    height: calc(560 * var(--px-media));
+  .heroPhoto {
+    object-position: 52% 30%;
   }
 
   .referText {

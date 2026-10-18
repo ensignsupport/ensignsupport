@@ -32,50 +32,50 @@
   --px-media: calc(1px + var(--grow) * 0.25);
   --px-wide: calc(1px + var(--grow) * 0.25);
   --header-height: calc(92 * var(--px-ui));     /* sticky header, components/SiteHeader.module.css */
-  --ink-2: #4A5373;          /* inactive nav, wordmark second word */
-  --ink-footer: #3A3F52;     /* footer links and copy */
-  --label-muted: #6B7493;    /* admin labels, footer column heads on phones */
-  --icon-muted: #9AA3C2;     /* chevrons in the phone menu */
-  --circle-bg: #F1F2F9;      /* round icon buttons in the header */
-  --divider-menu: #EEF0F6;   /* phone menu rows, admin row borders */
-  --divider-footer: #D9DCE8; /* footer bottom rule */
-  --partner-bg: #F1F3FA;     /* footer partner strip */
-  --tile-icon: #E2E6FA;      /* round icon tiles on soft cards */
-  --flag-shadow: #18205D;    /* big flag drawn on dark bands */
-  --hover-light: #EEF0FB;    /* light button hover */
-  --hover-border: #B9C2EE;   /* option and chip hover border */
-  --input-line: #DDE1F0;     /* input border on forms */
-  --dot-line: #C5CBE6;       /* unselected radio dot */
-  --chip-line: #E1E4F0;      /* choice and chip borders */
+  --ink-2: #475466;          /* inactive nav, wordmark second word */
+  --ink-footer: #363F4C;     /* footer links and copy */
+  --label-muted: #5F6B7D;    /* admin labels, footer column heads on phones */
+  --icon-muted: #98A3B2;     /* chevrons in the phone menu */
+  --circle-bg: #EFF2F5;      /* round icon buttons in the header */
+  --divider-menu: #ECEFF3;   /* phone menu rows, admin row borders */
+  --divider-footer: #D7DCE3; /* footer bottom rule */
+  --partner-bg: #EFF2F6;     /* footer partner strip */
+  --tile-icon: #DFE6EE;      /* round icon tiles on soft cards */
+  --flag-shadow: #132540;    /* big flag drawn on dark bands */
+  --hover-light: #ECF0F5;    /* light button hover */
+  --hover-border: #AFBDCE;   /* option and chip hover border */
+  --input-line: #DAE0E7;     /* input border on forms */
+  --dot-line: #C2CBD6;       /* unselected radio dot */
+  --chip-line: #DEE3E9;      /* choice and chip borders */
   --error: #B42318;          /* form errors. Not in the design (it has no error state). 6.5:1 on white */
   --error-bg: #FDECEA;       /* background of the "could not send" message */
 
   /* Admin area (AdminReferrals.dc.html, AdminEnquiries.dc.html). */
-  --admin-bg: #F6F7FB;        /* admin page background */
-  --admin-side: #141B52;      /* admin sidebar */
-  --admin-side-link: #C9D1F6; /* sidebar links */
-  --admin-side-sub: #9AA8EE;  /* sidebar small text */
-  --admin-line: #E1E4F0;      /* inputs, buttons, segmented choices */
-  --admin-card-line: #E6E9F4; /* cards, table frame, tab group */
-  --admin-row-line: #EEF0F6;  /* rows and section rules */
-  --admin-row-hover: #F8F9FD; /* row hover */
-  --admin-row-sel: #F1F3FC;   /* selected row, chosen status */
-  --admin-tab-hover: #EEF0F8; /* status tab hover */
-  --admin-count: #E6E9F4;     /* count bubble on tabs */
-  --admin-btn-hover: #F3F4FA; /* plain button hover */
-  --admin-chip: #F1F2F8;      /* service chip */
-  --admin-chip-ink: #3A4262;  /* service chip, plan, dates */
-  --admin-sub: #5A6488;       /* page subtitles, message previews */
-  --admin-thread: #FBFBFD;    /* reply thread background */
-  --admin-shade: rgba(18, 20, 31, 0.18); /* behind the detail panel */
+  --admin-bg: #F5F6F8;        /* admin page background */
+  --admin-side: #0F1E33;      /* admin sidebar */
+  --admin-side-link: #C7D3E3; /* sidebar links */
+  --admin-side-sub: #9DB0C8;  /* sidebar small text */
+  --admin-line: #DEE3E9;      /* inputs, buttons, segmented choices */
+  --admin-card-line: #E4E8ED; /* cards, table frame, tab group */
+  --admin-row-line: #ECEFF3;  /* rows and section rules */
+  --admin-row-hover: #F8F9FB; /* row hover */
+  --admin-row-sel: #EEF2F7;   /* selected row, chosen status */
+  --admin-tab-hover: #EDF0F4; /* status tab hover */
+  --admin-count: #E4E8ED;     /* count bubble on tabs */
+  --admin-btn-hover: #F2F4F7; /* plain button hover */
+  --admin-chip: #EFF1F4;      /* service chip */
+  --admin-chip-ink: #34404F;  /* service chip, plan, dates */
+  --admin-sub: #556274;       /* page subtitles, message previews */
+  --admin-thread: #FAFBFC;    /* reply thread background */
+  --admin-shade: rgba(17, 24, 32, 0.18); /* behind the detail panel */
   --st-replied-bg: #E2F3E8;   --st-replied-fg: #1D6B3F;
 
-  /* Accessibility adjustments. Three design colours fall just short of
-     WCAG 2.2 AA on the page background. Each is darkened by the smallest
-     step that passes, keeping its hue. See docs/decisions/0002. */
-  --text-4-aa: #6B718A;      /* was #7A8098, 3.78:1. Now 4.67:1 (small text needs 4.5) */
-  --label-muted-aa: #697291; /* was #6B7493, 4.47:1. Now 4.6:1 */
-  --indigo-400-aa: #7687E2;  /* was #7D8DE3, 2.99:1. Now 3.21:1 (large text needs 3) */
+  /* Accessibility adjustments, kept as separate tokens so components did not change.
+     With the navy palette (15 Oct 2026) the base colours already pass WCAG 2.2 AA
+     on the page background, so these now match or sit just darker than them. */
+  --text-4-aa: #646D7A;      /* --text-4 (#7A8390) is 3.7:1, too light for small text. This is 5.05:1 */
+  --label-muted-aa: #5F6B7D; /* same as --label-muted, 5.2:1 */
+  --indigo-400-aa: #557BA6;  /* same as --indigo-400, 4.25:1 (large text needs 3) */
 }
 
 /* No global box-sizing reset. The design source uses the browser default
@@ -151,7 +151,7 @@ textarea {
   border-radius: var(--radius-pill);
   font-weight: 500;
   text-decoration: none;
-  box-shadow: 0 calc(10 * var(--px-ui)) calc(24 * var(--px-ui)) -10px rgba(18, 20, 31, 0.4);
+  box-shadow: 0 calc(10 * var(--px-ui)) calc(24 * var(--px-ui)) -10px rgba(17, 24, 32, 0.4);
 }
 
 .skip-link:focus {

@@ -338,6 +338,47 @@ test("enquiries: opening marks read, a reply is stored, emailed from Ensign and 
   await context.close();
 });
 
+test("a Closed referral or enquiry can be removed for good, in two steps, keeping only the reference", async ({ browser }) => {
+  const context = await freshContext(browser);
+  const page = await context.newPage();
+  const live = await seedReferral({ participant_name: "Rhea Removetest", status: "accepted" });
+  const closed = await seedReferral({ participant_name: "Rory Removetest", status: "closed" });
+  await signIn(page);
+
+  // A record that is not Closed has no remove button.
+  await page.goto(`/admin/referrals?ref=${live.ref}`);
+  const liveDrawer = page.getByRole("dialog", { name: "Rhea Removetest" });
+  await expect(liveDrawer.getByRole("heading", { name: "Internal notes" })).toBeVisible();
+  await expect(liveDrawer.getByRole("button", { name: "Remove personal details" })).toHaveCount(0);
+
+  // The first click only asks. Cancel keeps everything.
+  await page.goto(`/admin/referrals?ref=${closed.ref}`);
+  const drawer = page.getByRole("dialog", { name: "Rory Removetest" });
+  await drawer.getByRole("button", { name: "Remove personal details" }).click();
+  await expect(drawer.getByText(`Remove ${closed.ref} for good?`)).toBeVisible();
+  await drawer.getByRole("button", { name: "Cancel" }).click();
+  expect((await sql<{ n: number }>(`SELECT count(*)::int AS n FROM referrals WHERE ref = $1`, [closed.ref]))[0].n).toBe(1);
+
+  await drawer.getByRole("button", { name: "Remove personal details" }).click();
+  await drawer.getByRole("button", { name: "Yes, remove for good" }).click();
+  await expect(page.getByText(`${closed.ref} removed. Only its reference number is kept.`)).toBeVisible();
+  await expect(page.getByText("Rory Removetest")).toHaveCount(0);
+  expect((await sql<{ n: number }>(`SELECT count(*)::int AS n FROM referrals WHERE ref = $1`, [closed.ref]))[0].n).toBe(0);
+  expect(await sql(`SELECT kind FROM removed_records WHERE ref = $1`, [closed.ref])).toEqual([{ kind: "referral" }]);
+  expect(await sql(`SELECT action FROM access_log WHERE target_ref = $1 AND action = 'remove_referral'`, [closed.ref])).toHaveLength(1);
+
+  const enq = await seedEnquiry("Erin Removetest", "Please remove me.");
+  await sql(`UPDATE enquiries SET status = 'closed' WHERE id = $1`, [enq.id]);
+  await page.goto(`/admin/enquiries?ref=${enq.ref}`);
+  const panel = page.getByRole("region", { name: "Enquiry" });
+  await panel.getByRole("button", { name: "Remove personal details" }).click();
+  await panel.getByRole("button", { name: "Yes, remove for good" }).click();
+  await expect(page.getByText(`${enq.ref} removed. Only its reference number is kept.`)).toBeVisible();
+  expect((await sql<{ n: number }>(`SELECT count(*)::int AS n FROM enquiries WHERE ref = $1`, [enq.ref]))[0].n).toBe(0);
+  expect(await sql(`SELECT kind FROM removed_records WHERE ref = $1`, [enq.ref])).toEqual([{ kind: "enquiry" }]);
+  await context.close();
+});
+
 test("a link from an alert email opens that enquiry after signing in", async ({ browser }) => {
   const e = await seedEnquiry("Lenny Linktest", "Link test 0b7.");
   const context = await freshContext(browser);

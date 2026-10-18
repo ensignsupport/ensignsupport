@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { BandFlag } from "@/components/BandFlag";
 import { EnquiryForm } from "@/components/forms/EnquiryForm";
 import { Eyebrow } from "@/components/Eyebrow";
-import { ClockIcon, DocumentIcon, MailIcon, PhoneIcon, PinIcon } from "@/components/icons";
+import { ClockIcon, DocumentIcon, MailIcon, PinIcon } from "@/components/icons";
 import { PageHero } from "@/components/PageHero";
 import { PillLink } from "@/components/PillButton";
 import { isPlaceholder, site } from "@/lib/site";
@@ -27,11 +27,6 @@ function InfoValue({ value, href }: { value: string; href?: string }) {
 
 const INFO: { label: string; icon: ReactNode; value: ReactNode }[] = [
   {
-    label: "Phone",
-    icon: <PhoneIcon size={22} color="var(--indigo-900)" strokeWidth={1.6} />,
-    value: <InfoValue value={site.phone} href={`tel:${site.phone.replace(/\s/g, "")}`} />,
-  },
-  {
     label: "Email",
     icon: <MailIcon size={22} color="var(--indigo-900)" strokeWidth={1.6} />,
     value: <InfoValue value={site.email} href={`mailto:${site.email}`} />,
@@ -40,6 +35,11 @@ const INFO: { label: string; icon: ReactNode; value: ReactNode }[] = [
     label: "Hours",
     icon: <ClockIcon size={22} color="var(--indigo-900)" />,
     value: <InfoValue value={site.hours} />,
+  },
+  {
+    label: "Service area",
+    icon: <PinIcon size={22} color="var(--indigo-900)" strokeWidth={1.6} />,
+    value: <InfoValue value={site.serviceArea} />,
   },
   {
     label: "ABN",

@@ -5,6 +5,7 @@ import {
   referralDetailAction,
   referralNoteAction,
   referralStatusAction,
+  removeReferralAction,
 } from "@/app/admin/actions";
 import type { ReferralDetail, ReferralRow } from "@/lib/server/admin-data";
 import {
@@ -21,6 +22,7 @@ import {
 } from "@/lib/admin/labels";
 import { PLAN_TYPES, REFERRER_TYPES } from "@/lib/forms/schema";
 import { CallIcon, CloseXIcon, EnquiriesIcon, SearchIcon } from "./AdminIcons";
+import { RemoveRecord } from "./RemoveRecord";
 import styles from "./admin.module.css";
 
 type Filter = "all" | ReferralStatus;
@@ -63,6 +65,7 @@ export function ReferralsBoard({
     null,
   );
   const [busy, setBusy] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
   const rowButtons = useRef(new Map<string, HTMLButtonElement>());
   const drawerRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -218,6 +221,13 @@ export function ReferralsBoard({
     setBusy(false);
   };
 
+  const removed = (ref: string) => {
+    setRows((list) => list.filter((r) => r.ref !== ref));
+    setSelRef(null);
+    setDetail(null);
+    setNotice(`${ref} removed. Only its reference number is kept.`);
+  };
+
   const tabs: { k: Filter; label: string; count: number }[] = [
     { k: "all", label: "All", count: rows.length },
     ...REFERRAL_STATUSES.map((s) => ({
@@ -235,6 +245,11 @@ export function ReferralsBoard({
           <p className={styles.subtitle}>
             Referrals submitted through the website referral form.
           </p>
+          {notice && (
+            <p role="status" className={styles.saved} style={{ margin: 0 }}>
+              {notice}
+            </p>
+          )}
         </div>
         <div className={styles.tools}>
           <label className={styles.searchLabel}>
@@ -653,6 +668,15 @@ export function ReferralsBoard({
                       </li>
                     </ul>
                   </section>
+
+                  <RemoveRecord
+                    kind="referral"
+                    refId={sel.ref}
+                    status={sel.status}
+                    disabled={busy}
+                    onRemove={removeReferralAction}
+                    onRemoved={removed}
+                  />
                 </>
               )}
             </div>

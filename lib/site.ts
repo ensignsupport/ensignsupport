@@ -2,7 +2,7 @@
  * Every client fact the public site shows lives here.
  *
  * Rule: never invent a fact. Anything Andrew has not supplied stays a visible
- * placeholder in square brackets, for example [PHONE]. The launch check
+ * placeholder in square brackets, for example [EMAIL]. The launch check
  * (npm run check:launch) fails while any placeholder remains.
  */
 
@@ -13,14 +13,10 @@ export const site = {
   shortName: "Ensign",
   tagline: "NDIS support coordination and psychosocial recovery coaching.",
   abn: "19 518 036 825",
-  phone: "[PHONE]",
-  email: "[EMAIL]",
-  hours: "[HOURS]",
+  // No public phone number by Andrew's choice: every contact goes to the email or the contact form.
+  email: "andrew@ensignsupport.com.au",
+  hours: "Monday to Friday, 7am to 7pm",
   serviceArea: "South East Queensland",
-  social: {
-    instagram: "[INSTAGRAM URL]",
-    facebook: "[FACEBOOK URL]",
-  },
   partnerUrl: "https://archwayautomation.com.au",
 } as const;
 
@@ -38,12 +34,6 @@ export function isPlaceholder(value: string): boolean {
 
 /** Every placeholder still on the site, for the launch check. */
 export function openPlaceholders(): string[] {
-  const values = [
-    site.phone,
-    site.email,
-    site.hours,
-    site.social.instagram,
-    site.social.facebook,
-  ];
+  const values: string[] = [site.email, site.hours];
   return values.filter(isPlaceholder);
 }

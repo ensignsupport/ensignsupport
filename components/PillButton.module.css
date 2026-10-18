@@ -1,5 +1,5 @@
 /* The round-ended buttons with a circle on the right, as in the design.
-   Accent (#2236B5) is for Make a Referral actions only. */
+   Accent (#0D3B70) is for Make a Referral actions only. */
 
 .pill {
   box-sizing: border-box;
@@ -29,7 +29,8 @@
 }
 
 .accent:hover {
-  background: var(--indigo-900);
+  /* Lightens on hover. The accent is now darker than --indigo-900, so going to that would barely show. */
+  background: var(--indigo-600);
   color: var(--white);
   transform: translateY(-1px);
 }
@@ -83,7 +84,7 @@
   padding: calc(5 * var(--px-ui)) calc(5 * var(--px-ui)) calc(5 * var(--px-ui)) calc(22 * var(--px-ui));
   gap: calc(14 * var(--px-ui));
   font-size: calc(14.5 * var(--px-ui));
-  box-shadow: 0 calc(10 * var(--px-ui)) calc(24 * var(--px-ui)) -10px rgba(34, 54, 181, 0.7);
+  box-shadow: 0 calc(10 * var(--px-ui)) calc(26 * var(--px-ui)) -9px rgba(13, 59, 112, 0.8);
 }
 
 .header .dot {
