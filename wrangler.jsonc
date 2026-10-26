@@ -1,6 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "ensign-support",
+  // Matches the Worker Cloudflare created from the repository. The D1 database
+  // below is a separate thing and keeps its own name, ensign-support.
+  "name": "ensignsupport",
   // worker.ts wraps what the OpenNext adapter builds from `next build` and
   // adds the hourly alerts job. See docs/decisions/0008-moving-to-cloudflare.md.
   "main": "worker.ts",
