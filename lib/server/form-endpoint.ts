@@ -81,7 +81,7 @@ export async function handleFormPost<T>(request: Request, opts: Options<T>): Pro
   log(`${opts.form}.saved`, { ref });
 
   // The record is safe. Try the alert now; anything that fails is retried
-  // by the hourly job (netlify/functions/alerts.mts).
+  // by the hourly job (worker.ts, through app/api/alerts/route.ts).
   try {
     await Promise.race([processOutbox(5), new Promise((resolve) => setTimeout(resolve, 4000))]);
   } catch (error) {

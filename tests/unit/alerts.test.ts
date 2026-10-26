@@ -1,45 +1,42 @@
+import { randomUUID } from "node:crypto";
 import { mkdtempSync, readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { NetlifyDB } from "@netlify/database-dev";
-import pg from "pg";
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from "vitest";
+import { startDatabase, timeAgo, type TestDatabase } from "../helpers/database";
 
-let db: NetlifyDB;
-let client: pg.Client;
+let database: TestDatabase;
 let sink: string;
 
 beforeAll(async () => {
-  db = new NetlifyDB();
-  process.env.NETLIFY_DB_URL = await db.start();
-  await db.applyMigrations("./netlify/database/migrations");
-  client = new pg.Client({ connectionString: process.env.NETLIFY_DB_URL });
-  await client.connect();
+  database = await startDatabase();
+  const { useDatabase } = await import("@/lib/server/db");
+  useDatabase(database.db);
   sink = path.join(mkdtempSync(path.join(tmpdir(), "ensign-")), "emails.jsonl");
   process.env.SITE_URL = "https://example.test";
   process.env.ALERT_TO = "andrew@example.test";
 });
 
 afterAll(async () => {
-  const { closeDb } = await import("@/lib/server/db");
-  await closeDb();
-  await client.end();
-  await db.stop();
+  const { useDatabase } = await import("@/lib/server/db");
+  useDatabase(null);
+  await database.stop();
 });
 
 beforeEach(async () => {
-  await client.query(
-    "DELETE FROM email_outbox; DELETE FROM enquiry_messages; DELETE FROM enquiries; DELETE FROM referral_status_history; DELETE FROM referrals;",
-  );
+  await database.reset();
 });
 
 async function addReferral(hoursAgo: number, status = "new") {
-  await client.query(
+  await database.sql(
     `INSERT INTO referrals (submission_id, created_at, status, referrer_type, referrer_name, referrer_phone, referrer_email,
        participant_name, participant_phone, participant_email, participant_suburb, plan_type, service, reason, consent, consent_at)
-     VALUES (gen_random_uuid(), now() - make_interval(hours => $1), $2, 'participant', 'Secret Name', '0400000000', 'secret@example.test',
-       'Secret Name', '0400000000', 'secret@example.test', 'Springfield 4300', 'self_managed', 'both', 'secret reason', true, now())`,
-    [hoursAgo, status],
+     VALUES (?, ?, ?, 'participant', 'Secret Name', '0400000000', 'secret@example.test',
+       'Secret Name', '0400000000', 'secret@example.test', 'Springfield 4300', 'self_managed', 'both', 'secret reason', 1,
+       strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))`,
+    randomUUID(),
+    timeAgo(hoursAgo),
+    status,
   );
 }
 
@@ -50,7 +47,7 @@ describe("alerts", () => {
     delete process.env.EMAIL_SINK_FILE;
     delete process.env.RESEND_API_KEY;
     const { processOutbox } = await import("@/lib/server/email");
-    await client.query(`INSERT INTO email_outbox (kind, ref) VALUES ('new_referral', 'R-2001')`);
+    await database.sql(`INSERT INTO email_outbox (kind, ref) VALUES ('new_referral', 'R-2001')`);
 
     const waiting = await processOutbox();
     expect(waiting).toEqual({ sent: 0, failed: 0, waiting: 1 });
@@ -87,14 +84,21 @@ describe("alerts", () => {
     delete process.env.EMAIL_SINK_FILE;
     delete process.env.RESEND_API_KEY;
     const { processOutbox } = await import("@/lib/server/email");
-    const { rows: e } = await client.query(
-      `INSERT INTO enquiries (submission_id, name, email, message) VALUES (gen_random_uuid(), 'Wendy', 'wendy@example.test', 'Question') RETURNING id, ref`,
+    const submission = randomUUID();
+    await database.sql(
+      `INSERT INTO enquiries (submission_id, name, email, message) VALUES (?, 'Wendy', 'wendy@example.test', 'Question')`,
+      submission,
     );
-    const { rows: m } = await client.query(`INSERT INTO enquiry_messages (enquiry_id, body) VALUES ($1, 'Yes we can help. Reply 77a.') RETURNING id`, [e[0].id]);
-    await client.query(`INSERT INTO email_outbox (kind, ref, message_id) VALUES ('enquiry_reply', $1, $2)`, [e[0].ref, m[0].id]);
+    // The reference is set by a trigger, so it is read back rather than returned.
+    const enquiry = (await database.sql(`SELECT id, ref FROM enquiries WHERE submission_id = ?`, submission))[0];
+    const message = (
+      await database.sql(`INSERT INTO enquiry_messages (enquiry_id, body) VALUES (?, 'Yes we can help. Reply 77a.') RETURNING id`, enquiry.id)
+    )[0];
+    await database.sql(`INSERT INTO email_outbox (kind, ref, message_id) VALUES ('enquiry_reply', ?, ?)`, enquiry.ref, message.id);
 
     expect(await processOutbox()).toMatchObject({ sent: 0, waiting: 1 });
-    expect((await client.query(`SELECT delivery_status FROM enquiry_messages WHERE id = $1`, [m[0].id])).rows[0].delivery_status).toBe("pending");
+    const pending = await database.sql(`SELECT delivery_status FROM enquiry_messages WHERE id = ?`, message.id);
+    expect(pending[0].delivery_status).toBe("pending");
 
     process.env.EMAIL_SINK_FILE = sink;
     expect(await processOutbox()).toMatchObject({ sent: 1 });
@@ -103,13 +107,14 @@ describe("alerts", () => {
     expect(sent).toHaveLength(1);
     expect(sent[0].to).toEqual(["wendy@example.test"]);
     expect(sent[0].replyTo).toBe("andrew@example.test");
-    expect((await client.query(`SELECT delivery_status FROM enquiry_messages WHERE id = $1`, [m[0].id])).rows[0].delivery_status).toBe("sent");
+    const delivered = await database.sql(`SELECT delivery_status FROM enquiry_messages WHERE id = ?`, message.id);
+    expect(delivered[0].delivery_status).toBe("sent");
   });
 
   test("the sign in lockout alert holds the time only", async () => {
     process.env.EMAIL_SINK_FILE = sink;
     const { processOutbox } = await import("@/lib/server/email");
-    await client.query(`INSERT INTO email_outbox (kind) VALUES ('login_lockout')`);
+    await database.sql(`INSERT INTO email_outbox (kind) VALUES ('login_lockout')`);
     await processOutbox();
     const alert = lines().find((l) => l.subject === "Admin sign in locked after failed attempts");
     expect(alert.to).toEqual(["andrew@example.test"]);

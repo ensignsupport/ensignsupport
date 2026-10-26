@@ -2,7 +2,7 @@
 
 | Phase | Status |
 | --- | --- |
-| 0 Kickoff | Done earlier (repo, Netlify site "ensignweb") |
+| 0 Kickoff | Done earlier (repo; host moved to Cloudflare Workers on 26 Oct, see docs/decisions/0008) |
 | 1 Information | LOCKED (earlier pack, `archway-rebuild/phase-1`) |
 | 2 Research | LOCKED (earlier pack, `archway-rebuild/phase-2`) |
 | 3 Spec, content and design | LOCKED 2 Oct 2026: design v2 in `design-pack/`, approved by Allen. Replaces the earlier pack in `archway-rebuild/phase-3` |
@@ -25,7 +25,7 @@
 ## Git
 
 - Work happens on `main`, committed and pushed by Allen in GitHub Desktop.
-- Pushing `main` updates the **dev site**, ensignweb.netlify.app. That is fine (Allen, 2 Oct 2026).
+- Pushing `main` updates the **dev site**, the Worker's workers.dev address. That is fine (Allen, 2 Oct 2026).
 - The **live site** is ensignsupport.com.au. Nothing goes there until "lock".
 - The dev site is never indexed by search engines (app/robots.ts). At launch, set `SITE_INDEXING=true` on the production site only.
 

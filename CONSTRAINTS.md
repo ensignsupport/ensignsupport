@@ -7,7 +7,7 @@ Rules every change must keep. If a change breaks one, it is not done.
 1. Never invent a client fact. Unknowns stay visible placeholders such as `[PHONE]`. All client facts live in `lib/site.ts`.
 2. No em dashes anywhere: copy, code, comments, alt text, commit messages.
 3. Australian English, Brisbane time, AUD.
-4. Nothing goes to the live site, ensignsupport.com.au, until Allen says "lock". Allen commits and pushes with GitHub Desktop. Pushing `main` updates the dev site (ensignweb.netlify.app), which is allowed and never indexed.
+4. Nothing goes to the live site, ensignsupport.com.au, until Allen says "lock". Allen commits and pushes with GitHub Desktop. Pushing `main` updates the dev site (the Worker's workers.dev address), which is allowed and never indexed.
 5. Never say something works until it has been run and checked.
 6. Corrections are logged in `archway-rebuild/SKILL-CORRECTIONS.md` (Wrong / Rule / Where / Date).
 
@@ -35,7 +35,7 @@ Rules every change must keep. If a change breaks one, it is not done.
 ## Security and privacy
 
 - Follow `archway-rebuild/phase-4-inputs/admin-security-requirements.md`.
-- Keys and passwords live only in Netlify's environment settings. Never in code, chat or files.
+- Keys and passwords live only as secrets on the Cloudflare Worker. Never in code, chat or files, and never in `wrangler.jsonc`.
 - Emails never contain health details or form contents. Reference number and link only.
 - Logs record what happened, never what a person wrote.
 - The sample data in the admin designs is fake and never ships.

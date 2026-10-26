@@ -4,8 +4,9 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import path from "node:path";
 
 const ROOT = path.resolve(import.meta.dirname, "..");
-const SKIP_DIRS = new Set(["node_modules", ".next", ".git", "test-results", "playwright-report", "design-pack", "archway-rebuild", "Claude outputs"]);
-const SKIP_FILES = new Set(["package-lock.json"]);
+const SKIP_DIRS = new Set(["node_modules", ".next", ".open-next", ".wrangler", ".git", "test-results", "playwright-report", "design-pack", "archway-rebuild", "Claude outputs"]);
+// cloudflare-env.d.ts is written by `wrangler types`, not by us.
+const SKIP_FILES = new Set(["package-lock.json", "cloudflare-env.d.ts"]);
 const TEXT = /\.(ts|tsx|js|mjs|cjs|css|md|json|html|txt|svg|toml|yml|yaml|sql)$/;
 const EM_DASH = String.fromCharCode(0x2014);
 

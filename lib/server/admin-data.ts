@@ -1,5 +1,5 @@
 import "server-only";
-import { query, transaction, type Queryable } from "./db";
+import { batch, first, query, type Statement } from "./db";
 import { log } from "./log";
 import { type EnquiryStatus, type ReferralStatus, ENQUIRY_STATUS_IDS, REFERRAL_STATUS_IDS } from "@/lib/admin/labels";
 
@@ -10,7 +10,16 @@ import { type EnquiryStatus, type ReferralStatus, ENQUIRY_STATUS_IDS, REFERRAL_S
  * for good with removeReferral or removeEnquiry, when its keeping period ends
  * (Privacy Policy v2.0 clause 11). Only a non-identifying row in
  * removed_records is kept.
+ *
+ * D1 has no interactive transactions and no row locks, so each change reads
+ * once for the answer the admin sees, then runs a batch whose every statement
+ * carries the same condition in its WHERE. The batch is one transaction, so a
+ * change either happens completely or not at all. See
+ * docs/decisions/0008-moving-to-cloudflare.md.
  */
+
+/** The time, written the way the schema writes its own. */
+const NOW = `strftime('%Y-%m-%dT%H:%M:%fZ', 'now')`;
 
 /**
  * What the list needs, and no more. Contact details and the reason (which can
@@ -50,7 +59,7 @@ export async function listReferrals(): Promise<ReferralRow[]> {
   const rows = await query<Record<string, string | null>>(
     `SELECT ref, created_at, status, referrer_type, referrer_name, referrer_org_role,
             participant_name, participant_suburb, plan_type, service
-       FROM referrals ORDER BY created_at DESC LIMIT $1`,
+       FROM referrals ORDER BY created_at DESC LIMIT ?`,
     [MAX_ROWS],
   );
   return rows.map((r) => ({
@@ -68,12 +77,11 @@ export async function listReferrals(): Promise<ReferralRow[]> {
 }
 
 async function referralId(ref: string): Promise<{ id: number; status: string } | null> {
-  const rows = await query<{ id: number; status: string }>(`SELECT id, status FROM referrals WHERE ref = $1`, [ref]);
-  return rows[0] ?? null;
+  return first<{ id: number; status: string }>(`SELECT id, status FROM referrals WHERE ref = ?`, [ref]);
 }
 
 export async function referralDetail(ref: string): Promise<ReferralDetail | null> {
-  const rows = await query<{
+  const found = await first<{
     id: number;
     referrer_phone: string;
     referrer_email: string;
@@ -85,19 +93,18 @@ export async function referralDetail(ref: string): Promise<ReferralDetail | null
   }>(
     `SELECT id, referrer_phone, referrer_email, participant_preferred_contact, participant_phone,
             participant_email, reason, heard_via
-       FROM referrals WHERE ref = $1`,
+       FROM referrals WHERE ref = ?`,
     [ref],
   );
-  const found = rows[0];
   if (!found) return null;
   const [notes, history] = await Promise.all([
-    query<{ id: number; body: string; created_at: Date }>(
-      `SELECT id, body, created_at FROM referral_notes WHERE referral_id = $1 ORDER BY created_at DESC, id DESC`,
+    query<{ id: number; body: string; created_at: string }>(
+      `SELECT id, body, created_at FROM referral_notes WHERE referral_id = ? ORDER BY created_at DESC, id DESC`,
       [found.id],
     ),
-    query<{ from_status: string | null; to_status: string; changed_at: Date }>(
+    query<{ from_status: string | null; to_status: string; changed_at: string }>(
       `SELECT from_status, to_status, changed_at FROM referral_status_history
-        WHERE referral_id = $1 ORDER BY changed_at DESC, id DESC`,
+        WHERE referral_id = ? ORDER BY changed_at DESC, id DESC`,
       [found.id],
     ),
   ]);
@@ -114,31 +121,39 @@ export async function referralDetail(ref: string): Promise<ReferralDetail | null
   };
 }
 
+/**
+ * The history line has to be written before the update, because it reads the
+ * status the record is moving away from. Both carry the same condition, so if
+ * the status changed underneath us neither does anything.
+ */
+function statusChange(table: "referrals" | "enquiries", historyTable: string, idColumn: string, ref: string, to: string): Statement[] {
+  return [
+    {
+      sql: `INSERT INTO ${historyTable} (${idColumn}, from_status, to_status)
+            SELECT id, status, ? FROM ${table} WHERE ref = ? AND status <> ?`,
+      params: [to, ref, to],
+    },
+    {
+      sql: `UPDATE ${table} SET status = ?, updated_at = ${NOW} WHERE ref = ? AND status <> ?`,
+      params: [to, ref, to],
+    },
+  ];
+}
+
 export async function setReferralStatus(ref: string, status: ReferralStatus): Promise<boolean> {
   if (!REFERRAL_STATUS_IDS.includes(status)) return false;
-  return transaction(async (client) => {
-    const { rows } = await client.query<{ id: number; status: string }>(
-      `SELECT id, status FROM referrals WHERE ref = $1 FOR UPDATE`,
-      [ref],
-    );
-    const row = rows[0];
-    if (!row) return false;
-    if (row.status === status) return true;
-    await client.query(`UPDATE referrals SET status = $2, updated_at = now() WHERE id = $1`, [row.id, status]);
-    await client.query(`INSERT INTO referral_status_history (referral_id, from_status, to_status) VALUES ($1, $2, $3)`, [
-      row.id,
-      row.status,
-      status,
-    ]);
-    log("admin.referral_status_changed", { ref, to: status });
-    return true;
-  });
+  const row = await referralId(ref);
+  if (!row) return false;
+  if (row.status === status) return true;
+  await batch(statusChange("referrals", "referral_status_history", "referral_id", ref, status));
+  log("admin.referral_status_changed", { ref, to: status });
+  return true;
 }
 
 export async function addReferralNote(ref: string, body: string): Promise<boolean> {
   const found = await referralId(ref);
   if (!found) return false;
-  await query(`INSERT INTO referral_notes (referral_id, body) VALUES ($1, $2)`, [found.id, body]);
+  await batch([{ sql: `INSERT INTO referral_notes (referral_id, body) VALUES (?, ?)`, params: [found.id, body] }]);
   log("admin.referral_note_added", { ref });
   return true;
 }
@@ -166,18 +181,18 @@ const PREVIEW = 140;
 export async function listEnquiries(): Promise<EnquiryRow[]> {
   const rows = await query<{
     ref: string;
-    created_at: Date;
+    created_at: string;
     status: EnquiryStatus;
-    read_at: Date | null;
+    read_at: string | null;
     name: string;
     email: string;
     preview: string;
-    long: boolean;
+    long: number;
   }>(
     `SELECT ref, created_at, status, read_at, name, email,
-            left(message, $2) AS preview, char_length(message) > $2 AS long
-       FROM enquiries ORDER BY created_at DESC LIMIT $1`,
-    [MAX_ROWS, PREVIEW],
+            substr(message, 1, ?) AS preview, length(message) > ? AS long
+       FROM enquiries ORDER BY created_at DESC LIMIT ?`,
+    [PREVIEW, PREVIEW, MAX_ROWS],
   );
   return rows.map((r) => ({
     ref: r.ref,
@@ -192,72 +207,56 @@ export async function listEnquiries(): Promise<EnquiryRow[]> {
 
 /** The full message, phone and replies so far. Opening an enquiry marks it read. */
 export async function openEnquiry(ref: string): Promise<EnquiryDetail | null> {
-  const rows = await query<{ id: number; message: string; phone: string | null }>(
-    `UPDATE enquiries SET read_at = COALESCE(read_at, now()) WHERE ref = $1 RETURNING id, message, phone`,
+  const row = await first<{ id: number; message: string; phone: string | null }>(
+    `UPDATE enquiries SET read_at = COALESCE(read_at, ${NOW}) WHERE ref = ? RETURNING id, message, phone`,
     [ref],
   );
-  if (!rows[0]) return null;
-  const messages = await query<{ body: string; sent_at: Date; delivery_status: ThreadLine["delivery"] }>(
-    `SELECT body, sent_at, delivery_status FROM enquiry_messages WHERE enquiry_id = $1 ORDER BY sent_at, id`,
-    [rows[0].id],
+  if (!row) return null;
+  const messages = await query<{ body: string; sent_at: string; delivery_status: ThreadLine["delivery"] }>(
+    `SELECT body, sent_at, delivery_status FROM enquiry_messages WHERE enquiry_id = ? ORDER BY sent_at, id`,
+    [row.id],
   );
   return {
-    message: rows[0].message,
-    phone: rows[0].phone,
+    message: row.message,
+    phone: row.phone,
     thread: messages.map((m) => ({ body: m.body, at: new Date(m.sent_at).toISOString(), delivery: m.delivery_status })),
   };
 }
 
-async function changeEnquiryStatus(
-  client: Queryable,
-  id: number,
-  from: string,
-  to: EnquiryStatus,
-) {
-  if (from === to) return;
-  await client.query(`UPDATE enquiries SET status = $2, updated_at = now() WHERE id = $1`, [id, to]);
-  await client.query(`INSERT INTO enquiry_status_history (enquiry_id, from_status, to_status) VALUES ($1, $2, $3)`, [
-    id,
-    from,
-    to,
-  ]);
-}
-
 export async function setEnquiryStatus(ref: string, status: EnquiryStatus): Promise<boolean> {
   if (!ENQUIRY_STATUS_IDS.includes(status)) return false;
-  return transaction(async (client) => {
-    const { rows } = await client.query<{ id: number; status: string }>(
-      `SELECT id, status FROM enquiries WHERE ref = $1 FOR UPDATE`,
-      [ref],
-    );
-    if (!rows[0]) return false;
-    await changeEnquiryStatus(client, rows[0].id, rows[0].status, status);
-    log("admin.enquiry_status_changed", { ref, to: status });
-    return true;
-  });
+  const row = await first<{ status: string }>(`SELECT status FROM enquiries WHERE ref = ?`, [ref]);
+  if (!row) return false;
+  if (row.status !== status) {
+    await batch(statusChange("enquiries", "enquiry_status_history", "enquiry_id", ref, status));
+  }
+  log("admin.enquiry_status_changed", { ref, to: status });
+  return true;
 }
 
 /**
  * Stores the reply, queues it to be emailed from Ensign's address, and marks
- * the enquiry Replied, all at once. The email goes out through the outbox, so
- * it is retried until it is sent and never sent twice.
+ * the enquiry Replied, all in one batch. The email goes out through the outbox,
+ * so it is retried until it is sent and never sent twice.
+ *
+ * The outbox row finds the reply by the highest id for that enquiry, because
+ * the insert before it in the batch has just made it and D1 cannot hand an id
+ * from one statement to the next.
  */
 export async function queueEnquiryReply(ref: string, body: string): Promise<boolean> {
-  return transaction(async (client) => {
-    const { rows } = await client.query<{ id: number; status: string }>(
-      `SELECT id, status FROM enquiries WHERE ref = $1 FOR UPDATE`,
-      [ref],
-    );
-    if (!rows[0]) return false;
-    const { rows: msg } = await client.query<{ id: number }>(
-      `INSERT INTO enquiry_messages (enquiry_id, body) VALUES ($1, $2) RETURNING id`,
-      [rows[0].id, body],
-    );
-    await client.query(`INSERT INTO email_outbox (kind, ref, message_id) VALUES ('enquiry_reply', $1, $2)`, [ref, msg[0].id]);
-    await changeEnquiryStatus(client, rows[0].id, rows[0].status, "replied");
-    log("admin.enquiry_reply_queued", { ref });
-    return true;
-  });
+  const row = await first<{ id: number }>(`SELECT id FROM enquiries WHERE ref = ?`, [ref]);
+  if (!row) return false;
+  await batch([
+    { sql: `INSERT INTO enquiry_messages (enquiry_id, body) VALUES (?, ?)`, params: [row.id, body] },
+    {
+      sql: `INSERT INTO email_outbox (kind, ref, message_id)
+            SELECT 'enquiry_reply', ?, max(id) FROM enquiry_messages WHERE enquiry_id = ?`,
+      params: [ref, row.id],
+    },
+    ...statusChange("enquiries", "enquiry_status_history", "enquiry_id", ref, "replied"),
+  ]);
+  log("admin.enquiry_reply_queued", { ref });
+  return true;
 }
 
 export type RemoveResult = "removed" | "not_found" | "not_closed";
@@ -267,27 +266,34 @@ export type RemoveResult = "removed" | "not_found" | "not_closed";
  * and status history. Keeps only the reference number, the day it was received
  * and when it was removed (removed_records). Refuses anything not Closed, so a
  * live referral can never be removed by mistake.
+ *
+ * received_on is the Brisbane day. Queensland is UTC+10 all year with no
+ * daylight saving, so adding 10 hours to the stored UTC time is exact.
  */
 export async function removeReferral(ref: string): Promise<RemoveResult> {
-  return transaction(async (client) => {
-    const { rows } = await client.query<{ id: number; status: string; created_at: Date }>(
-      `SELECT id, status, created_at FROM referrals WHERE ref = $1 FOR UPDATE`,
-      [ref],
-    );
-    const row = rows[0];
-    if (!row) return "not_found";
-    if (row.status !== "closed") return "not_closed";
-    await client.query(`DELETE FROM referral_notes WHERE referral_id = $1`, [row.id]);
-    await client.query(`DELETE FROM referral_status_history WHERE referral_id = $1`, [row.id]);
-    await client.query(`DELETE FROM referrals WHERE id = $1`, [row.id]);
-    await client.query(
-      `INSERT INTO removed_records (ref, kind, received_on)
-       VALUES ($1, 'referral', ($2::timestamptz AT TIME ZONE 'Australia/Brisbane')::date)`,
-      [ref, row.created_at],
-    );
-    log("admin.referral_removed", { ref });
-    return "removed";
-  });
+  const row = await first<{ status: string }>(`SELECT status FROM referrals WHERE ref = ?`, [ref]);
+  if (!row) return "not_found";
+  if (row.status !== "closed") return "not_closed";
+  await batch([
+    {
+      sql: `INSERT OR IGNORE INTO removed_records (ref, kind, received_on)
+            SELECT ref, 'referral', date(created_at, '+10 hours') FROM referrals WHERE ref = ? AND status = 'closed'`,
+      params: [ref],
+    },
+    {
+      sql: `DELETE FROM referral_notes
+             WHERE referral_id IN (SELECT id FROM referrals WHERE ref = ? AND status = 'closed')`,
+      params: [ref],
+    },
+    {
+      sql: `DELETE FROM referral_status_history
+             WHERE referral_id IN (SELECT id FROM referrals WHERE ref = ? AND status = 'closed')`,
+      params: [ref],
+    },
+    { sql: `DELETE FROM referrals WHERE ref = ? AND status = 'closed'`, params: [ref] },
+  ]);
+  log("admin.referral_removed", { ref });
+  return "removed";
 }
 
 /**
@@ -296,28 +302,25 @@ export async function removeReferral(ref: string): Promise<RemoveResult> {
  * non-identifying row in removed_records.
  */
 export async function removeEnquiry(ref: string): Promise<RemoveResult> {
-  return transaction(async (client) => {
-    const { rows } = await client.query<{ id: number; status: string; created_at: Date }>(
-      `SELECT id, status, created_at FROM enquiries WHERE ref = $1 FOR UPDATE`,
-      [ref],
-    );
-    const row = rows[0];
-    if (!row) return "not_found";
-    if (row.status !== "closed") return "not_closed";
-    await client.query(
-      `UPDATE email_outbox SET message_id = NULL
-        WHERE message_id IN (SELECT id FROM enquiry_messages WHERE enquiry_id = $1)`,
-      [row.id],
-    );
-    await client.query(`DELETE FROM enquiry_messages WHERE enquiry_id = $1`, [row.id]);
-    await client.query(`DELETE FROM enquiry_status_history WHERE enquiry_id = $1`, [row.id]);
-    await client.query(`DELETE FROM enquiries WHERE id = $1`, [row.id]);
-    await client.query(
-      `INSERT INTO removed_records (ref, kind, received_on)
-       VALUES ($1, 'enquiry', ($2::timestamptz AT TIME ZONE 'Australia/Brisbane')::date)`,
-      [ref, row.created_at],
-    );
-    log("admin.enquiry_removed", { ref });
-    return "removed";
-  });
+  const row = await first<{ status: string }>(`SELECT status FROM enquiries WHERE ref = ?`, [ref]);
+  if (!row) return "not_found";
+  if (row.status !== "closed") return "not_closed";
+  const closed = `(SELECT id FROM enquiries WHERE ref = ? AND status = 'closed')`;
+  await batch([
+    {
+      sql: `INSERT OR IGNORE INTO removed_records (ref, kind, received_on)
+            SELECT ref, 'enquiry', date(created_at, '+10 hours') FROM enquiries WHERE ref = ? AND status = 'closed'`,
+      params: [ref],
+    },
+    {
+      sql: `UPDATE email_outbox SET message_id = NULL
+             WHERE message_id IN (SELECT id FROM enquiry_messages WHERE enquiry_id IN ${closed})`,
+      params: [ref],
+    },
+    { sql: `DELETE FROM enquiry_messages WHERE enquiry_id IN ${closed}`, params: [ref] },
+    { sql: `DELETE FROM enquiry_status_history WHERE enquiry_id IN ${closed}`, params: [ref] },
+    { sql: `DELETE FROM enquiries WHERE ref = ? AND status = 'closed'`, params: [ref] },
+  ]);
+  log("admin.enquiry_removed", { ref });
+  return "removed";
 }

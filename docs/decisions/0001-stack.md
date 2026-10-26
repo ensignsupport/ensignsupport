@@ -1,5 +1,7 @@
 # 0001. Stack: Next.js on Netlify, Netlify Database, Resend
 
+> **Superseded in part by [0008](0008-moving-to-cloudflare.md) (26 October 2026):** the site now runs on Cloudflare Workers with a D1 database, not Netlify with Netlify Database. The rest of this record stands as it was decided.
+
 - **Date:** 2 October 2026
 - **Decided by:** Allen
 

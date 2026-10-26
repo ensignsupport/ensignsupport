@@ -2,8 +2,8 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { expect, test, type Browser, type BrowserContext, type Page } from "@playwright/test";
-import pg from "pg";
 import { expectNoAxeViolations, expectNoSidewaysScroll, watchErrors } from "./helpers";
+import { sql } from "./helpers/browser-db";
 import { SCREENS } from "./screens";
 
 /**
@@ -16,16 +16,6 @@ test.describe.configure({ mode: "serial" });
 const RESULTS = path.join(__dirname, "..", "test-results");
 const PASS = "correct horse battery staple test"; // scripts/test-server.mjs
 const COOKIE = "__Host-ensign_admin";
-
-async function sql<T = Record<string, unknown>>(text: string, params: unknown[] = []): Promise<T[]> {
-  const client = new pg.Client({ connectionString: readFileSync(path.join(RESULTS, ".db-url"), "utf8") });
-  await client.connect();
-  try {
-    return (await client.query(text, params)).rows as T[];
-  } finally {
-    await client.end();
-  }
-}
 
 function emails(): { to: string[]; subject: string; text: string; replyTo?: string }[] {
   return readFileSync(path.join(RESULTS, "emails.jsonl"), "utf8")
@@ -67,15 +57,15 @@ type Seed = Partial<{
 }>;
 
 async function seedReferral(s: Seed = {}): Promise<{ id: number; ref: string }> {
-  const [row] = await sql<{ id: number; ref: string }>(
+  const submission = randomUUID();
+  await sql(
     `INSERT INTO referrals (submission_id, created_at, status, referrer_type, referrer_name, referrer_org_role, referrer_phone,
        referrer_email, participant_name, participant_preferred_contact, participant_phone, participant_email,
        participant_suburb, plan_type, service, reason, consent, consent_at, heard_via)
-     VALUES ($1, COALESCE($2::timestamptz, now()), $3, $4, $5, NULL, '0400 000 201', 'ref@example.test', $6, NULL,
-       '0400 000 101', 'participant@example.test', $7, $8, $9, $10, true, now(), 'Word of mouth')
-     RETURNING id, ref`,
+     VALUES (?, COALESCE(?, strftime('%Y-%m-%dT%H:%M:%fZ', 'now')), ?, ?, ?, NULL, '0400 000 201', 'ref@example.test', ?, NULL,
+       '0400 000 101', 'participant@example.test', ?, ?, ?, ?, 1, strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), 'Word of mouth')`,
     [
-      randomUUID(),
+      submission,
       s.created_at ?? null,
       s.status ?? "new",
       s.referrer_type ?? "family",
@@ -87,7 +77,9 @@ async function seedReferral(s: Seed = {}): Promise<{ id: number; ref: string }> 
       s.reason ?? "Test reason.",
     ],
   );
-  await sql(`INSERT INTO referral_status_history (referral_id, from_status, to_status) VALUES ($1, NULL, $2)`, [
+  // The reference is set by a trigger, so it is read back rather than returned.
+  const [row] = await sql<{ id: number; ref: string }>(`SELECT id, ref FROM referrals WHERE submission_id = ?`, [submission]);
+  await sql(`INSERT INTO referral_status_history (referral_id, from_status, to_status) VALUES (?, NULL, ?)`, [
     row.id,
     s.status ?? "new",
   ]);
@@ -95,10 +87,14 @@ async function seedReferral(s: Seed = {}): Promise<{ id: number; ref: string }> 
 }
 
 async function seedEnquiry(name: string, message: string): Promise<{ id: number; ref: string }> {
-  const [row] = await sql<{ id: number; ref: string }>(
-    `INSERT INTO enquiries (submission_id, name, email, phone, message) VALUES ($1, $2, $3, '0400 000 999', $4) RETURNING id, ref`,
-    [randomUUID(), name, `${name.split(" ")[0].toLowerCase()}@example.test`, message],
-  );
+  const submission = randomUUID();
+  await sql(`INSERT INTO enquiries (submission_id, name, email, phone, message) VALUES (?, ?, ?, '0400 000 999', ?)`, [
+    submission,
+    name,
+    `${name.split(" ")[0].toLowerCase()}@example.test`,
+    message,
+  ]);
+  const [row] = await sql<{ id: number; ref: string }>(`SELECT id, ref FROM enquiries WHERE submission_id = ?`, [submission]);
   return row;
 }
 
@@ -171,9 +167,9 @@ test("signing in sets a locked-down cookie, and the database keeps only its hash
   expect(cookie!.secure).toBe(true);
   expect(cookie!.sameSite).toBe("Strict");
   expect(cookie!.path).toBe("/");
-  const stored = await sql<{ id: string }>(`SELECT id FROM admin_sessions WHERE id = $1`, [cookie!.value]);
+  const stored = await sql<{ id: string }>(`SELECT id FROM admin_sessions WHERE id = ?`, [cookie!.value]);
   expect(stored, "the raw token is never stored").toHaveLength(0);
-  const live = await sql<{ n: number }>(`SELECT count(*)::int AS n FROM admin_sessions WHERE revoked_at IS NULL AND expires_at > now() + interval '7 hours'`);
+  const live = await sql<{ n: number }>(`SELECT count(*) AS n FROM admin_sessions WHERE revoked_at IS NULL AND expires_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '+7 hours')`);
   expect(live[0].n).toBeGreaterThan(0);
   await context.close();
 });
@@ -249,10 +245,10 @@ test("changing status and adding a note are saved, recorded in history and the a
   await panel.getByRole("button", { name: "In progress", exact: true }).click();
   await expect(panel.getByRole("status").first()).toHaveText("Saved");
   await expect(panel.getByRole("button", { name: "In progress", exact: true })).toHaveAttribute("aria-pressed", "true");
-  const [saved] = await sql<{ status: string }>(`SELECT status FROM referrals WHERE ref = $1`, [r.ref]);
+  const [saved] = await sql<{ status: string }>(`SELECT status FROM referrals WHERE ref = ?`, [r.ref]);
   expect(saved.status).toBe("in_progress");
   const history = await sql<{ from_status: string; to_status: string }>(
-    `SELECT from_status, to_status FROM referral_status_history WHERE referral_id = $1 ORDER BY id`,
+    `SELECT from_status, to_status FROM referral_status_history WHERE referral_id = ? ORDER BY id`,
     [r.id],
   );
   expect(history.map((h) => [h.from_status, h.to_status])).toEqual([[null, "new"], ["new", "in_progress"]]);
@@ -262,14 +258,14 @@ test("changing status and adding a note are saved, recorded in history and the a
   await panel.getByLabel("Add a note").fill(note);
   await panel.getByRole("button", { name: "Save note" }).click();
   await expect(panel.getByRole("list", { name: "Saved notes" })).toContainText(note);
-  const notes = await sql<{ body: string }>(`SELECT body FROM referral_notes WHERE referral_id = $1`, [r.id]);
+  const notes = await sql<{ body: string }>(`SELECT body FROM referral_notes WHERE referral_id = ?`, [r.id]);
   expect(notes.map((n) => n.body)).toEqual([note]);
 
   // Still there after a reload.
   await page.reload();
   await expect(page.getByRole("dialog", { name: "Nora Statustest" }).getByRole("list", { name: "Saved notes" })).toContainText(note);
 
-  const log = await sql<Record<string, unknown>>(`SELECT * FROM access_log WHERE target_ref = $1 ORDER BY id`, [r.ref]);
+  const log = await sql<Record<string, unknown>>(`SELECT * FROM access_log WHERE target_ref = ? ORDER BY id`, [r.ref]);
   expect(log.map((l) => l.action)).toEqual(expect.arrayContaining(["view_referral", "change_referral_status", "add_referral_note"]));
   expect(JSON.stringify(log)).not.toContain("Note 3f9");
   expect(JSON.stringify(log)).not.toContain("Nora");
@@ -308,7 +304,7 @@ test("enquiries: opening marks read, a reply is stored, emailed from Ensign and 
   const pane = page.getByRole("region", { name: "Enquiry", exact: true });
   await expect(pane.getByRole("heading", { name: "Wendy Replytest" })).toBeVisible();
   await expect(pane).toContainText("Do you work in Logan? Reply test 2d4.");
-  await expect.poll(async () => (await sql<{ read_at: Date | null }>(`SELECT read_at FROM enquiries WHERE ref = $1`, [e.ref]))[0].read_at).not.toBeNull();
+  await expect.poll(async () => (await sql<{ read_at: Date | null }>(`SELECT read_at FROM enquiries WHERE ref = ?`, [e.ref]))[0].read_at).not.toBeNull();
 
   await expect(pane.getByRole("button", { name: "Send reply" })).toBeDisabled();
   const reply = "Hi Wendy, yes we do. Andrew will call you this week. Reply 6a0.";
@@ -319,11 +315,11 @@ test("enquiries: opening marks read, a reply is stored, emailed from Ensign and 
   await expect(pane.getByRole("button", { name: "Replied" })).toHaveAttribute("aria-pressed", "true");
 
   const [stored] = await sql<{ body: string; delivery_status: string }>(
-    `SELECT m.body, m.delivery_status FROM enquiry_messages m JOIN enquiries e ON e.id = m.enquiry_id WHERE e.ref = $1`,
+    `SELECT m.body, m.delivery_status FROM enquiry_messages m JOIN enquiries e ON e.id = m.enquiry_id WHERE e.ref = ?`,
     [e.ref],
   );
   expect(stored).toEqual({ body: reply, delivery_status: "sent" });
-  const [status] = await sql<{ status: string }>(`SELECT status FROM enquiries WHERE ref = $1`, [e.ref]);
+  const [status] = await sql<{ status: string }>(`SELECT status FROM enquiries WHERE ref = ?`, [e.ref]);
   expect(status.status).toBe("replied");
   const sent = emails().find((m) => m.text.includes("Reply 6a0"));
   expect(sent, "reply email").toBeTruthy();
@@ -357,25 +353,25 @@ test("a Closed referral or enquiry can be removed for good, in two steps, keepin
   await drawer.getByRole("button", { name: "Remove personal details" }).click();
   await expect(drawer.getByText(`Remove ${closed.ref} for good?`)).toBeVisible();
   await drawer.getByRole("button", { name: "Cancel" }).click();
-  expect((await sql<{ n: number }>(`SELECT count(*)::int AS n FROM referrals WHERE ref = $1`, [closed.ref]))[0].n).toBe(1);
+  expect((await sql<{ n: number }>(`SELECT count(*) AS n FROM referrals WHERE ref = ?`, [closed.ref]))[0].n).toBe(1);
 
   await drawer.getByRole("button", { name: "Remove personal details" }).click();
   await drawer.getByRole("button", { name: "Yes, remove for good" }).click();
   await expect(page.getByText(`${closed.ref} removed. Only its reference number is kept.`)).toBeVisible();
   await expect(page.getByText("Rory Removetest")).toHaveCount(0);
-  expect((await sql<{ n: number }>(`SELECT count(*)::int AS n FROM referrals WHERE ref = $1`, [closed.ref]))[0].n).toBe(0);
-  expect(await sql(`SELECT kind FROM removed_records WHERE ref = $1`, [closed.ref])).toEqual([{ kind: "referral" }]);
-  expect(await sql(`SELECT action FROM access_log WHERE target_ref = $1 AND action = 'remove_referral'`, [closed.ref])).toHaveLength(1);
+  expect((await sql<{ n: number }>(`SELECT count(*) AS n FROM referrals WHERE ref = ?`, [closed.ref]))[0].n).toBe(0);
+  expect(await sql(`SELECT kind FROM removed_records WHERE ref = ?`, [closed.ref])).toEqual([{ kind: "referral" }]);
+  expect(await sql(`SELECT action FROM access_log WHERE target_ref = ? AND action = 'remove_referral'`, [closed.ref])).toHaveLength(1);
 
   const enq = await seedEnquiry("Erin Removetest", "Please remove me.");
-  await sql(`UPDATE enquiries SET status = 'closed' WHERE id = $1`, [enq.id]);
+  await sql(`UPDATE enquiries SET status = 'closed' WHERE id = ?`, [enq.id]);
   await page.goto(`/admin/enquiries?ref=${enq.ref}`);
   const panel = page.getByRole("region", { name: "Enquiry" });
   await panel.getByRole("button", { name: "Remove personal details" }).click();
   await panel.getByRole("button", { name: "Yes, remove for good" }).click();
   await expect(page.getByText(`${enq.ref} removed. Only its reference number is kept.`)).toBeVisible();
-  expect((await sql<{ n: number }>(`SELECT count(*)::int AS n FROM enquiries WHERE ref = $1`, [enq.ref]))[0].n).toBe(0);
-  expect(await sql(`SELECT kind FROM removed_records WHERE ref = $1`, [enq.ref])).toEqual([{ kind: "enquiry" }]);
+  expect((await sql<{ n: number }>(`SELECT count(*) AS n FROM enquiries WHERE ref = ?`, [enq.ref]))[0].n).toBe(0);
+  expect(await sql(`SELECT kind FROM removed_records WHERE ref = ?`, [enq.ref])).toEqual([{ kind: "enquiry" }]);
   await context.close();
 });
 
@@ -405,7 +401,7 @@ test("signing out ends the session on the server", async ({ browser }) => {
   await context.addCookies([{ name: COOKIE, value: token, url: "https://localhost:3100", secure: true, httpOnly: true, sameSite: "Strict" }]);
   await page.goto("/admin/referrals");
   await expect(page).toHaveURL(/\/admin\/sign-in/);
-  const revoked = await sql<{ n: number }>(`SELECT count(*)::int AS n FROM admin_sessions WHERE revoked_at IS NOT NULL`);
+  const revoked = await sql<{ n: number }>(`SELECT count(*) AS n FROM admin_sessions WHERE revoked_at IS NOT NULL`);
   expect(revoked[0].n).toBeGreaterThan(0);
   await context.close();
 });
@@ -419,16 +415,16 @@ test("15 minutes without activity, or 8 hours in total, signs out, and an action
   const panel = page.getByRole("dialog", { name: "Olive Idletest" });
   await expect(panel).toBeVisible();
   // Make every session look idle for 16 minutes, then try to change the status.
-  await sql(`UPDATE admin_sessions SET last_seen_at = now() - interval '16 minutes'`);
+  await sql(`UPDATE admin_sessions SET last_seen_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-16 minutes')`);
   await panel.getByRole("button", { name: "Closed", exact: true }).click();
   await expect(page).toHaveURL(/\/admin\/sign-in\?expired=1/);
   await expect(page.getByRole("status")).toContainText("nothing happened for 15 minutes");
-  const [row] = await sql<{ status: string }>(`SELECT status FROM referrals WHERE ref = $1`, [r.ref]);
+  const [row] = await sql<{ status: string }>(`SELECT status FROM referrals WHERE ref = ?`, [r.ref]);
   expect(row.status).toBe("new");
 
   await signIn(page);
   await expect(page).toHaveURL(/\/admin\/referrals/);
-  await sql(`UPDATE admin_sessions SET expires_at = now() - interval '1 minute' WHERE revoked_at IS NULL`);
+  await sql(`UPDATE admin_sessions SET expires_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-1 minute') WHERE revoked_at IS NULL`);
   await page.reload();
   await expect(page).toHaveURL(/\/admin\/sign-in/);
   await context.close();
@@ -500,7 +496,7 @@ test("after an action finds the session has run out, Back does not show the admi
   await page.goto(`/admin/referrals?ref=${r.ref}`);
   const panel = page.getByRole("dialog", { name: "Carl Backaction" });
   await expect(panel).toBeVisible();
-  await sql(`UPDATE admin_sessions SET last_seen_at = now() - interval '16 minutes'`);
+  await sql(`UPDATE admin_sessions SET last_seen_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-16 minutes')`);
   await panel.getByRole("button", { name: "Accepted", exact: true }).click();
   await expect(page).toHaveURL(/\/admin\/sign-in\?expired=1/);
   expect((await context.cookies()).some((c) => c.name === COOKIE)).toBe(false);
@@ -547,7 +543,7 @@ test("a session made under an old passphrase no longer works", async ({ browser 
   const page = await context.newPage();
   await signIn(page);
   await expect(page).toHaveURL(/\/admin\/referrals/);
-  // Stands in for the passphrase being changed in Netlify: the session's tie to it no longer matches.
+  // Stands in for the passphrase being changed on the Worker: the session's tie to it no longer matches.
   await sql(`UPDATE admin_sessions SET passphrase_tag = 'old' WHERE revoked_at IS NULL`);
   await page.reload();
   await expect(page).toHaveURL(/\/admin\/sign-in/);
@@ -555,7 +551,7 @@ test("a session made under an old passphrase no longer works", async ({ browser 
 });
 
 test("a burst of guesses sent at once is still counted one by one", async ({ browser }) => {
-  const before = (await sql<{ n: number }>(`SELECT count(*)::int AS n FROM login_attempts WHERE succeeded = false`))[0].n;
+  const before = (await sql<{ n: number }>(`SELECT count(*) AS n FROM login_attempts WHERE succeeded = 0`))[0].n;
   ipCounter += 1;
   const ip = `203.0.113.${ipCounter}`;
   const contexts = await Promise.all(
@@ -571,7 +567,7 @@ test("a burst of guesses sent at once is still counted one by one", async ({ bro
   // and the other 7 were refused without looking at the passphrase.
   expect(answers.filter((a) => a?.includes("not right"))).toHaveLength(4);
   expect(answers.filter((a) => a?.includes("locked for 15 minutes"))).toHaveLength(8);
-  const after = (await sql<{ n: number }>(`SELECT count(*)::int AS n FROM login_attempts WHERE succeeded = false`))[0].n;
+  const after = (await sql<{ n: number }>(`SELECT count(*) AS n FROM login_attempts WHERE succeeded = 0`))[0].n;
   expect(after - before).toBe(12); // every try is recorded
   await Promise.all(contexts.map((c) => c.close()));
 });
@@ -613,7 +609,7 @@ test("after 20 wrong tries in total, only addresses that have signed in before c
   await noAddressA.close();
   await noAddressB.close();
 
-  const failed = async () => (await sql<{ n: number }>(`SELECT count(*)::int AS n FROM login_attempts WHERE succeeded = false AND attempted_at > now() - interval '15 minutes'`))[0].n;
+  const failed = async () => (await sql<{ n: number }>(`SELECT count(*) AS n FROM login_attempts WHERE succeeded = 0 AND attempted_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-15 minutes')`))[0].n;
   while ((await failed()) < 20) {
     const c = await freshContext(browser);
     const p = await c.newPage();

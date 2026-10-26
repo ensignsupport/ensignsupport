@@ -2,7 +2,7 @@ import "server-only";
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
 import { cookies, headers } from "next/headers";
 import { redirect, RedirectType } from "next/navigation";
-import { query, transaction } from "./db";
+import { batch, first, rowsOf, run } from "./db";
 import { processOutbox } from "./email";
 import { log, logError } from "./log";
 import { addressGroup } from "@/lib/address";
@@ -12,7 +12,7 @@ import { hashKey, ipFromHeaders } from "./request";
  * Admin sign in (archway-rebuild/phase-4-inputs/admin-security-requirements.md,
  * docs/decisions/0007-admin-sign-in-and-data.md).
  *
- * - One long passphrase, kept only in Netlify's settings as ADMIN_PASSWORD.
+ * - One long passphrase, kept only as the Worker secret ADMIN_PASSWORD.
  *   Checked on the server in constant time. Under 16 characters, or missing,
  *   means nobody can sign in at all.
  * - The session cookie holds a random token. The database keeps only its hash.
@@ -78,58 +78,58 @@ export async function signIn(passphrase: string): Promise<SignInResult> {
   }
   const address = await addressKey();
 
-  // One try at a time: a lock held only for this transaction, so it is always
-  // released, even through a connection pooler. The insert-first counting
-  // below is also safe on its own.
-  const outcome = await transaction(async (client) => {
-    await client.query(`SELECT pg_advisory_xact_lock(hashtext('ensign-admin-sign-in'))`);
-    // Record the try first, as a failure, then count up to and including it.
-    const { rows: added } = await client.query<{ id: number }>(
-      `INSERT INTO login_attempts (ip_hash, succeeded) VALUES ($1, false) RETURNING id`,
-      [address],
-    );
-    const id = added[0].id;
-    const { rows: counted } = await client.query<{ mine: number; total: number; known: boolean }>(
-      `SELECT count(*) FILTER (WHERE ip_hash = $1 AND succeeded = false)::int AS mine,
-              count(*) FILTER (WHERE succeeded = false)::int AS total,
-              EXISTS (
-                SELECT 1 FROM login_attempts
-                 WHERE ip_hash = $1 AND succeeded = true AND attempted_at > now() - interval '30 days'
-              ) AS known
-         FROM login_attempts
-        WHERE attempted_at > now() - make_interval(mins => $2) AND id <= $3`,
-      [address, WINDOW_MINUTES, id],
-    );
-    const { mine, total, known } = counted[0];
-    // Counts before this try decide whether it may be checked at all.
+  // Record the try first, as a failure, then count. Both in one batch, which
+  // D1 runs as a single transaction with its writes serialised, so the count
+  // always includes this try and never a later one. That is what the Postgres
+  // advisory lock and the "id <= this try" bound were there to guarantee.
+  const counted = await batch([
+    { sql: `INSERT INTO login_attempts (ip_hash, succeeded) VALUES (?, 0) RETURNING id`, params: [address] },
+    {
+      sql: `SELECT count(*) FILTER (WHERE ip_hash = ?1 AND succeeded = 0) AS mine,
+                   count(*) FILTER (WHERE succeeded = 0) AS total,
+                   EXISTS (
+                     SELECT 1 FROM login_attempts
+                      WHERE ip_hash = ?1 AND succeeded = 1
+                        AND attempted_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-30 days')
+                   ) AS known
+              FROM login_attempts
+             WHERE attempted_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now', ?2)`,
+      params: [address, `-${WINDOW_MINUTES} minutes`],
+    },
+  ]);
+  const id = rowsOf<{ id: number }>(counted[0])[0].id;
+  const { mine, total, known } = rowsOf<{ mine: number; total: number; known: number }>(counted[1])[0];
+
+  // Counts before this try decide whether it may be checked at all.
+  const outcome = await (async () => {
     const lockedBefore = mine - 1 >= MAX_FAILS_PER_ADDRESS || (total - 1 >= MAX_FAILS_TOTAL && !known);
     if (lockedBefore) return "locked" as const;
     if (passphraseMatches(passphrase)) {
-      await client.query(`UPDATE login_attempts SET succeeded = true WHERE id = $1`, [id]);
+      await run(`UPDATE login_attempts SET succeeded = 1 WHERE id = ?`, [id]);
       return "ok" as const;
     }
     const lockedNow = mine >= MAX_FAILS_PER_ADDRESS || (total >= MAX_FAILS_TOTAL && !known);
     return lockedNow ? ("just_locked" as const) : ("wrong" as const);
-  });
+  })();
 
   if (outcome === "locked" || outcome === "just_locked") {
     // One alert per 15 minutes at most while the lock goes on. Time only.
-    await transaction(async (client) => {
-      await client.query(`SELECT pg_advisory_xact_lock(hashtext('ensign-admin-lockout-alert'))`);
-      await client.query(
-        `INSERT INTO email_outbox (kind)
-         SELECT 'login_lockout'
-          WHERE NOT EXISTS (
-            SELECT 1 FROM email_outbox WHERE kind = 'login_lockout' AND created_at > now() - make_interval(mins => $1)
-          )`,
-        [WINDOW_MINUTES],
-      );
-    });
+    // One guarded statement, so it needs no transaction of its own.
+    await run(
+      `INSERT INTO email_outbox (kind)
+       SELECT 'login_lockout'
+        WHERE NOT EXISTS (
+          SELECT 1 FROM email_outbox
+           WHERE kind = 'login_lockout'
+             AND created_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now', ?)
+        )`,
+      [`-${WINDOW_MINUTES} minutes`],
+    );
     // Sent now, not by the hourly job.
     await processOutbox(5).catch((error) => logError("admin.lockout_alert_send_failed", error));
   }
 
-  await query(`DELETE FROM login_attempts WHERE attempted_at < now() - interval '30 days'`);
+  await run(`DELETE FROM login_attempts WHERE attempted_at < strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-30 days')`);
   if (outcome !== "ok") {
     log(outcome === "wrong" ? "admin.sign_in_failed" : "admin.sign_in_locked");
     return { ok: false, reason: outcome === "wrong" ? "wrong" : "locked" };
@@ -138,14 +138,17 @@ export async function signIn(passphrase: string): Promise<SignInResult> {
   const jar = await cookies();
   // A new token every sign in. Any session this browser already had is ended.
   const previous = jar.get(SESSION_COOKIE)?.value;
-  if (previous) await query(`UPDATE admin_sessions SET revoked_at = now() WHERE id = $1`, [sessionId(previous)]);
+  if (previous) {
+    await run(`UPDATE admin_sessions SET revoked_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ?`, [sessionId(previous)]);
+  }
   const token = randomBytes(32).toString("base64url");
-  const id = sessionId(token);
-  await query(
-    `INSERT INTO admin_sessions (id, passphrase_tag, expires_at) VALUES ($1, $2, now() + make_interval(hours => $3))`,
-    [id, passphraseTag(token), ABSOLUTE_HOURS],
+  const sid = sessionId(token);
+  await run(
+    `INSERT INTO admin_sessions (id, passphrase_tag, expires_at)
+     VALUES (?, ?, strftime('%Y-%m-%dT%H:%M:%fZ', 'now', ?))`,
+    [sid, passphraseTag(token), `+${ABSOLUTE_HOURS} hours`],
   );
-  await query(`DELETE FROM admin_sessions WHERE expires_at < now() - interval '7 days'`);
+  await run(`DELETE FROM admin_sessions WHERE expires_at < strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-7 days')`);
   jar.set(SESSION_COOKIE, token, {
     httpOnly: true,
     secure: true,
@@ -153,7 +156,7 @@ export async function signIn(passphrase: string): Promise<SignInResult> {
     path: "/",
     maxAge: ABSOLUTE_HOURS * 3600,
   });
-  await logAccess(id, "sign_in");
+  await logAccess(sid, "sign_in");
   log("admin.signed_in");
   return { ok: true };
 }
@@ -163,15 +166,15 @@ export async function currentSession(): Promise<{ id: string } | null> {
   if (!signInConfigured()) return null;
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
   if (!token || token.length > 100) return null;
-  const rows = await query<{ id: string }>(
-    `UPDATE admin_sessions SET last_seen_at = now()
-      WHERE id = $1 AND revoked_at IS NULL AND expires_at > now()
-        AND last_seen_at > now() - make_interval(mins => $2)
-        AND passphrase_tag = $3
+  return first<{ id: string }>(
+    `UPDATE admin_sessions SET last_seen_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+      WHERE id = ?1 AND revoked_at IS NULL
+        AND expires_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now')
+        AND last_seen_at > strftime('%Y-%m-%dT%H:%M:%fZ', 'now', ?2)
+        AND passphrase_tag = ?3
       RETURNING id`,
-    [sessionId(token), IDLE_MINUTES, passphraseTag(token)],
+    [sessionId(token), `-${IDLE_MINUTES} minutes`, passphraseTag(token)],
   );
-  return rows[0] ?? null;
 }
 
 function signInUrl(expired: boolean, next?: string) {
@@ -217,7 +220,7 @@ export async function signOut() {
   const token = jar.get(SESSION_COOKIE)?.value;
   if (token) {
     const id = sessionId(token);
-    await query(`UPDATE admin_sessions SET revoked_at = now() WHERE id = $1`, [id]);
+    await run(`UPDATE admin_sessions SET revoked_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now') WHERE id = ?`, [id]);
     await logAccess(id, "sign_out");
   }
   jar.delete({ name: SESSION_COOKIE, path: "/", secure: true, httpOnly: true, sameSite: "strict" });
@@ -247,7 +250,7 @@ export type AccessAction =
 
 /** Who did what and when. A reference number only, never what anyone wrote. */
 export async function logAccess(session: string, action: AccessAction, ref?: string) {
-  await query(`INSERT INTO access_log (session_id, action, target_ref) VALUES ($1, $2, $3)`, [
+  await run(`INSERT INTO access_log (session_id, action, target_ref) VALUES (?, ?, ?)`, [
     session.slice(0, 16),
     action,
     ref ?? null,

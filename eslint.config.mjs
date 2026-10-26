@@ -12,6 +12,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Generated: the Worker bundle, wrangler's local state, and the binding types.
+    ".open-next/**",
+    ".wrangler/**",
+    "cloudflare-env.d.ts",
     // Approved design files, kept for reference only.
     "design-pack/**",
     "test-results/**",

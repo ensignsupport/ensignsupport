@@ -1,5 +1,7 @@
 # 0007. Admin sign in and how the admin handles data
 
+> **Superseded in part by [0008](0008-moving-to-cloudflare.md) (26 October 2026):** `ADMIN_PASSWORD` is now a Worker secret, and the data lives in D1. The sign in rules themselves are unchanged.
+
 Date: 2 October 2026. Follows `archway-rebuild/phase-4-inputs/admin-security-requirements.md`. Decisions from Allen on 2 October: one passphrase with no phone code for now, no Export CSV for now, alerts to Andrew only.
 
 ## Sign in

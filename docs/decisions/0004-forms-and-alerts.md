@@ -1,5 +1,7 @@
 # 0004. How the forms save, alert and protect data
 
+> **Superseded in part by [0008](0008-moving-to-cloudflare.md) (26 October 2026):** the hourly job is now a Worker cron trigger (`worker.ts`), not a Netlify scheduled function, and the visitor's address comes from Cloudflare's header. The rules themselves are unchanged.
+
 - **Date:** 2 October 2026
 - **Decided by:** Allen (email content, safeguards), the build (the mechanics below)
 

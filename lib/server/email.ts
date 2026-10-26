@@ -1,6 +1,5 @@
-import { appendFileSync } from "node:fs";
 import { Resend } from "resend";
-import { query } from "./db";
+import { first, query, run } from "./db";
 import { log, logError } from "./log";
 
 /**
@@ -8,7 +7,7 @@ import { log, logError } from "./log";
  * reference number and a link to the admin, never names, health details or
  * anything a person typed.
  *
- * Settings, kept only in Netlify's environment settings:
+ * Settings, kept only as Worker variables and secrets:
  *   RESEND_API_KEY  Resend key
  *   EMAIL_FROM      sender, for example "Ensign Support Services <alerts@ensignsupport.com.au>"
  *   ALERT_TO        who gets alerts, comma separated
@@ -39,7 +38,9 @@ function recipients(): string[] {
 
 export function emailReady(): boolean {
   if (!process.env.SITE_URL || recipients().length === 0) return false;
-  return Boolean(process.env.EMAIL_SINK_FILE || (process.env.RESEND_API_KEY && process.env.EMAIL_FROM));
+  return Boolean(
+    process.env.EMAIL_SINK_FILE || process.env.EMAIL_SINK_URL || (process.env.RESEND_API_KEY && process.env.EMAIL_FROM),
+  );
 }
 
 function compose(kind: Exclude<OutboxKind, "enquiry_reply">, ref: string | null, count?: number): Message {
@@ -76,9 +77,23 @@ function compose(kind: Exclude<OutboxKind, "enquiry_reply">, ref: string | null,
 }
 
 async function deliver(message: Message, idempotencyKey: string): Promise<string> {
-  // Tests write emails to a file instead of sending them.
+  const sunk = JSON.stringify({ ...message, idempotencyKey });
+  // The browser tests collect emails over HTTP, because a Worker has no
+  // filesystem to write to. scripts/test-server.mjs listens and writes the file.
+  if (process.env.EMAIL_SINK_URL) {
+    const response = await fetch(process.env.EMAIL_SINK_URL, {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: sunk,
+    });
+    if (!response.ok) throw new Error(`Email sink: ${response.status}`);
+    return `sink-${idempotencyKey}`;
+  }
+  // The unit tests run in Node, so they can write the file directly. Loaded
+  // only when that is switched on, so node:fs never reaches the Worker bundle.
   if (process.env.EMAIL_SINK_FILE) {
-    appendFileSync(process.env.EMAIL_SINK_FILE, JSON.stringify({ ...message, idempotencyKey }) + "\n");
+    const { appendFileSync } = await import("node:fs");
+    appendFileSync(process.env.EMAIL_SINK_FILE, sunk + "\n");
     return `sink-${idempotencyKey}`;
   }
   const resend = new Resend(process.env.RESEND_API_KEY);
@@ -102,11 +117,10 @@ async function deliver(message: Message, idempotencyKey: string): Promise<string
  * ALERT_TO address). The text is exactly what Andrew wrote in the admin.
  */
 async function composeReply(messageId: number): Promise<Message | null> {
-  const rows = await query<{ body: string; email: string; name: string }>(
-    `SELECT m.body, e.email, e.name FROM enquiry_messages m JOIN enquiries e ON e.id = m.enquiry_id WHERE m.id = $1`,
+  const row = await first<{ body: string; email: string; name: string }>(
+    `SELECT m.body, e.email, e.name FROM enquiry_messages m JOIN enquiries e ON e.id = m.enquiry_id WHERE m.id = ?`,
     [messageId],
   );
-  const row = rows[0];
   if (!row) return null;
   const replyTo = (process.env.REPLY_TO ?? "").trim() || recipients()[0];
   return {
@@ -117,29 +131,21 @@ async function composeReply(messageId: number): Promise<Message | null> {
   };
 }
 
-/** Queue an alert. Called inside the same transaction that saves the record. */
-export async function queueAlert(
-  client: { query: (text: string, params?: unknown[]) => Promise<unknown> },
-  kind: OutboxKind,
-  ref: string | null,
-) {
-  await client.query(`INSERT INTO email_outbox (kind, ref) VALUES ($1, $2)`, [kind, ref]);
-}
-
 /**
  * Sends every alert still waiting. Safe to run at any time: each alert carries
  * an idempotency key, so a retry never sends the same alert twice.
  */
 export async function processOutbox(limit = 20): Promise<{ sent: number; failed: number; waiting: number }> {
   if (!emailReady()) {
-    const [{ count }] = await query<{ count: number }>(`SELECT count(*)::int AS count FROM email_outbox WHERE status = 'pending'`);
+    const row = await first<{ count: number }>(`SELECT count(*) AS count FROM email_outbox WHERE status = 'pending'`);
+    const count = row?.count ?? 0;
     log("email.not_configured", { waiting: count });
     return { sent: 0, failed: 0, waiting: count };
   }
   const rows = await query<{ id: number; kind: OutboxKind; ref: string | null; attempts: number; message_id: number | null }>(
     `SELECT id, kind, ref, attempts, message_id FROM email_outbox
       WHERE status = 'pending' AND attempts < 8
-      ORDER BY created_at LIMIT $1`,
+      ORDER BY created_at LIMIT ?`,
     [limit],
   );
   let sent = 0;
@@ -148,9 +154,12 @@ export async function processOutbox(limit = 20): Promise<{ sent: number; failed:
     try {
       const count =
         row.kind === "daily_reminder"
-          ? (await query<{ count: number }>(
-              `SELECT count(*)::int AS count FROM referrals WHERE status = 'new' AND created_at < now() - interval '24 hours'`,
-            ))[0].count
+          ? ((
+              await first<{ count: number }>(
+                `SELECT count(*) AS count FROM referrals
+                  WHERE status = 'new' AND created_at < strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-24 hours')`,
+              )
+            )?.count ?? 0)
           : undefined;
       let message: Message | null;
       if (row.kind === "enquiry_reply") {
@@ -161,24 +170,26 @@ export async function processOutbox(limit = 20): Promise<{ sent: number; failed:
       }
       const providerId = await deliver(message, `outbox-${row.id}`);
       if (row.message_id) {
-        await query(`UPDATE enquiry_messages SET delivery_status = 'sent', email_id = $2 WHERE id = $1`, [row.message_id, providerId]);
+        await run(`UPDATE enquiry_messages SET delivery_status = 'sent', email_id = ?2 WHERE id = ?1`, [row.message_id, providerId]);
       }
-      await query(`UPDATE email_outbox SET status = 'sent', sent_at = now(), attempts = attempts + 1, provider_id = $2 WHERE id = $1`, [
-        row.id,
-        providerId,
-      ]);
+      await run(
+        `UPDATE email_outbox
+            SET status = 'sent', sent_at = strftime('%Y-%m-%dT%H:%M:%fZ', 'now'), attempts = attempts + 1, provider_id = ?2
+          WHERE id = ?1`,
+        [row.id, providerId],
+      );
       log("email.sent", { kind: row.kind, ref: row.ref });
       sent++;
     } catch (error) {
       const attempts = row.attempts + 1;
-      await query(`UPDATE email_outbox SET attempts = $2, last_error = $3, status = $4 WHERE id = $1`, [
+      await run(`UPDATE email_outbox SET attempts = ?2, last_error = ?3, status = ?4 WHERE id = ?1`, [
         row.id,
         attempts,
         error instanceof Error ? error.message.slice(0, 200) : "error",
         attempts >= 8 ? "failed" : "pending",
       ]);
       if (attempts >= 8 && row.message_id) {
-        await query(`UPDATE enquiry_messages SET delivery_status = 'failed' WHERE id = $1`, [row.message_id]);
+        await run(`UPDATE enquiry_messages SET delivery_status = 'failed' WHERE id = ?`, [row.message_id]);
       }
       logError("email.failed", error, { kind: row.kind, ref: row.ref, attempts });
       failed++;
@@ -189,11 +200,12 @@ export async function processOutbox(limit = 20): Promise<{ sent: number; failed:
 
 /** Queue the daily reminder, only when something has been New for over 24 hours. */
 export async function queueDailyReminder(): Promise<boolean> {
-  const [{ count }] = await query<{ count: number }>(
-    `SELECT count(*)::int AS count FROM referrals WHERE status = 'new' AND created_at < now() - interval '24 hours'`,
+  const row = await first<{ count: number }>(
+    `SELECT count(*) AS count FROM referrals
+      WHERE status = 'new' AND created_at < strftime('%Y-%m-%dT%H:%M:%fZ', 'now', '-24 hours')`,
   );
-  if (count === 0) return false;
-  await query(`INSERT INTO email_outbox (kind) VALUES ('daily_reminder')`);
+  if ((row?.count ?? 0) === 0) return false;
+  await run(`INSERT INTO email_outbox (kind) VALUES ('daily_reminder')`);
   return true;
 }
 

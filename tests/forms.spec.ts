@@ -1,9 +1,9 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { expect, test, type Page } from "@playwright/test";
-import pg from "pg";
 import { randomUUID } from "node:crypto";
 import { expectNoAxeViolations, expectNoSidewaysScroll } from "./helpers";
+import { sql } from "./helpers/browser-db";
 
 // Forms share one throwaway database, so these tests run one at a time.
 test.describe.configure({ mode: "serial" });
@@ -13,16 +13,6 @@ const ORIGIN = `http://localhost:${Number(process.env.TEST_PORT ?? 3100)}`;
 /** What a browser on this site sends with a form post. */
 const api = (ip: string) => ({ "x-forwarded-for": ip, origin: ORIGIN });
 const BROKEN = `http://localhost:${Number(process.env.TEST_PORT ?? 3100) + 1}`;
-
-async function sql<T = Record<string, unknown>>(text: string, params: unknown[] = []): Promise<T[]> {
-  const client = new pg.Client({ connectionString: readFileSync(path.join(RESULTS, ".db-url"), "utf8") });
-  await client.connect();
-  try {
-    return (await client.query(text, params)).rows as T[];
-  } finally {
-    await client.end();
-  }
-}
 
 function emails(file = "emails.jsonl"): { to: string[]; subject: string; text: string }[] {
   return readFileSync(path.join(RESULTS, file), "utf8")
@@ -59,7 +49,7 @@ test("professional referral: every step, saved exactly, alert has no details", a
   await freshVisitor(page);
   await page.goto("/referral");
   const countMine = async () =>
-    (await sql<{ n: number }>(`SELECT count(*)::int AS n FROM referrals WHERE reason = $1`, [PRO.reason]))[0].n;
+    (await sql<{ n: number }>(`SELECT count(*) AS n FROM referrals WHERE reason = ?`, [PRO.reason]))[0].n;
   const before = await countMine();
 
   // Step: who. Continue waits for a choice.
@@ -105,7 +95,7 @@ test("professional referral: every step, saved exactly, alert has no details", a
   await expect(page.getByRole("heading", { name: "Thank you, your referral is in" })).toBeVisible();
   await expect(page.getByText("Ensign Support Services will contact you about next steps.")).toBeVisible();
 
-  const rows = await sql<Record<string, unknown>>(`SELECT * FROM referrals WHERE reason = $1`, [PRO.reason]);
+  const rows = await sql<Record<string, unknown>>(`SELECT * FROM referrals WHERE reason = ?`, [PRO.reason]);
   expect(rows).toHaveLength(1);
   const r = rows[0];
   expect(r).toMatchObject({
@@ -122,12 +112,14 @@ test("professional referral: every step, saved exactly, alert has no details", a
     participant_suburb: PRO.suburb,
     plan_type: "plan_managed",
     service: "both",
-    consent: true,
+    // Stored as 1: SQLite has no boolean type, so the schema uses an integer
+    // with a check that it is always 1. Consent still cannot be false.
+    consent: 1,
     heard_via: "Plan manager",
   });
   expect(r.consent_at).toBeTruthy();
   expect(await countMine()).toBe(before + 1);
-  const history = await sql(`SELECT from_status, to_status FROM referral_status_history WHERE referral_id = $1`, [r.id]);
+  const history = await sql(`SELECT from_status, to_status FROM referral_status_history WHERE referral_id = ?`, [r.id]);
   expect(history).toEqual([{ from_status: null, to_status: "new" }]);
 
   // The alert went out, with the reference number and none of the details.
@@ -139,7 +131,7 @@ test("professional referral: every step, saved exactly, alert has no details", a
     expect(alert!.text, `alert leaks "${secret}"`).not.toContain(secret);
     expect(alert!.subject).not.toContain(secret);
   }
-  const outbox = await sql(`SELECT status FROM email_outbox WHERE ref = $1`, [r.ref]);
+  const outbox = await sql(`SELECT status FROM email_outbox WHERE ref = ?`, [r.ref]);
   expect(outbox).toEqual([{ status: "sent" }]);
 });
 
@@ -165,7 +157,7 @@ test("self referral: no participant contact fields, their own details are stored
   await page.getByRole("button", { name: "Send Referral" }).click();
   await expect(page.getByRole("heading", { name: "Thank you, your referral is in" })).toBeVisible();
 
-  const [r] = await sql(`SELECT * FROM referrals WHERE reason = $1`, ["Self referral test 91b2."]);
+  const [r] = await sql(`SELECT * FROM referrals WHERE reason = ?`, ["Self referral test 91b2."]);
   expect(r).toMatchObject({
     referrer_type: "participant",
     referrer_org_role: null,
@@ -248,8 +240,11 @@ test("the server refuses what the brief rules out, even when the browser is bypa
     headers,
   });
   expect(extra.status()).toBe(200);
-  const cols = await sql<{ column_name: string }>(`SELECT column_name FROM information_schema.columns WHERE table_name = 'referrals'`);
-  expect(cols.map((c) => c.column_name).join(",")).not.toMatch(/ndis_number|diagnosis|medicare|file|upload/);
+  // SQLite lists a table's columns through pragma_table_info, where Postgres
+  // had information_schema.columns.
+  const cols = await sql<{ name: string }>(`SELECT name FROM pragma_table_info('referrals')`);
+  expect(cols).not.toHaveLength(0);
+  expect(cols.map((c) => c.name).join(",")).not.toMatch(/ndis_number|diagnosis|medicare|file|upload/);
 
   const crossSite = await request.post("/api/referral", { data: { ...good, ...id() }, headers: { ...headers, origin: "https://evil.example" } });
   expect(crossSite.status()).toBe(403);
@@ -265,12 +260,12 @@ test("the server refuses what the brief rules out, even when the browser is bypa
   const once = { ...good, ...id(), reason: "Idempotency test e41c" };
   expect((await request.post("/api/referral", { data: once, headers })).status()).toBe(200);
   expect((await request.post("/api/referral", { data: once, headers })).status()).toBe(200);
-  expect(await sql(`SELECT ref FROM referrals WHERE reason = $1`, ["Idempotency test e41c"])).toHaveLength(1);
+  expect(await sql(`SELECT ref FROM referrals WHERE reason = ?`, ["Idempotency test e41c"])).toHaveLength(1);
 });
 
 test("a bot that fills the hidden field is thanked and nothing is saved", async ({ request }) => {
   const countBots = async () =>
-    (await sql<{ n: number }>(`SELECT count(*)::int AS n FROM enquiries WHERE email = 'bot@example.test'`))[0].n;
+    (await sql<{ n: number }>(`SELECT count(*) AS n FROM enquiries WHERE email = 'bot@example.test'`))[0].n;
   const before = await countBots();
   const res = await request.post("/api/enquiry", {
     data: { name: "Bot", email: "bot@example.test", message: "spam", submissionId: randomUUID(), ens_hp_7x: "http://spam.example" },
@@ -344,7 +339,7 @@ test("enquiry: validation, saved, thank you, alert with no details, privacy line
   await form.getByRole("button", { name: "Send Enquiry" }).click();
   await expect(page.getByRole("heading", { name: "Thank you, your enquiry is in" })).toBeVisible();
 
-  const [e] = await sql(`SELECT * FROM enquiries WHERE message = $1`, ["Do you cover Logan? Test 55c1."]);
+  const [e] = await sql(`SELECT * FROM enquiries WHERE message = ?`, ["Do you cover Logan? Test 55c1."]);
   expect(e).toMatchObject({ status: "new", name: "Test Enquirer", email: "enquirer@example.test", phone: null });
   const alert = emails().find((m) => m.subject === `New enquiry ${e.ref}`);
   expect(alert).toBeTruthy();

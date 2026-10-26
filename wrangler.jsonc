@@ -1,0 +1,34 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "ensign-support",
+  // worker.ts wraps what the OpenNext adapter builds from `next build` and
+  // adds the hourly alerts job. See docs/decisions/0008-moving-to-cloudflare.md.
+  "main": "worker.ts",
+  "compatibility_date": "2026-10-26",
+  // node:crypto and Buffer are used by the admin sign in and the form endpoint.
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ensign-support",
+      "database_id": "078a0edd-1906-409c-ba07-332777256cbf",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  },
+  // The hourly alerts job: sends anything still waiting in the outbox, and at
+  // 8am Brisbane time queues the daily reminder. Cron runs on UTC, so hourly
+  // is what makes a Brisbane 8am possible.
+  "triggers": {
+    "crons": ["0 * * * *"]
+  }
+  // Keys and passwords are never written here. They are set as secrets on the
+  // Worker (CONSTRAINTS.md, security and privacy): ADMIN_PASSWORD, HASH_SALT,
+  // CRON_SECRET, RESEND_API_KEY and the email addresses.
+}

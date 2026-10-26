@@ -45,8 +45,9 @@ next-env.d.ts
 /playwright-report/
 /blob-report/
 
-# Netlify
-.netlify
+# Cloudflare
+/.open-next/
+.wrangler/
 
 # Archives. A 237MB zip in a commit is what blocked the first push.
 *.zip

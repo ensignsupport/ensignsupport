@@ -51,12 +51,39 @@ Owner in brackets. Nothing here is fixed silently: each one waits for the owner'
 - Which email address replies and alerts come from. Who receives alerts: Andrew only (Allen, 2 Oct 2026)
 - **Business name registration.** The site uses "Ensign Support Services" (Allen confirmed). The questionnaire says the registered business name on Andrew's ABN is "Ensign Support Coordination". Before launch Andrew should make sure "Ensign Support Services" is registered as a business name on his ABN (ASIC business names register), or the site uses the registered name.
 
+## Blocks go live: the privacy policy still names Netlify (Allen and Andrew)
+
+The site moved to Cloudflare on 26 October (docs/decisions/0008). The privacy
+policy and the two form consent notices still tell people that Netlify hosts the
+site and the database, and that their information is stored in the United
+States. Both are now wrong, and both are shown to participants at the moment
+they consent, so they cannot be left as they are once the site is live.
+
+What has to change, and who decides the wording:
+
+- `lib/legal/privacy-policy.ts`, clauses 9.2, 9.7, 10.3 and 13.4: every mention
+  of Netlify as the host and as a data processor.
+- `components/forms/ReferralForm.tsx` and `components/forms/EnquiryForm.tsx`:
+  the collection notices that name "Netlify and Resend" and say the information
+  is stored in the United States.
+- Where the data actually sits now: the D1 database was created in Cloudflare's
+  Oceania region, so referral and enquiry data is held closer to home than it
+  was. That is a better answer than the current wording gives, but it has to be
+  checked and stated accurately, not assumed.
+- Whether moving from a United States processor to Cloudflare needs anything
+  else said under APP 8 (overseas disclosure).
+
+Not changed by anyone here: this is the client's legal wording, and
+`CONSTRAINTS.md` says client facts are never invented. The dev site can run on
+Cloudflare with the old wording while this is settled, because it is not public
+and is never indexed.
+
 ## Setup with Allen
 
-- ~~Netlify Database~~ provisioned, migrations applied on deploy (checked 3 Oct).
-- Netlify settings: ~~`SITE_URL`, `ALERT_TO`, `ADMIN_PASSWORD`~~ set. Still to add: `RESEND_API_KEY` and `EMAIL_FROM` once Resend is set up (see SPEC.md, Settings). At launch: change `SITE_URL` to the live address.
+- ~~Netlify Database~~ replaced by the Cloudflare D1 database `ensign-support` (Oceania region), created 26 Oct. Apply the schema with `npx wrangler d1 migrations apply ensign-support --remote`.
+- Worker secrets to set, none of which carry over from Netlify: `ADMIN_PASSWORD`, `HASH_SALT` (new, and now required), `CRON_SECRET` (new, for the hourly alerts job), `SITE_URL`, `ALERT_TO`, and `RESEND_API_KEY` and `EMAIL_FROM` once Resend is set up (see SPEC.md, Settings). At launch: change `SITE_URL` to the live address.
 - Resend account, and Ensign's domain verified in Resend (needs access to the DNS for ensignsupport.com.au)
-- Turn on two-step sign in (MFA) for the Netlify team "Business Edified": it has 4 members and will hold referral data
+- Turn on two-step sign in (MFA) for the Cloudflare account that holds the Worker and the D1 database: it will hold referral data
 - Before launch: delete the test referrals and enquiries made on the dev site
-- Visitor address check: after Allen next signs in to the dev site admin, search Netlify's function logs for `sign_in_no_ip`. Nothing found means the lockout sees each visitor's real address.
+- Visitor address check: after Allen next signs in to the dev site admin, search the Worker's logs for `sign_in_no_ip`. Nothing found means the lockout sees each visitor's real address. Also search for `rate_limit.random_salt`, which means `HASH_SALT` was not set.
 - Speed on the real host: run PageSpeed Insights (pagespeed.web.dev) on the dev site's Home page on a phone setting. Local tests put the phone Home page at about 3 seconds to its main photo (target 2.5), slowed by a local server with no CDN. Every other page and every desktop result meets the targets.
